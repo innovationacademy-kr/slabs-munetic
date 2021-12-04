@@ -1,0 +1,42 @@
+services:
+  munetic_admin:
+    container_name: munetic_admin
+    build:
+      context: ./munetic_admin
+      dockerfile: Dockerfile
+    working_dir: /munetic_admin
+    networks:
+      - munetic
+    ports:
+      - '4242:4242'
+    volumes:
+      - ./munetic_admin/src:/munetic_admin/src
+
+  munetic_app:
+    container_name: munetic_app
+    build:
+      context: ./munetic_app
+      dockerfile: Dockerfile
+    working_dir: /munetic_app
+    ports:
+      - '2424:2424'
+    networks:
+      - munetic
+    volumes:
+      - ./munetic_app/src:/munetic_app/src
+
+  munetic_express:
+    container_name: munetic_express
+    build:
+      context: ./munetic_express
+      dockerfile: Dockerfile
+    working_dir: /munetic_express
+    ports:
+      - '3030:3030'
+    networks:
+      - munetic
+    volumes:
+      - ./munetic_express/src:/munetic_express/src
+
+networks:
+  munetic: {}
