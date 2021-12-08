@@ -1,4 +1,4 @@
-FROM node:17
+FROM node:16
 RUN mkdir munetic_app
 WORKDIR /munetic_app
 COPY . .
