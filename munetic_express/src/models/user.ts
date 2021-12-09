@@ -63,7 +63,7 @@ export class User
         },
         login_id: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(30),
           unique: true,
         },
         login_password: {
@@ -72,12 +72,12 @@ export class User
         },
         nickname: {
           allowNull: true,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(30),
           unique: true,
         },
         name: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(50),
         },
         name_public: {
           allowNull: false,
@@ -85,21 +85,21 @@ export class User
         },
         email: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(128),
           unique: true,
         },
         phone_number: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(20),
           unique: true,
         },
         image_url: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(256),
         },
         introduction: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(8192),
         },
       },
       { tableName: "User", sequelize }
