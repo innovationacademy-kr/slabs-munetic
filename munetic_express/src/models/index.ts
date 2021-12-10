@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { config } from '../config/config';
 import { Category } from './category';
 import { Lesson } from './lesson';
+import { User } from "./user";
 
 const { db } = config.development;
 
@@ -43,7 +44,7 @@ export function models() {
   // app.ts에서 models()함수를 불러 테이블을 한번에 생성합니다.
 
   Category.initModel(sequelize);
-  // ex) Users.initModel(sequelize);
+  User.initModel(sequelize);
   Lesson.initModel(sequelize);
 
   Category.hasMany(Lesson);
@@ -53,12 +54,12 @@ export function models() {
       allowNull: false,
     },
   });
-  // User.hasMany(Lesson);
-  // Lesson.belongsTo(User, {
-  //    foreignKey: {
-  //    name: 'tutor_id',
-  //    allowNull: false,
-  //  }
-  // })
+  User.hasMany(Lesson);
+  Lesson.belongsTo(User, {
+      foreignKey: {
+      name: 'tutor_id',
+      allowNull: false,
+    }
+  })
   return sequelize;
 }
