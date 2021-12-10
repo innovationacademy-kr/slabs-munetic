@@ -60,7 +60,7 @@ export class Lesson
         },
         gender: {
           allowNull: true,
-          type: DataTypes.STRING,
+          type: DataTypes.ENUM('Male', 'Female', 'Other'),
         },
         location: {
           allowNull: true,
