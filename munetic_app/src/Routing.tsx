@@ -1,16 +1,16 @@
-import { Route, Routes } from "react-router";
-import Home from "./components/Home";
-import Category from "./components/lesson/Category";
-import Class from "./components/lesson/Class";
-import ClassLists from "./components/lesson/ClassLists";
-import ManageClass from "./components/lesson/ManageClass";
-import EditClass from "./components/lesson/EditClass";
-import WriteClass from "./components/lesson/WriteClass";
-import ViewProfile from "./components/profile/ViewProfile";
-import ManageProfile from "./components/profile/ManageProfile";
-import EditProfile from "./components/profile/EditProfile";
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
+import { Route, Routes } from 'react-router';
+import Home from './components/Home';
+import Category from './components/lesson/Category';
+import Class from './components/lesson/Class';
+import ClassLists from './components/lesson/ClassLists';
+import ManageClass from './components/lesson/ManageClass';
+import EditClass from './components/lesson/EditClass';
+import WriteClass from './components/lesson/WriteClass';
+import ViewProfile from './components/profile/ViewProfile';
+import ManageProfile from './components/profile/ManageProfile';
+import EditProfile from './components/profile/EditProfile';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
 
 export default function Routing() {
   return (

@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router";
-import Home from "./components/Home";
-import Posts from "./components/Posts";
-import Users from "./components/Users";
+import { Route, Routes } from 'react-router';
+import Home from './components/Home';
+import Posts from './components/Posts';
+import Users from './components/Users';
 
 export default function Routing() {
   return (
