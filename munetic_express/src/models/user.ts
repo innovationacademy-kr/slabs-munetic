@@ -8,15 +8,15 @@ enum ACCOUNT {
 interface userAttributes {
   id: number;
   type: ACCOUNT;
-  login_id: string;
-  login_password: string;
+  login_id: string | null;
+  login_password: string | null;
   nickname: string;
-  name: string;
-  name_public: boolean;
-  email: string;
-  phone_number: string;
-  image_url: string;
-  introduction: string;
+  name: string | null;
+  name_public: boolean | null;
+  email: string | null;
+  phone_number: string | null;
+  image_url: string | null;
+  introduction: string | null;
 }
 
 type userCreationAttributes = Optional<
@@ -38,15 +38,15 @@ export class User
 {
   public id!: number;
   public type!: ACCOUNT;
-  public login_id!: string;
-  public login_password!: string;
+  public login_id!: string | null;
+  public login_password!: string | null;
   public nickname!: string;
-  public name!: string;
-  public name_public!: boolean;
-  public email!: string;
-  public phone_number!: string;
-  public image_url!: string;
-  public introduction!: string;
+  public name!: string | null;
+  public name_public!: boolean | null;
+  public email!: string | null;
+  public phone_number!: string | null;
+  public image_url!: string | null;
+  public introduction!: string | null;
 
   static initModel(sequelize: Sequelize): typeof User {
     return User.init(
@@ -68,7 +68,7 @@ export class User
         },
         login_password: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(60),
         },
         nickname: {
           allowNull: true,
