@@ -36,7 +36,7 @@ services: # 사용되는 서비스들입니다.
         EXPRESS_PASSWORD: ${EXPRESS_PASSWORD}
     restart: always
     environment:
-      MARIADB_USER=: ${MARIADB_USER}
+      MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
