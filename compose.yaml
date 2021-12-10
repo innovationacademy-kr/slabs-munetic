@@ -1,6 +1,7 @@
 services: # 사용되는 서비스들입니다.
   munetic_admin: # 서비스의 이름을 지정합니다.
     container_name: munetic_admin # 컨테이너의 이름이 됩니다.
+    restart: always
     build: # 이미지를 빌드해서 사용하겠다는 선언입니다.
       context: ./munetic_admin # 사용할 도커파일의 경로를 적어줍니다.
       dockerfile: Dockerfile # 도커파일의 이름을 명시적으로 적어줍니다.
@@ -14,6 +15,7 @@ services: # 사용되는 서비스들입니다.
 
   munetic_app:
     container_name: munetic_app
+    restart: always
     build:
       context: ./munetic_app
       dockerfile: Dockerfile
@@ -25,8 +27,33 @@ services: # 사용되는 서비스들입니다.
     volumes:
       - ./munetic_app/src:/munetic_app/src
 
+  database:
+    container_name: munetic_database
+    build:
+      context: ./munetic_database
+      args:
+        EXPRESS_USER: ${EXPRESS_USER}
+        EXPRESS_PASSWORD: ${EXPRESS_PASSWORD}
+    restart: always
+    environment:
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./munetic_database/db:/var/lib/mysql
+    networks:
+      - munetic
+
   munetic_express:
     container_name: munetic_express
+    restart: always
+    environment:
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_USERNAME=${EXPRESS_USER}
+      - DB_PASSWORD=${EXPRESS_PASSWORD}
+      - DB_NAME=munetic
     build:
       context: ./munetic_express
       dockerfile: Dockerfile

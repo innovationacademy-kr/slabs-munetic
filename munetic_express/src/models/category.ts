@@ -1,5 +1,5 @@
-import { sequelize } from "./index";
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { sequelize } from './index';
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
 //카테고리 테이블 속성 타입 지정
 interface categoryAttributes {
@@ -11,7 +11,7 @@ interface categoryAttributes {
 // 예를 들어 새 로우를 db에 추가한다고 할때 id값은 전달안해도 db에서 auto Increment로 넣어준다.
 // id 없이 name만 쿼리에 전달해도 된다는 뜻. 이렇게 쿼리에서 빠져도 되는 값들(ex.id) 이런 값은 optional로 따로 지정해줘야한다.
 // 안하면 무슨일이 생기냐... 쿼리 넘길때 id값 없다고 컴파일 에러 나버림. 타입스크립트는 db에서 자동 처리된다는 것을 모르기 떄문에
-type categoryCreationAttributes = Optional<categoryAttributes, "id">;
+type categoryCreationAttributes = Optional<categoryAttributes, 'id'>;
 
 export class Category
   extends Model<categoryAttributes, categoryCreationAttributes>
@@ -38,7 +38,7 @@ export class Category
           unique: true,
         },
       },
-      { tableName: "Category", sequelize }
+      { tableName: 'Category', sequelize },
     );
   }
 }
