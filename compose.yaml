@@ -29,7 +29,11 @@ services: # 사용되는 서비스들입니다.
 
   database:
     container_name: munetic_database
-    image: mariadb:10.6.5-focal
+    build:
+      context: ./munetic_database
+      args:
+        EXPRESS_USER: ${EXPRESS_USER}
+        EXPRESS_PASSWORD: ${EXPRESS_PASSWORD}
     restart: always
     environment:
       MARIADB_USER=: ${MARIADB_USER}
@@ -38,10 +42,18 @@ services: # 사용되는 서비스들입니다.
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./munetic_database/db:/var/lib/mysql
+    networks:
+      - munetic
 
   munetic_express:
     container_name: munetic_express
     restart: always
+    environment:
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_USERNAME=${EXPRESS_USER}
+      - DB_PASSWORD=${EXPRESS_PASSWORD}
+      - DB_NAME=munetic
     build:
       context: ./munetic_express
       dockerfile: Dockerfile
