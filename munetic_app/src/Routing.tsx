@@ -1,16 +1,16 @@
-import { Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
-import CategoryPage from "./pages/lesson/CategoryPage";
-import ClassPage from "./pages/lesson/ClassPage";
-import ClassListPage from "./pages/lesson/ClassListPage";
-import ManageClassPage from "./pages/lesson/ManageClassPage";
-import EditClassPage from "./pages/lesson/EditClassPage";
-import WriteClassPage from "./pages/lesson/WriteClassPage";
-import ViewProfilePage from "./pages/profile/ViewProfilePage";
-import ManageProfilePage from "./pages/profile/ManageProfilePage";
-import EditProfilePage from "./pages/profile/EditProfilePage";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+import { Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage';
+import CategoryPage from './pages/lesson/CategoryPage';
+import ClassPage from './pages/lesson/ClassPage';
+import ClassListPage from './pages/lesson/ClassListPage';
+import ManageClassPage from './pages/lesson/ManageClassPage';
+import EditClassPage from './pages/lesson/EditClassPage';
+import WriteClassPage from './pages/lesson/WriteClassPage';
+import ViewProfilePage from './pages/profile/ViewProfilePage';
+import ManageProfilePage from './pages/profile/ManageProfilePage';
+import EditProfilePage from './pages/profile/EditProfilePage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
 
 export default function Routing() {
   return (

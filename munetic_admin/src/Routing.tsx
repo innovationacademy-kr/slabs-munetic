@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
-import PostListPage from "./pages/PostListPage";
-import UserListPage from "./pages/UserListPage";
+import { Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage';
+import PostListPage from './pages/PostListPage';
+import UserListPage from './pages/UserListPage';
 
 export default function Routing() {
   return (
