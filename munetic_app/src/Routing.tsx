@@ -1,32 +1,32 @@
-import { Route, Routes } from 'react-router';
-import Home from './components/Home';
-import Category from './components/lesson/Category';
-import Class from './components/lesson/Class';
-import ClassLists from './components/lesson/ClassLists';
-import ManageClass from './components/lesson/ManageClass';
-import EditClass from './components/lesson/EditClass';
-import WriteClass from './components/lesson/WriteClass';
-import ViewProfile from './components/profile/ViewProfile';
-import ManageProfile from './components/profile/ManageProfile';
-import EditProfile from './components/profile/EditProfile';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+import { Route, Routes } from "react-router";
+import HomePage from "./pages/HomePage";
+import CategoryPage from "./pages/lesson/CategoryPage";
+import ClassPage from "./pages/lesson/ClassPage";
+import ClassListPage from "./pages/lesson/ClassListPage";
+import ManageClassPage from "./pages/lesson/ManageClassPage";
+import EditClassPage from "./pages/lesson/EditClassPage";
+import WriteClassPage from "./pages/lesson/WriteClassPage";
+import ViewProfilePage from "./pages/profile/ViewProfilePage";
+import ManageProfilePage from "./pages/profile/ManageProfilePage";
+import EditProfilePage from "./pages/profile/EditProfilePage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 export default function Routing() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/lesson/category" element={<Category />} />
-      <Route path="/lesson/classes" element={<ClassLists />} />
-      <Route path="/lesson/class/:id" element={<Class />} />
-      <Route path="/lesson/manage" element={<ManageClass />} />
-      <Route path="/lesson/write" element={<WriteClass />} />
-      <Route path="/lesson/write/:id" element={<EditClass />} />
-      <Route path="/profile/:id" element={<ViewProfile />} />
-      <Route path="/profile/manage/:id" element={<ManageProfile />} />
-      <Route path="/profile/edit/:id" element={<EditProfile />} />
-      <Route path="/auth/login" element={<Login />} />
-      <Route path="/auth/register" element={<Register />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/lesson/category" element={<CategoryPage />} />
+      <Route path="/lesson/classes" element={<ClassListPage />} />
+      <Route path="/lesson/class/:id" element={<ClassPage />} />
+      <Route path="/lesson/manage" element={<ManageClassPage />} />
+      <Route path="/lesson/write" element={<WriteClassPage />} />
+      <Route path="/lesson/write/:id" element={<EditClassPage />} />
+      <Route path="/profile/:id" element={<ViewProfilePage />} />
+      <Route path="/profile/manage/:id" element={<ManageProfilePage />} />
+      <Route path="/profile/edit/:id" element={<EditProfilePage />} />
+      <Route path="/auth/login" element={<LoginPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
     </Routes>
   );
 }
