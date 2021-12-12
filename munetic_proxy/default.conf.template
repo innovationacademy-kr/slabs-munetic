@@ -5,17 +5,18 @@ server {
 	server_name munetic_proxy;
 
 	location /admin {
-    set $munetic_admin munetic_admin;
+		# domain name을 ip 주소로 치환하기 위한 설정
+		set $munetic_admin munetic_admin;
 		proxy_pass http://$munetic_admin:4242;
 	}
 
 	location / {
-    set $munetic_app munetic_app;
+		set $munetic_app munetic_app;
 		proxy_pass http://$munetic_app:2424;
 	}
 
 	location /api {
-    set $munetic_express munetic_express;
-    proxy_pass http://$munetic_express:3030;
-  }
+		set $munetic_express munetic_express;
+		proxy_pass http://$munetic_express:3030;
+	}
 }
