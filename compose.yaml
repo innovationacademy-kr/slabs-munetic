@@ -41,6 +41,7 @@ services: # 사용되는 서비스들입니다.
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - ./munetic_database/my.cnf:/etc/mysql/my.cnf:ro
       - ./munetic_database/db:/var/lib/mysql
     networks:
       - munetic
@@ -69,7 +70,7 @@ services: # 사용되는 서비스들입니다.
     networks:
       - munetic
     ports:
-      - '8080:80'
+      - "8080:80"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./munetic_proxy:/etc/nginx/templates:ro

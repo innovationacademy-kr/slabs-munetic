@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 import { config } from '../config/config';
 import { Category } from './category';
 import { Lesson } from './lesson';
-import { User } from "./user";
+import { User } from './user';
 
 const { db } = config.development;
 
@@ -34,7 +34,7 @@ export const sequelize = new Sequelize(database!, username!, password, {
 sequelize // 생성된 sequelize 인스턴스가 db랑 연결됐는지를 테스팅 하는 코드입니다. 연결에 성공해도 모델 생성에서 에러 날 수 있습니다.
   .authenticate()
   .then(() => console.log('db connected🚀'))
-  .catch((err) => {
+  .catch(err => {
     console.log(host);
     console.log('db failed🙀', err);
   });
@@ -56,10 +56,10 @@ export function models() {
   });
   User.hasMany(Lesson);
   Lesson.belongsTo(User, {
-      foreignKey: {
+    foreignKey: {
       name: 'tutor_id',
       allowNull: false,
-    }
-  })
+    },
+  });
   return sequelize;
 }
