@@ -16,6 +16,6 @@ server {
 
 	location /api {
     set $munetic_express munetic_express;
-    proxy_pass http://$munetic_express:3030;
+    proxy_pass http://$munetic_express:8080;
   }
 }
