@@ -6,7 +6,7 @@ server {
 
 	location /admin {
 		# domain name을 ip 주소로 치환하기 위한 설정
-		set $munetic_admin munetic_admin
+		set $munetic_admin munetic_admin;
 
 		# 무한 새로고침을 막기 위한 설정. issue #44 참고
 		proxy_set_header	X-Forwarded-For $proxy_add_x_forwarded_for;
