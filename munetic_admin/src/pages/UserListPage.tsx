@@ -1,7 +1,3 @@
 export default function UserListPage() {
-  return (
-    <div>
-      <div>회원관리</div>
-    </div>
-  );
+  return <div>User 관리 페이지 입니다.</div>;
 }

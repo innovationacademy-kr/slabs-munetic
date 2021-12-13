@@ -1,7 +1,3 @@
 export default function PostListPage() {
-  return (
-    <div>
-      <div>게시물 관리</div>
-    </div>
-  );
+  return <div>Post 관리 페이지 입니다.</div>;
 }
