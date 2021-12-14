@@ -1,3 +1,5 @@
+version: '3'
+
 services: # 사용되는 서비스들입니다.
   munetic_admin: # 서비스의 이름을 지정합니다.
     container_name: munetic_admin # 컨테이너의 이름이 됩니다.
