@@ -1,8 +1,8 @@
-import { Model, Optional, Sequelize, DataTypes } from "sequelize";
+import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
 enum ACCOUNT {
-  student = "STUDENT",
-  tutor = "TUTOR",
+  student = 'STUDENT',
+  tutor = 'TUTOR',
 }
 
 interface userAttributes {
@@ -21,15 +21,15 @@ interface userAttributes {
 
 type userCreationAttributes = Optional<
   userAttributes,
-  | "id"
-  | "login_id"
-  | "login_password"
-  | "name"
-  | "name_public"
-  | "email"
-  | "phone_number"
-  | "image_url"
-  | "introduction"
+  | 'id'
+  | 'login_id'
+  | 'login_password'
+  | 'name'
+  | 'name_public'
+  | 'email'
+  | 'phone_number'
+  | 'image_url'
+  | 'introduction'
 >;
 
 export class User
@@ -59,7 +59,7 @@ export class User
         },
         type: {
           allowNull: false,
-          type: DataTypes.ENUM("STUDENT", "TUTOR"),
+          type: DataTypes.ENUM('STUDENT', 'TUTOR'),
         },
         login_id: {
           allowNull: false,
@@ -102,7 +102,7 @@ export class User
           type: DataTypes.STRING(8192),
         },
       },
-      { tableName: "User", sequelize }
+      { tableName: 'User', sequelize },
     );
   }
 }
