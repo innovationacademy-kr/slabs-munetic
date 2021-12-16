@@ -1,7 +1,11 @@
 name: "File existence check"
 
 on: 
-  - pull_request
+  pull_request:
+    branches: 
+      - develop
+      - main
+  
 
 jobs:
   file_existence:
@@ -18,5 +22,6 @@ jobs:
 
       - name: File exists
         if: steps.check_files.outputs.files_exists == 'true'
-        # Only runs if all of the files exists
-        run: echo All files exists!
+        with:
+          github_token: ${{ github.token }}
+          labels: rejected
