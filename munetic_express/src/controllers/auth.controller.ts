@@ -1,15 +1,33 @@
-import { RequestHandler } from 'express';
+import { userCreationAttributes } from './../models/user';
+import {
+  Controller,
+  Example,
+  Get,
+  Post,
+  Route,
+  Body,
+  SuccessResponse,
+} from 'tsoa';
 import status from 'http-status';
-import * as authService from '../service/auth.service';
+import { AuthService } from '../service/auth.service';
 
-export const login: RequestHandler = (req, res) => {
-  try {
-  } catch {}
-};
+@Route('/auth/')
+export class AuthController extends Controller {
+  @Get('')
+  public async index() {
+    return { msg: 'Hello World!' };
+  }
 
-export const signin: RequestHandler = (req, res) => {
-  try {
-    const user = authService.createUser(req.body);
-    res.status(status.CREATED).json({ message: 'SUCCESS!', data: { user } });
-  } catch {}
-};
+  @Get('/msg')
+  public msg() {
+    return { msg: 'This is a message' };
+  }
+
+  // @Post('/signin')
+  // public async createUser(
+  //   userInfo: userCreationAttributes,
+  // ): Promise<userCreationAttributes> {
+  //   this.setStatus(201);
+  //   return new AuthService().signin(userInfo);
+  // }
+}

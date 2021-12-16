@@ -1,6 +1,6 @@
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
-enum ACCOUNT {
+export enum ACCOUNT {
   student = 'STUDENT',
   tutor = 'TUTOR',
 }
@@ -10,7 +10,7 @@ interface userAttributes {
   type: ACCOUNT;
   login_id: string | null;
   login_password: string | null;
-  nickname: string;
+  nickname: string | null;
   name: string | null;
   name_public: boolean | null;
   email: string | null;
@@ -19,11 +19,12 @@ interface userAttributes {
   introduction: string | null;
 }
 
-type userCreationAttributes = Optional<
+export type userCreationAttributes = Optional<
   userAttributes,
   | 'id'
   | 'login_id'
   | 'login_password'
+  | 'nickname'
   | 'name'
   | 'name_public'
   | 'email'

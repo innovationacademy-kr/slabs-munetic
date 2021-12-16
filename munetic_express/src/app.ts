@@ -1,15 +1,22 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { router } from './routes';
+import * as swaggerUi from 'swagger-ui-express';
+
 import { Models } from './models';
+import { RegisterRoutes } from './routes/routes';
 
 const app: express.Application = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-app.use('/api', router);
+
+app.use('/docs', swaggerUi.serve, async (req: Request, res: Response) => {
+  return res.send(
+    swaggerUi.generateHTML(await import('./swagger/swagger.json')),
+  );
+});
 
 /**
  * MariaDB 테이블 연결
@@ -20,6 +27,8 @@ Models()
     console.log('👍 Modeling Successed');
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
+
+RegisterRoutes(app);
 
 app.listen(3030, () =>
   console.log(`=============
