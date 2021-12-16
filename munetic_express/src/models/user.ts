@@ -1,6 +1,43 @@
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   User:
+ *    type: object
+ *    properties:
+ *     id:
+ *      type: number
+ *     type:
+ *      type: string
+ *     login_id:
+ *      type: string
+ *     login_password:
+ *      type: string
+ *     nickname:
+ *      type: string
+ *     name:
+ *      type: string
+ *     name_public:
+ *      type: boolean
+ *     email:
+ *      type: string
+ *     phone_number:
+ *      type: string
+ *     image_url:
+ *      type: string
+ *     introduction:
+ *      type: string
+ *     created_at:
+ *      type: date
+ *     updated_at:
+ *      type: date
+ *     deleted_at:
+ *      type: date
+ */
+
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
-export enum ACCOUNT {
+enum ACCOUNT {
   student = 'STUDENT',
   tutor = 'TUTOR',
 }
@@ -10,7 +47,7 @@ interface userAttributes {
   type: ACCOUNT;
   login_id: string | null;
   login_password: string | null;
-  nickname: string | null;
+  nickname: string;
   name: string | null;
   name_public: boolean | null;
   email: string | null;
@@ -24,7 +61,6 @@ export type userCreationAttributes = Optional<
   | 'id'
   | 'login_id'
   | 'login_password'
-  | 'nickname'
   | 'name'
   | 'name_public'
   | 'email'
