@@ -21,7 +21,8 @@ jobs:
           files: "./munetic_admin/package-lock.json, ./munetic_app/package-lock.json, ./munetic_express/package-lock.json"
 
       - name: File exists
-        if: steps.check_files.outputs.files_exists == 'true'
+        uses: actions-ecosystem/action-add-labels@v1
+        if: steps.check_files.outputs.files_exists != 'true'
         with:
           github_token: ${{ github.token }}
           labels: rejected
