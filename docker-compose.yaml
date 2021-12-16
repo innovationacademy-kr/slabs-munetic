@@ -65,14 +65,25 @@ services: # 사용되는 서비스들입니다.
 
   munetic_proxy:
     container_name: munetic_proxy
-    image: nginx:1.21.4-alpine
+    image: nginx:1.21.4
     networks:
       - munetic
     ports:
       - '8080:80'
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./munetic_proxy:/etc/nginx/templates:ro
+      - ./munetic_proxy/conf.d:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; \
+      nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot:v1.22.0
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; \
+      while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 networks: # 네트워크를 사용하겠다는 선언입니다. 선언하지 않을 경우 기본 네트워크가 사용됩니다.
   munetic: {} # 기본 설정을 이용하여 munetic이라는 네트워크를 선언합니다. munetic network를 사용하는 컨테이너들은 서로 간에 서비스의 이름으로 접근할 수 있습니다.
