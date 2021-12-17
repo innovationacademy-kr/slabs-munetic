@@ -1,8 +1,45 @@
-import { Model, Optional, Sequelize, DataTypes } from "sequelize";
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   User:
+ *    type: object
+ *    properties:
+ *     id:
+ *      type: number
+ *     type:
+ *      type: string
+ *     login_id:
+ *      type: string
+ *     login_password:
+ *      type: string
+ *     nickname:
+ *      type: string
+ *     name:
+ *      type: string
+ *     name_public:
+ *      type: boolean
+ *     email:
+ *      type: string
+ *     phone_number:
+ *      type: string
+ *     image_url:
+ *      type: string
+ *     introduction:
+ *      type: string
+ *     created_at:
+ *      type: date
+ *     updated_at:
+ *      type: date
+ *     deleted_at:
+ *      type: date
+ */
+
+import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
 enum ACCOUNT {
-  student = "STUDENT",
-  tutor = "TUTOR",
+  student = 'STUDENT',
+  tutor = 'TUTOR',
 }
 
 interface userAttributes {
@@ -19,17 +56,17 @@ interface userAttributes {
   introduction: string | null;
 }
 
-type userCreationAttributes = Optional<
+export type userCreationAttributes = Optional<
   userAttributes,
-  | "id"
-  | "login_id"
-  | "login_password"
-  | "name"
-  | "name_public"
-  | "email"
-  | "phone_number"
-  | "image_url"
-  | "introduction"
+  | 'id'
+  | 'login_id'
+  | 'login_password'
+  | 'name'
+  | 'name_public'
+  | 'email'
+  | 'phone_number'
+  | 'image_url'
+  | 'introduction'
 >;
 
 export class User
@@ -59,7 +96,7 @@ export class User
         },
         type: {
           allowNull: false,
-          type: DataTypes.ENUM("STUDENT", "TUTOR"),
+          type: DataTypes.ENUM('STUDENT', 'TUTOR'),
         },
         login_id: {
           allowNull: false,
@@ -102,7 +139,7 @@ export class User
           type: DataTypes.STRING(8192),
         },
       },
-      { tableName: "User", sequelize }
+      { tableName: 'User', sequelize },
     );
   }
 }
