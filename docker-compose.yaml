@@ -1,3 +1,5 @@
+version: '3'
+
 services: # 사용되는 서비스들입니다.
   munetic_admin: # 서비스의 이름을 지정합니다.
     container_name: munetic_admin # 컨테이너의 이름이 됩니다.
@@ -5,6 +7,7 @@ services: # 사용되는 서비스들입니다.
     build: # 이미지를 빌드해서 사용하겠다는 선언입니다.
       context: ./munetic_admin # 사용할 도커파일의 경로를 적어줍니다.
       dockerfile: Dockerfile # 도커파일의 이름을 명시적으로 적어줍니다.
+    command: npm run ${MODE}
     working_dir: /munetic_admin # 컨테이너 내부에서 기본적으로 사용할 디렉토리를 지정해줍니다.
     networks: # 사용할 네트워크(최하단)를 설정합니다.
       - munetic
@@ -19,6 +22,7 @@ services: # 사용되는 서비스들입니다.
     build:
       context: ./munetic_app
       dockerfile: Dockerfile
+    command: npm run ${MODE}
     working_dir: /munetic_app
     networks:
       - munetic
