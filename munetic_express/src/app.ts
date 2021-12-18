@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import swaggerOptions from './swagger';
+import { options } from './swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
@@ -17,7 +17,7 @@ app.use('/api', router);
 /**
  * Swagger 연결
  */
-const specs = swaggerJSDoc(swaggerOptions);
+const specs = swaggerJSDoc(options);
 app.use(
   '/swagger',
   swaggerUi.serve,

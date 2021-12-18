@@ -1,0 +1,123 @@
+tags:
+  - name: Auth
+    description: 유저의 로그인과 회원가입을 담당합니다.
+  - name: Lesson
+  - name: Profile
+paths:
+  # AUTH 관련 API
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: 아이디와 패스워드를 이용한 로그인
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: succesful login
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/Login'
+          headers:
+            Set-Cookie:
+              description: JWT accessToken
+              type: string
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: Signin User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: 아이디와 패스워드를 이용한 로그인
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: succesful Signin
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+
+definitions:
+  Login:
+    type: object
+    required:
+      - 'id'
+      - 'password'
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+  User:
+    type: object
+    required:
+      - 'id'
+      - 'password'
+      - 'type'
+      - 'name'
+      - 'nickname'
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+      type:
+        type: string
+        enum: ['tutor', 'student']
+      name:
+        type: string
+      name_public:
+        type: boolean
+      nickname:
+        type: string
+      mail:
+        type: string
+      phone_number:
+        type: string
+      image_url:
+        type: string
+      introduction:
+        type: string
