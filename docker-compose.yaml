@@ -73,15 +73,20 @@ services: # 사용되는 서비스들입니다.
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./munetic_proxy/conf.d:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./certbot/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/certs:/etc/letsencrypt
+      - ./certbot/log:/var/log/letsencrypt
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; \
       nginx -s reload; done & nginx -g \"daemon off;\"'"
   certbot:
-    image: certbot/certbot:v1.22.0
+    build:
+      context: ./certbot
+    environment:
+      - HOST_SERVER='munetic.dev.42cadet.kr'
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./certbot/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/certs:/etc/letsencrypt
+      - ./certbot/log:/var/log/letsencrypt
     entrypoint: "/bin/sh -c 'trap exit TERM; \
       while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
