@@ -1,17 +1,12 @@
-const options = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
+export const options = {
+  definition: {
+    swagger: '2.0',
     info: {
-      title: 'Express Service with Swagger',
+      title: 'MUNETIC API',
       version: '1.0.0',
-      description: 'Munetic Rest api ver.01',
     },
-    servers: [
-      {
-        url: 'http://localhost:3030',
-      },
-    ],
+    host: 'munetic.42cadet.kr',
+    basePath: '/api',
   },
-  apis: ['./src/routes/*.ts', './src/models/*.ts'],
+  apis: ['./src/swagger.yml'],
 };
-export default options;
