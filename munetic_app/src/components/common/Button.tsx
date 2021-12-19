@@ -5,11 +5,12 @@ const Container = styled.button`
   width: 100%;
   border: 0;
   border-radius: 20px;
-  background-color: #0168fa;
-  color: #00f8b6;
+  background-color: #457b9d;
+  color: #f1faee;
   font-size: 20px;
   font-weight: bold;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   ::before {
     content: '';
     display: block;

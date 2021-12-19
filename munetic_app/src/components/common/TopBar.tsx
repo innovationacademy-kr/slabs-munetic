@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 const TopBarContainer = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #0168fa;
+  background-color: #1d3557;
   postion: sticky;
   top: 0;
   z-index: 99;
@@ -21,7 +21,7 @@ const TopBarContainer = styled.div`
     cursor: pointer;
   }
   .topBarIcon {
-    color: #00f8b6;
+    color: #f1faee;
   }
   .topBarIconText {
     width: 15px;
@@ -29,8 +29,8 @@ const TopBarContainer = styled.div`
     position: absolute;
     top: -3px;
     left: 10px;
-    background-color: red;
-    color: white;
+    background-color: #e63946;
+    color: #f1faee;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -40,7 +40,7 @@ const TopBarContainer = styled.div`
   .logo {
     font-weight: bold;
     font-size: 26px;
-    color: #00f8b6;
+    color: #f1faee;
     cursor: pointer;
     line-height: 53px;
   }
@@ -57,12 +57,12 @@ const TopBarContainer = styled.div`
     text-align: right;
   }
   .topBarRightText {
-    color: #00f8b6;
+    color: #f1faee;
     font-size: 15px;
     font-weight: bold;
   }
   .topBarLeftText {
-    color: #00f8b6;
+    color: #f1faee;
     font-size: 15px;
     font-weight: bold;
   }
