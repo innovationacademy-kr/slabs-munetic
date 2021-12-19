@@ -4,7 +4,7 @@
   "description": "backend server for the project munetic",
   "main": "index.js",
   "scripts": {
-    "test": "tsc-watch --onSuccess \"ts-node dist/app.js\"",
+    "dev": "tsc-watch --onSuccess \"ts-node dist/app.js\"",
     "serve": "tsc && node dist/app.js"
   },
   "author": "",
