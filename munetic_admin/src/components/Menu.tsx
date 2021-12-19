@@ -12,7 +12,7 @@ export default function Menu() {
   ];
   const subMenuLists = [
     ['회원 조회 및 관리'],
-    ['게사물 조회 및 관리'],
+    ['게시물 조회 및 관리'],
     ['앱 가입 정책 관리', '회원 가입 양식', '오픈 소스 라이센스', '팝업 관리'],
     ['스토어 앱 버전 관리'],
     ['결제 내역 조회', '환불/취소 관리', '서비스 센터'],
@@ -23,7 +23,7 @@ export default function Menu() {
 
   return (
     <MenuContainer>
-      <Wrapper>
+      <MenuWrapper>
         <Logo>
           <Link to="/">Munetic</Link>
         </Logo>
@@ -43,7 +43,7 @@ export default function Menu() {
             </li>
           ))}
         </MenuList>
-      </Wrapper>
+      </MenuWrapper>
     </MenuContainer>
   );
 }
@@ -55,16 +55,15 @@ const MenuContainer = styled.header`
   z-index: 100;
 `;
 
-const Wrapper = styled.div`
-  height: 3.71rem;
+const MenuWrapper = styled.div`
   display: flex;
-  width: 68rem;
+  width: 110rem;
 `;
 
 const Logo = styled.h1`
   margin: 1rem 2rem 1rem 3rem;
   a {
-    font-size: 1.3rem;
+    font-size: 2rem;
     font-weight: 700;
     color: rgb(82, 111, 255);
   }
@@ -73,8 +72,8 @@ const Logo = styled.h1`
 const MenuList = styled.ul`
   display: flex;
   > li {
-    padding: 0 1rem;
-    font-size: 0.8rem;
+    padding: 0 2.5rem;
+    font-size: 1.2rem;
     &:hover {
       &::after {
         content: '';
@@ -103,9 +102,9 @@ const MenuList = styled.ul`
 
 const SubMenuList = styled.div<{ content: number }>`
   background-color: white;
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   position: fixed;
-  top: 3.73rem;
+  top: 4.5rem;
   left: 0px;
   display: none;
   padding-top: 1.5rem;
