@@ -2,10 +2,10 @@
   "name": "munetic_app",
   "version": "0.0.0",
   "scripts": {
-    "dev": "npx vite",
     "build": "tsc && npx vite build",
-    "serve": "npx vite preview",
     "test": "vite-jest"
+    "dev": "tsc && npx vite build && vite serve",
+    "serve": "tsc && npx vite build && serve dist -l 2424"
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",
@@ -18,6 +18,7 @@
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^6.0.2",
+    "serve": "^13.0.2",
     "styled-components": "^5.3.3",
     "styled-reset": "^4.3.4"
   },
