@@ -1,40 +1,3 @@
-/**
- * @swagger
- * components:
- *  schemas:
- *   User:
- *    type: object
- *    properties:
- *     id:
- *      type: number
- *     type:
- *      type: string
- *     login_id:
- *      type: string
- *     login_password:
- *      type: string
- *     nickname:
- *      type: string
- *     name:
- *      type: string
- *     name_public:
- *      type: boolean
- *     email:
- *      type: string
- *     phone_number:
- *      type: string
- *     image_url:
- *      type: string
- *     introduction:
- *      type: string
- *     created_at:
- *      type: date
- *     updated_at:
- *      type: date
- *     deleted_at:
- *      type: date
- */
-
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
 enum ACCOUNT {
@@ -52,6 +15,7 @@ interface userAttributes {
   name_public: boolean | null;
   email: string | null;
   phone_number: string | null;
+  phone_public: boolean | null;
   image_url: string | null;
   introduction: string | null;
 }
@@ -65,6 +29,7 @@ export type userCreationAttributes = Optional<
   | 'name_public'
   | 'email'
   | 'phone_number'
+  | 'phone_public'
   | 'image_url'
   | 'introduction'
 >;
@@ -82,6 +47,7 @@ export class User
   public name_public!: boolean | null;
   public email!: string | null;
   public phone_number!: string | null;
+  public phone_public!: boolean | null;
   public image_url!: string | null;
   public introduction!: string | null;
 
@@ -99,43 +65,47 @@ export class User
           type: DataTypes.ENUM('STUDENT', 'TUTOR'),
         },
         login_id: {
-          allowNull: false,
-          type: DataTypes.STRING(30),
-          unique: true,
-        },
-        login_password: {
-          allowNull: false,
-          type: DataTypes.STRING(60),
-        },
-        nickname: {
           allowNull: true,
           type: DataTypes.STRING(30),
           unique: true,
         },
-        name: {
+        login_password: {
+          allowNull: true,
+          type: DataTypes.STRING(60),
+        },
+        nickname: {
           allowNull: false,
+          type: DataTypes.STRING(30),
+          unique: true,
+        },
+        name: {
+          allowNull: true,
           type: DataTypes.STRING(50),
         },
         name_public: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.BOOLEAN,
         },
         email: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(128),
           unique: true,
         },
         phone_number: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(20),
           unique: true,
         },
+        phone_public: {
+          allowNull: true,
+          type: DataTypes.BOOLEAN,
+        },
         image_url: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(256),
         },
         introduction: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(8192),
         },
       },

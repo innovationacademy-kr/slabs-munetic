@@ -1,0 +1,11 @@
+require('ts-node').register({
+  /* options */
+});
+const path = require('path');
+
+module.exports = {
+  config: path.resolve('./src/config', 'config.ts'),
+  'migrations-path': path.resolve('./src', 'migrations'),
+  'models-path': path.resolve('./src', 'models'),
+  'seeders-path': path.resolve('./src', 'seeders'),
+};
