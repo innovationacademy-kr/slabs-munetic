@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "tsc && npx vite build",
-    "test": "vite-jest"
+    "test": "vite-jest",
     "dev": "tsc && npx vite build && vite serve",
     "serve": "tsc && npx vite build && serve dist -l 2424"
   },
