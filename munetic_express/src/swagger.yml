@@ -1,0 +1,483 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Auth
+    description: Authorization
+  - name: User
+    description: User Information
+  - name: Lesson
+    description: Lesson Information
+paths:
+  # AUTH 관련 API
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/Login'
+          headers:
+            Set-Cookie:
+              description: JWT accessToken
+              type: string
+        '400':
+          description: 'Bad Request: there is no corresponding user data'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Invalid id or password'
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: Signin User
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: Created User
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '500':
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Internal Server Error'
+
+  # USER 관련 API
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user profile by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'id'
+          type: number
+          in: path
+          required: true
+          description: user ID
+      responses:
+        '201':
+          description: succesful Signin
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: Invalid ID
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+    patch:
+      tags:
+        - User
+      summary: Edit profile by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: user ID
+          type: string
+        - name: body
+          in: body
+          description: Edit contents
+          schema:
+            type: object
+            properties:
+              type:
+                enum: ['STUDENT', 'TUTOR']
+              nickname:
+                type: string
+              name_public:
+                type: boolean
+              phone_public:
+                type: boolean
+              image_url:
+                type: string
+              introduction:
+                type: string
+      responses:
+        '200':
+          description: SUCCESS
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: Invalid ID
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  #Lesson 관련 API
+  /api/lesson/{id}:
+    get:
+      tags:
+        - Lesson
+      summary: 'Get existing lesson by lesson id'
+      description: ''
+      operationId: getLesson
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 'Successful: a lesson is returned'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: a lesson is successfully retrived
+              data:
+                $ref: '#/definitions/Lesson'
+        '400':
+          description: 'Bad Request: id is missing or not a number'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'id is missing or not a number'
+              data:
+                type: object
+        '409':
+          description: "Conflict: id is number but there's no corresponding data"
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'no such lesson'
+              data:
+                type: object
+    patch:
+      tags:
+        - Lesson
+      summary: 'Edit some fields of a lesson'
+      description: ''
+      operationId: editLesson
+      parameters:
+        - name: 'id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+        - name: 'body'
+          in: body
+          description: 'lesson fields to update lesson information'
+          schema:
+            $ref: '#/definitions/LessonEditable'
+          required: true
+      responses:
+        '200':
+          description: a lesson is successfully edited
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: a lesson is successfully edited
+              data:
+                $ref: '#/definitions/Lesson'
+        '400':
+          description: 'Bad Request: id is missing or not a number, or the request body is invalid'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'wrong request of parameter or payload'
+              data:
+                type: object
+        '403':
+          description: 'Forbidden: The client is not accessable for editing'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'The request agent has no permission to edit'
+              data:
+                type: object
+    delete:
+      tags:
+        - Lesson
+      summary: 'Delete an existing lesson ad'
+      description: ''
+      operationId: deleteLesson
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 'Succesful: a lesson is successfully deleted'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'a lesson is successfully deleted'
+              data:
+                type: object
+        '400':
+          description: 'Bad Request: id is missing or not a number, or the request body is invalid'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'wrong request of parameter or payload'
+              data:
+                type: object
+        '403':
+          description: 'Forbidden: The client is not accessable for deleting'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'The request agent has no permission to delete'
+              data:
+                type: object
+  /api/lesson/:
+    post:
+      tags:
+        - Lesson
+      summary: 'Add new lesson ad'
+      description: ''
+      operationId: submitLesson
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'body'
+          in: body
+          description: 'lesson information for submission'
+          schema:
+            $ref: '#/definitions/LessonEditable'
+          required: true
+      responses:
+        '201':
+          description: 'Created: added a lesson successfully to database'
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 'The lesson is succesfully submitted'
+              data:
+                description: 'The lesson information just added'
+                $ref: '#/definitions/Lesson'
+        '400':
+          description: 'Bad Request: when some fields are invalid or the request is invalid'
+          schema:
+            properties:
+              message:
+                type: string
+                example: 'Some fields are invalid'
+              data:
+                type: object
+                example:
+definitions:
+  Login:
+    type: object
+    required:
+      - 'id'
+      - 'password'
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+  User:
+    type: object
+    required:
+      - 'id'
+      - 'password'
+      - 'type'
+      - 'name'
+      - 'nickname'
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+      type:
+        enum:
+          - 'STUDENT'
+          - 'TUTOR'
+      name:
+        type: string
+      name_public:
+        type: boolean
+      nickname:
+        type: string
+      mail:
+        type: string
+      phone_number:
+        type: string
+      phone_public:
+        type: boolean
+      image_url:
+        type: string
+      introduction:
+        type: string
+  Lesson:
+    type: object
+    required:
+      - lesson id
+      - tutor id
+      - gender
+      - age
+    properties:
+      lesson id:
+        description: 'the id of the lesson ad'
+        type: number
+        format: int32
+      tutor id:
+        description: 'the id of the tutor'
+        type: number
+        format: int32
+      gender:
+        type: string
+        enum:
+          - male
+          - female
+          - other
+      age:
+        description: 'age of the tutor'
+        type: number
+        format: int32
+      editable:
+        $ref: '#/definitions/LessonEditable'
+    example:
+      summary: 'an example of a lesson'
+      description: ''
+      lesson id: 14
+      tutor id: 3
+      gender: female
+      age: 33
+  LessonEditable:
+    type: object
+    properties:
+      category:
+        description: 'the category of the lesson'
+        type: string
+      title:
+        description: 'name of the lesson ad'
+        type: string
+      price:
+        description: 'price per one lesson, based on KRW'
+        type: number
+        format: int32
+      location:
+        description: available location of the tutor'
+        type: string
+      minute per lesson:
+        type: number
+        format: int32
+      content:
+        description: 'introduction of the lesson by the tutor'
+        type: string
+    example:
+      category: classic piano
+      title: some title
+      price: 120000
+      location: some location
+      minute per lesson: 60
+      content: some introduction

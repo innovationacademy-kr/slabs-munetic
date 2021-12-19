@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import MuiBottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { styled } from '@mui/material';
+
+const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
+  &.Mui-selected {
+    color: #1d3557;
+  }
+  background-color: #f1faee;
+  color: #457b9d;
+`);
 
 export default function BottomMenu() {
   const [value, setValue] = useState(0);

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const TopBarContainer = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #0168fa;
+  background-color: #1d3557;
   postion: sticky;
   top: 0;
   z-index: 99;
@@ -20,7 +21,7 @@ const TopBarContainer = styled.div`
     cursor: pointer;
   }
   .topBarIcon {
-    color: #00f8b6;
+    color: #f1faee;
   }
   .topBarIconText {
     width: 15px;
@@ -28,8 +29,8 @@ const TopBarContainer = styled.div`
     position: absolute;
     top: -3px;
     left: 10px;
-    background-color: red;
-    color: white;
+    background-color: #e63946;
+    color: #f1faee;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -39,9 +40,9 @@ const TopBarContainer = styled.div`
   .logo {
     font-weight: bold;
     font-size: 26px;
-    color: #00f8b6;
+    color: #f1faee;
     cursor: pointer;
-    line-height: 55px;
+    line-height: 53px;
   }
   .topBarLeft {
     flex: 3;
@@ -56,27 +57,53 @@ const TopBarContainer = styled.div`
     text-align: right;
   }
   .topBarRightText {
-    color: #00f8b6;
-    font-size: 13px;
+    color: #f1faee;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .topBarLeftText {
+    color: #f1faee;
+    font-size: 15px;
+    font-weight: bold;
   }
 `;
 
 export default function TopBar() {
-  //home에선 푸쉬알림, 수정에선 저장, 등록에선 등록, 나머지는 공백
+  //home에선 푸쉬알림&공백, 수정에선 Back&저장, 등록에선 Back&등록, 나머지는 Back&공백
+  const navigate = useNavigate();
+  const currentPath = useLocation().pathname;
+  let rightText;
+  if (currentPath === '/') {
+    rightText = '';
+  } else if (currentPath.includes('edit')) {
+    rightText = '저장';
+  } else if (currentPath === '/lesson/write') {
+    rightText = '등록';
+  } else {
+    rightText = '';
+  }
   return (
     <TopBarContainer>
       <div className="topBarWrapper">
         <div className="topBarLeft">
-          <div className="topBarIconContainer">
-            <NotificationsNoneIcon className="topBarIcon" />
-            <span className="topBarIconText">2</span>
-          </div>
+          {currentPath === '/' ? (
+            <div className="topBarIconContainer">
+              <NotificationsNoneIcon className="topBarIcon" />
+              <span className="topBarIconText">2</span>
+            </div>
+          ) : (
+            <span className="topBarLeftText" onClick={() => navigate(-1)}>
+              Back
+            </span>
+          )}
         </div>
         <div className="topBarCenter">
-          <span className="logo">MUNETIC</span>
+          <Link to="/">
+            <span className="logo">MUNETIC</span>
+          </Link>
         </div>
         <div className="topBarRight">
-          <span className="topBarRightText">저장</span>
+          <span className="topBarRightText">{rightText}</span>
         </div>
       </div>
     </TopBarContainer>

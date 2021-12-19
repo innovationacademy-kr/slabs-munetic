@@ -2,9 +2,9 @@
   "name": "munetic_admin",
   "version": "0.0.0",
   "scripts": {
-    "dev": "npx vite",
-    "build": "tsc && npx vite build",
-    "serve": "npx vite preview"
+    "test": "npx vite",
+    "dev": "tsc && npx vite build && vite serve",
+    "serve": "tsc && npx vite build && serve dist -l 4242"
   },
   "dependencies": {
     "@emotion/react": "^11.7.1",

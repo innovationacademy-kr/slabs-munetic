@@ -1,16 +1,41 @@
-import express, { Request, Response } from 'express';
-import { models } from './models';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { options } from './swagger';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import { router } from './routes';
+import { Models } from './models';
+
 const app: express.Application = express();
 
-models() //models/index.ts에 정의한 models함수입니다.
-  .sync({ force: true }) // force:true는 서버 껐다 킬때마다 테이블을 싹 새로 만들어요. 프로덕션때는 반드시 false해야합니다.  지금 개발 환경이라 true가 편해서 true로 해놨어요.
+app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
+app.use('/api', router);
+
+/**
+ * Swagger 연결
+ */
+const specs = swaggerJSDoc(options);
+app.use(
+  '/swagger',
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true }),
+);
+
+/**
+ * MariaDB 테이블 연결
+ */
+Models()
+  .sync({ force: true })
   .then(() => {
-    console.log('👍 Modeling Successed'); // 이 표시 나오면 mariadb에서 테이블이 성공적으로 생성된 것을 확인할 수 있습니다.
+    console.log('👍 Modeling Successed');
   })
-  .catch(err => console.log(err));
+  .catch(err => console.log(err, '🙀 Modeling Failed'));
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, world!');
-});
-
-app.listen(3030);
+app.listen(3030, () =>
+  console.log(`=============
+🚀 App listening on the port 3030
+============`),
+);

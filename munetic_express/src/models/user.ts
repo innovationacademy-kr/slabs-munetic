@@ -1,8 +1,8 @@
-import { Model, Optional, Sequelize, DataTypes } from "sequelize";
+import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
 enum ACCOUNT {
-  student = "STUDENT",
-  tutor = "TUTOR",
+  student = 'STUDENT',
+  tutor = 'TUTOR',
 }
 
 interface userAttributes {
@@ -15,21 +15,23 @@ interface userAttributes {
   name_public: boolean | null;
   email: string | null;
   phone_number: string | null;
+  phone_public: boolean | null;
   image_url: string | null;
   introduction: string | null;
 }
 
-type userCreationAttributes = Optional<
+export type userCreationAttributes = Optional<
   userAttributes,
-  | "id"
-  | "login_id"
-  | "login_password"
-  | "name"
-  | "name_public"
-  | "email"
-  | "phone_number"
-  | "image_url"
-  | "introduction"
+  | 'id'
+  | 'login_id'
+  | 'login_password'
+  | 'name'
+  | 'name_public'
+  | 'email'
+  | 'phone_number'
+  | 'phone_public'
+  | 'image_url'
+  | 'introduction'
 >;
 
 export class User
@@ -45,6 +47,7 @@ export class User
   public name_public!: boolean | null;
   public email!: string | null;
   public phone_number!: string | null;
+  public phone_public!: boolean | null;
   public image_url!: string | null;
   public introduction!: string | null;
 
@@ -59,50 +62,54 @@ export class User
         },
         type: {
           allowNull: false,
-          type: DataTypes.ENUM("STUDENT", "TUTOR"),
+          type: DataTypes.ENUM('STUDENT', 'TUTOR'),
         },
         login_id: {
-          allowNull: false,
-          type: DataTypes.STRING(30),
-          unique: true,
-        },
-        login_password: {
-          allowNull: false,
-          type: DataTypes.STRING(60),
-        },
-        nickname: {
           allowNull: true,
           type: DataTypes.STRING(30),
           unique: true,
         },
-        name: {
+        login_password: {
+          allowNull: true,
+          type: DataTypes.STRING(60),
+        },
+        nickname: {
           allowNull: false,
+          type: DataTypes.STRING(30),
+          unique: true,
+        },
+        name: {
+          allowNull: true,
           type: DataTypes.STRING(50),
         },
         name_public: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.BOOLEAN,
         },
         email: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(128),
           unique: true,
         },
         phone_number: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(20),
           unique: true,
         },
+        phone_public: {
+          allowNull: true,
+          type: DataTypes.BOOLEAN,
+        },
         image_url: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(256),
         },
         introduction: {
-          allowNull: false,
+          allowNull: true,
           type: DataTypes.STRING(8192),
         },
       },
-      { tableName: "User", sequelize }
+      { tableName: 'User', sequelize },
     );
   }
 }
