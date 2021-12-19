@@ -2,22 +2,10 @@
   "name": "munetic_app",
   "version": "0.0.0",
   "scripts": {
-<<<<<<< Updated upstream
-    "dev": "npx vite",
-    "build": "tsc && npx vite build",
-    "serve": "npx vite preview"
-=======
-<<<<<<< Updated upstream
-    "test": "npx vite",
-    "dev": "tsc && npx vite build && vite serve",
-    "serve": "tsc && npx vite build && serve dist"
-=======
     "dev": "npx vite",
     "build": "tsc && npx vite build",
     "serve": "npx vite preview",
     "test": "vite-jest"
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",
