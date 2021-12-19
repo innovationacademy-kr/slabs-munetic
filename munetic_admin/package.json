@@ -4,7 +4,7 @@
   "scripts": {
     "test": "npx vite",
     "dev": "tsc && npx vite build && vite serve",
-    "serve": "tsc && npx vite build && serve dist"
+    "serve": "tsc && npx vite build && serve dist -l 4242"
   },
   "dependencies": {
     "react": "^17.0.0",
