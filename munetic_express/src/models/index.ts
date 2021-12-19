@@ -1,18 +1,12 @@
 import { Sequelize } from 'sequelize';
-import { config } from '../config/config';
+import { Admin } from './admin';
 import { Category } from './category';
 import { Lesson } from './lesson';
 import { User } from './user';
 
-const { db } = config.development;
+const { development } = require('../config/config');
 
-const { host, port, database, username, password } = db as {
-  host: string;
-  port: number;
-  database: string;
-  username: string;
-  password: string;
-};
+const { host, port, database, username, password } = development;
 
 export const sequelize = new Sequelize(database!, username!, password, {
   host,
@@ -41,15 +35,20 @@ export function Models() {
   Category.initModel(sequelize);
   User.initModel(sequelize);
   Lesson.initModel(sequelize);
+  Admin.initModel(sequelize);
 
-  Category.hasMany(Lesson);
+  Category.hasMany(Lesson, {
+    foreignKey: 'category_id',
+  });
   Lesson.belongsTo(Category, {
     foreignKey: {
-      name: 'category_name',
+      name: 'category_id',
       allowNull: false,
     },
   });
-  User.hasMany(Lesson);
+  User.hasMany(Lesson, {
+    foreignKey: 'tutor_id',
+  });
   Lesson.belongsTo(User, {
     foreignKey: {
       name: 'tutor_id',
