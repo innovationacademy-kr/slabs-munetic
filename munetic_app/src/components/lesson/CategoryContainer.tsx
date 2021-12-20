@@ -60,7 +60,7 @@ interface IProps {
   name: string;
 }
 
-const CategoryItem: React.FC<IProps> = ({ name }) => {
+const CategoryItem = ({ name }: IProps) => {
   return (
     <CategoryButton>
       <Link to={`/lesson/classes?category=${name}`}>

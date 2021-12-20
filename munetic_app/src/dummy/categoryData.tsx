@@ -1,8 +1,1 @@
-export const categoryData = [
-  '기타',
-  '바이올린',
-  '드럼',
-  '피아노',
-  '하프',
-  '첼로',
-];
+export const categoryData = ['전체', '기타', '드럼', '피아노', '하프', '첼로'];
