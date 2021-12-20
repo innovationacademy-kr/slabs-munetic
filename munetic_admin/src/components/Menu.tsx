@@ -10,6 +10,7 @@ export default function Menu() {
     '결제 관리',
     '푸쉬 관리',
   ];
+
   const subMenuLists = [
     ['회원 조회 및 관리'],
     ['게시물 조회 및 관리'],
@@ -19,31 +20,31 @@ export default function Menu() {
     ['푸쉬 보내기', '푸쉬 히스토리'],
   ];
 
-  const menuLink = ['/users', '/posts', '', '', '', ''];
+  const menuLinks = ['/users', '/posts', '', '', '', ''];
 
   return (
     <MenuContainer>
-      <MenuWrapper>
+      <MenuInner>
         <Logo>
           <Link to="/">Munetic</Link>
         </Logo>
-        <MenuList>
+        <MenuLists>
           {menuLists.map((menu, i) => (
-            <li>
-              <span>
-                <Link to={menuLink[i]}>{menu}</Link>
-              </span>
-              <SubMenuList content={i + 1}>
-                <ul>
-                  {subMenuLists[i].map(subMenu => (
-                    <li key={i}>{subMenu}</li>
-                  ))}
-                </ul>
-              </SubMenuList>
-            </li>
+            <MainMenuList key={i}>
+              <MainMenuContent>
+                <Link to={menuLinks[i]}>{menu}</Link>
+                <SubMenuContainer>
+                  <ul>
+                    {subMenuLists[i].map(subMenu => (
+                      <SubMenuList>{subMenu}</SubMenuList>
+                    ))}
+                  </ul>
+                </SubMenuContainer>
+              </MainMenuContent>
+            </MainMenuList>
           ))}
-        </MenuList>
-      </MenuWrapper>
+        </MenuLists>
+      </MenuInner>
     </MenuContainer>
   );
 }
@@ -55,7 +56,7 @@ const MenuContainer = styled.header`
   z-index: 100;
 `;
 
-const MenuWrapper = styled.div`
+const MenuInner = styled.div`
   display: flex;
   width: 110rem;
 `;
@@ -63,66 +64,69 @@ const MenuWrapper = styled.div`
 const Logo = styled.h1`
   margin: 1rem 2rem 1rem 3rem;
   a {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: rgb(82, 111, 255);
   }
 `;
 
-const MenuList = styled.ul`
+const MenuLists = styled.ul`
   display: flex;
-  > li {
-    padding: 0 2.5rem;
-    font-size: 1.2rem;
-    &:hover {
-      &::after {
-        content: '';
-        display: block;
-        margin-top: -2px;
-        position: relative;
-        height: 3px;
-        weight: 100%;
-        background-color: rgb(82, 111, 255);
-      }
-      span a {
-        font-weight: 500;
-        color: rgb(82, 111, 255);
-      }
-      cursor: pointer;
-    }
-    span {
+`;
+
+const MainMenuList = styled.li`
+  padding: 0 2.5rem;
+  font-size: 1.5rem;
+  &:hover {
+    &::after {
+      content: '';
       display: block;
-      padding: 1.5rem 0.5rem;
-      a {
-        color: rgb(34, 34, 34);
-      }
+      margin-top: -0.25rem;
+      position: relative;
+      height: 3px;
+      weight: 100%;
+      background-color: rgb(82, 111, 255);
     }
   }
 `;
 
-const SubMenuList = styled.div<{ content: number }>`
-  background-color: white;
-  font-size: 1.1rem;
+const MainMenuContent = styled.span`
+  position: relative;
+  display: block;
+  padding: 1.5rem 0.5rem;
+  cursor: pointer;
+  a {
+    color: rgb(34, 34, 34);
+  }
+  ${MainMenuList}:hover a {
+    font-weight: 500;
+    color: rgb(82, 111, 255);
+  }
+`;
+
+const SubMenuContainer = styled.div`
   position: fixed;
-  top: 4.5rem;
-  left: 0px;
   display: none;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  padding-left: ${props => 10 + props.content ** 2}rem;
-  border-bottom: 1px solid rgb(239, 239, 239);
+  top: 4.65rem;
+  left: 0;
   width: 100%;
-  ${MenuList} li:hover > & {
+  font-size: 1.4rem;
+  padding: 1.4rem 0;
+  background-color: white;
+  border-bottom: 1px solid rgb(239, 239, 239);
+  ${MainMenuList}:hover & {
     display: block;
   }
-  ul {
+  > ul {
+    padding-left: 14.7rem;
     display: flex;
-    li {
-      padding-right: 3rem;
-      &:hover {
-        font-weight: 500;
-        color: rgb(82, 111, 255);
-      }
-    }
+  }
+`;
+
+const SubMenuList = styled.li`
+  padding: 1rem 3rem;
+  &:hover {
+    font-weight: 500;
+    color: rgb(82, 111, 255);
   }
 `;

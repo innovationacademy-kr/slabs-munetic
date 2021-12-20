@@ -2,7 +2,7 @@ const userDummy = [
   {
     name: '박코딩',
     id: 'chaepark',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -10,7 +10,7 @@ const userDummy = [
   {
     name: '김자바',
     id: 'kunlee',
-    auth: 'tutor',
+    type: 'tutor',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -18,7 +18,7 @@ const userDummy = [
   {
     name: '이배포',
     id: 'jolim',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -26,7 +26,7 @@ const userDummy = [
   {
     name: '박코딩',
     id: 'chaepark',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -34,7 +34,7 @@ const userDummy = [
   {
     name: '김자바',
     id: 'kunlee',
-    auth: 'tutor',
+    type: 'tutor',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -42,7 +42,7 @@ const userDummy = [
   {
     name: '이배포',
     id: 'jolim',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -50,7 +50,7 @@ const userDummy = [
   {
     name: '박코딩',
     id: 'chaepark',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -58,7 +58,7 @@ const userDummy = [
   {
     name: '김자바',
     id: 'kunlee',
-    auth: 'tutor',
+    type: 'tutor',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
@@ -66,7 +66,7 @@ const userDummy = [
   {
     name: '이배포',
     id: 'jolim',
-    auth: 'student',
+    type: 'student',
     group: '그룹1',
     createdAt: '2021-11-05',
     lastLogin: '2021-12-14 18:22',
