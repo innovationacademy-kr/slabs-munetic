@@ -15,12 +15,19 @@ const ClassItemContainer = styled(Link)`
   .classItemDescription {
     flex: 1;
     margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
   }
   .classItemTitle {
-    margin: 15px 0px 10px 0px;
+    margin: 0px 0px 5px 0px;
     color: #f1faee;
     font-size: 18px;
     font-weight: bold;
+  }
+  .classItemCategory {
+    font-size: 12px;
+    font-weight: normal;
+    color: #f1faee96;
   }
   .classItemImg {
     width: 60px;
@@ -48,6 +55,7 @@ const ClassItem = ({ lesson }: IProps) => {
     <ClassItemContainer to={`/lesson/class/${id}`}>
       <div className="classItemDescription">
         <span className="classItemTitle">{title}</span>
+        <span className="classItemCategory">카테고리 : {category}</span>
       </div>
       <img className="classItemImg" src={img} alt="" />
     </ClassItemContainer>
