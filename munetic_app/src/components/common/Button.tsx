@@ -30,7 +30,7 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   to: string;
 }
 
-const Button: React.FC<IProps> = ({ children, to, ...props }) => {
+const Button = ({ children, to, ...props }: IProps) => {
   return (
     <Link to={to}>
       <Container {...props}>

@@ -28,8 +28,7 @@ const CategoryPageContainer = styled.div`
   }
 `;
 
-const CategoryButton = styled.button`
-  //Button 이랑 margin, border-radius, width, color, font-size 만 다름
+const CategoryButton = styled(Link)`
   width: 28%;
   border: 0;
   border-radius: 7px;
@@ -53,6 +52,7 @@ const CategoryButton = styled.button`
     color: #1d3557;
     font-size: 15px;
     font-weight: bold;
+    text-align: center;
   }
 `;
 
@@ -60,12 +60,10 @@ interface IProps {
   name: string;
 }
 
-const CategoryItem: React.FC<IProps> = ({ name }) => {
+const CategoryItem = ({ name }: IProps) => {
   return (
-    <CategoryButton>
-      <Link to={`/lesson/classes?category=${name}`}>
-        <span className="categoryText">{name}</span>
-      </Link>
+    <CategoryButton to={`/lesson/classes?category=${name}`}>
+      <span className="categoryText">{name}</span>
     </CategoryButton>
   );
 };
