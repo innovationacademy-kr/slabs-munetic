@@ -1,10 +1,8 @@
 import { Button } from '@mui/material';
-import List from '../components/List';
+import List from '../components/List/List';
 import lessonDummy from '../dummy/lessonDummy';
-import ListContainer from '../components/ListContainer';
-import ListCard from '../components/ListCard';
+import ListCard from '../components/List/ListCard';
 import CustomPagination from '../components/CustomPagination';
-import ListLessonColumn from '../components/ListLessonColumn';
 
 export default function PostListPage() {
   const lessonList: JSX.Element[] = lessonDummy.map(lesson => (

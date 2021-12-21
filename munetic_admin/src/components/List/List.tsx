@@ -1,9 +1,11 @@
+import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import userDummy from '../dummy/userDummy';
-import lessonDummy from '../dummy/lessonDummy';
+import userDummy from '../../dummy/userDummy';
+import lessonDummy from '../../dummy/lessonDummy';
+
 import ListCard from './ListCard';
-import ListContainer from './ListContainer';
 import ListLessonColumn from './ListLessonColumn';
+import ListUserColumn from './ListUserColumn';
 
 export default function List() {
   const path = useLocation().pathname;
@@ -14,8 +16,15 @@ export default function List() {
 
   return (
     <ListContainer>
-      <ListLessonColumn />
+      {path === '/users' ? <ListUserColumn /> : <ListLessonColumn />}
       {path === '/users' ? userList : lessonList}
     </ListContainer>
   );
 }
+
+const ListContainer = styled.ul`
+  height: 80%;
+  padding: 1.5rem 2rem;
+  margin-top: 1rem;
+  border: 0.2rem solid rgb(239, 239, 239);
+`;

@@ -1,12 +1,14 @@
-import Checkbox from '@mui/material/Checkbox';
-import styled from 'styled-components';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
+import Checkbox from '@mui/material/Checkbox';
 import ListLessonInfo from './ListLessonInfo';
 import ListUserInfo from './ListUserInfo';
-import { useLocation } from 'react-router-dom';
+import Modal from '../Modal/Modal';
 
 export type UserInfoProps = {
-  onClick?: () => void;
+  onOpenModal?: () => void;
   name: string;
   id: string;
   type: string;
@@ -16,7 +18,7 @@ export type UserInfoProps = {
 };
 
 export type LessonInfoProps = {
-  onClick?: () => void;
+  onOpenModal?: () => void;
   tutor: string;
   category: string;
   title: string;
@@ -29,23 +31,38 @@ export type LessonInfoProps = {
 export default function ListCard({
   ...cardInfo
 }: UserInfoProps | LessonInfoProps) {
-  const [modalOn, setModalon] = useState(false);
+  const [modalOn, setModalOn] = useState(false);
   const onOpenModal = () => {
-    setModalon(!modalOn);
-    console.log(modalOn);
+    setModalOn(true);
+    /**
+     * list key값으로 배정돼있는 userId 값을 바탕으로 해당 유저 상세정보를 불러오는 get 요청 필요
+     */
   };
 
+  const onCloseModal = () => {
+    setModalOn(false);
+  };
+
+  console.log(modalOn);
   const path = useLocation().pathname;
   return (
     <ListCardContainer>
       <Checkbox />
       {path === '/users' ? (
-        <ListUserInfo {...(cardInfo as UserInfoProps)} onClick={onOpenModal} />
+        <ListUserInfo
+          {...(cardInfo as UserInfoProps)}
+          onOpenModal={onOpenModal}
+        />
       ) : (
         <ListLessonInfo
           {...(cardInfo as LessonInfoProps)}
-          onClick={onOpenModal}
+          onOpenModal={onOpenModal}
         />
+      )}
+      {path === '/users' && modalOn ? (
+        <Modal onCloseModal={onCloseModal} />
+      ) : (
+        ''
       )}
     </ListCardContainer>
   );

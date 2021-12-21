@@ -1,7 +1,10 @@
 import styled from 'styled-components';
+
 import { LessonInfoProps } from './ListCard';
+import ListInfoContainer from './ListInfoContainer';
 
 export default function ListLessonInfo({
+  onOpenModal,
   tutor,
   category,
   title,
@@ -11,7 +14,7 @@ export default function ListLessonInfo({
   deletedAt,
 }: LessonInfoProps) {
   return (
-    <LessonListContainer>
+    <ListInfoContainer onClick={onOpenModal}>
       <TutorName>{tutor}</TutorName>
       <LessonCategory>{category}</LessonCategory>
       <LessonTitle>{title}</LessonTitle>
@@ -19,17 +22,9 @@ export default function ListLessonInfo({
       <LessonPrice>{price}</LessonPrice>
       <CreatedAt>{createdAt}</CreatedAt>
       <DeletedAt>{deletedAt}</DeletedAt>
-    </LessonListContainer>
+    </ListInfoContainer>
   );
 }
-
-const LessonListContainer = styled.div`
-  flex: 1;
-  display: flex;
-  margin: auto 0;
-  padding-left: 1rem;
-`;
-
 const TutorName = styled.div`
   flex: 0.5;
 `;

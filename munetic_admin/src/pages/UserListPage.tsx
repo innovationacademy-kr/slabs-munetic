@@ -1,9 +1,7 @@
 import Button from '@mui/material/Button';
 import userDummy from '../dummy/userDummy';
-import List from '../components/List';
-import ListContainer from '../components/ListContainer';
-import ListCard from '../components/ListCard';
-import ListUserColumn from '../components/ListUserColumn';
+import List from '../components/List/List';
+import ListCard from '../components/List/ListCard';
 import CustomPagination from '../components/CustomPagination';
 
 export default function UserListPage() {

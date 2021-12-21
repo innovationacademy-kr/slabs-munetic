@@ -1,7 +1,10 @@
 import styled from 'styled-components';
+
 import { UserInfoProps } from './ListCard';
+import ListInfoContainer from './ListInfoContainer';
 
 export default function ListUserInfo({
+  onOpenModal,
   name,
   id,
   type,
@@ -10,23 +13,16 @@ export default function ListUserInfo({
   lastLogin,
 }: UserInfoProps) {
   return (
-    <UserListContainer>
+    <ListInfoContainer onClick={onOpenModal}>
       <UserName>{name}</UserName>
       <UserId>{id}</UserId>
       <UserType>{type}</UserType>
       <UserGroup>{group}</UserGroup>
       <CreatedAt>{createdAt}</CreatedAt>
       <LastLogin>{lastLogin}</LastLogin>
-    </UserListContainer>
+    </ListInfoContainer>
   );
 }
-
-const UserListContainer = styled.div`
-  flex: 1;
-  display: flex;
-  margin: auto 0;
-  padding-left: 1rem;
-`;
 
 const UserName = styled.div`
   flex: 0.5;
