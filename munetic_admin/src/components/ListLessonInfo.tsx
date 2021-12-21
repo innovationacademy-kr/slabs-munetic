@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LessonInfoProps } from './ListLessonCard';
+import { LessonInfoProps } from './ListCard';
 
 export default function ListLessonInfo({
   tutor,

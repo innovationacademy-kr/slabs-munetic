@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { UserInfoProps } from './ListUserCard';
+import { UserInfoProps } from './ListCard';
 
 export default function ListUserInfo({
   name,

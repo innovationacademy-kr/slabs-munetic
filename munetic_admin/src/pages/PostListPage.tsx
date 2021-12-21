@@ -1,13 +1,14 @@
 import { Button } from '@mui/material';
+import List from '../components/List';
 import lessonDummy from '../dummy/lessonDummy';
 import ListContainer from '../components/ListContainer';
-import ListLessonCard from '../components/ListLessonCard';
+import ListCard from '../components/ListCard';
 import CustomPagination from '../components/CustomPagination';
 import ListLessonColumn from '../components/ListLessonColumn';
 
 export default function PostListPage() {
   const lessonList: JSX.Element[] = lessonDummy.map(lesson => (
-    <ListLessonCard {...lesson} />
+    <ListCard {...lesson} />
   ));
 
   return (
@@ -18,10 +19,7 @@ export default function PostListPage() {
       <Button sx={{ fontSize: 12 }} variant="outlined">
         export
       </Button>
-      <ListContainer>
-        <ListLessonColumn />
-        {lessonList}
-      </ListContainer>
+      <List />
       <CustomPagination />
     </div>
   );
