@@ -44,7 +44,7 @@ export const classData = [
   },
   {
     id: 4,
-    title: '드럼 빼고 다 가능인데 드럼 강의함',
+    title: '드럼 빼고 다 가능인데 드럼 강의함 잘리나 테스트',
     img: '/img/testImg.png',
     category: '드럼',
     nickname: 'nobody',
