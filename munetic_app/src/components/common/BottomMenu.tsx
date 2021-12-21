@@ -8,13 +8,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled } from '@mui/material';
+import palette from '../../style/palette';
 
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
   &.Mui-selected {
-    color: #1d3557;
+    color: ${palette.darkBlue};
   }
-  background-color: #f1faee;
-  color: #457b9d;
+  background-color: ${palette.ivory};
+  color: ${palette.grayBlue};
 `);
 
 export default function BottomMenu() {

@@ -1,10 +1,25 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { classData } from '../../dummy/classData';
 import palette from '../../style/palette';
+import Button from '../common/Button';
+import ClassList from './ClassList';
 
-const ClassListContainer = styled.div`
-  margin: 30px;
+const ClassManageContainer = styled.div``;
+
+const WriteBtnWrapper = styled.div`
+  padding: 80px 30px;
+  border-bottom: 1px solid ${palette.darkBlue};
+`;
+
+const StyledButton = styled(Button)`
+  ::before {
+    padding-top: 50%;
+  }
+`;
+
+const ClassListWrapper = styled.div`
+  padding: 40px 30px;
 `;
 
 const ClassItemContainer = styled(Link)`
@@ -63,21 +78,24 @@ const ClassItem = ({ lesson }: IProps) => {
   );
 };
 
-export default function ClassList() {
-  const [getParams, setParams] = useSearchParams();
-  const categoryParam = getParams.get('category');
+export default function ClassManage() {
+  // 나중에는 현재 로그인한 유저 정보 불러와서 매칭되는 레슨 글만 보이도록 해줄 것
+
   return (
-    <ClassListContainer>
-      {classData &&
-        (categoryParam === '전체'
-          ? classData.map(lesson => (
+    <ClassManageContainer>
+      <WriteBtnWrapper>
+        <StyledButton to="/lesson/write">레슨 글 등록하기</StyledButton>
+      </WriteBtnWrapper>
+      <ClassListWrapper>
+        등록된 레슨
+        <div className="classList">
+          {classData &&
+            classData.map(lesson => (
               <ClassItem lesson={lesson} key={lesson.id} />
-            ))
-          : classData.map(lesson => {
-              if (lesson.category === categoryParam) {
-                return <ClassItem lesson={lesson} key={lesson.id} />;
-              }
-            }))}
-    </ClassListContainer>
+            ))}
+        </div>
+      </ClassListWrapper>
+      <ClassList />
+    </ClassManageContainer>
   );
 }

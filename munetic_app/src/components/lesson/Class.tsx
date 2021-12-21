@@ -5,16 +5,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import palette from '../../style/palette';
 
 const ClassContainer = styled.div`
   margin: 10px;
-  background-color: #f1faee;
+  background-color: ${palette.ivory};
 `;
 
 const ClassProfileWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #1d3557;
+  border-bottom: 1px solid ${palette.darkBlue};
   .imgAndNickname {
     margin: 20px;
     display: flex;
@@ -30,7 +31,7 @@ const ClassProfileWrapper = styled.div`
     text-align: center;
     font-size: large;
     font-weight: bold;
-    color: #1d3557;
+    color: ${palette.darkBlue};
   }
   .sns {
     display: flex;
@@ -44,11 +45,11 @@ const ClassPhoneNumber = styled.div`
   padding: 15px 20px;
   font-size: 17px;
   font-weight: bold;
-  color: #1d3557;
-  border-bottom: 1px solid #1d3557;
+  color: ${palette.darkBlue};
+  border-bottom: 1px solid ${palette.darkBlue};
   .phoneNumber {
     font-weight: normal;
-    color: #457b9d;
+    color: ${palette.grayBlue};
   }
 `;
 
@@ -56,8 +57,8 @@ const ClassBasicInfo = styled.div`
   padding: 15px 20px;
   font-size: 17px;
   font-weight: bold;
-  color: #1d3557;
-  border-bottom: 1px solid #1d3557;
+  color: ${palette.darkBlue};
+  border-bottom: 1px solid ${palette.darkBlue};
   .basicInfo {
     margin: 10px 15px 0px 5px;
   }
@@ -72,7 +73,7 @@ const ClassBasicInfo = styled.div`
   .basicInfoDetailValue {
     font-weight: normal;
     flex: 1.5;
-    color: #457b9d;
+    color: ${palette.grayBlue};
   }
 `;
 
@@ -80,8 +81,8 @@ const ClassContent = styled.div`
   padding: 15px 20px;
   font-size: 17px;
   font-weight: bold;
-  color: #1d3557;
-  border-bottom: 1px solid #1d3557;
+  color: ${palette.darkBlue};
+  border-bottom: 1px solid ${palette.darkBlue};
   .contentBox {
     margin: 10px 0;
     padding: 25px 15px;
