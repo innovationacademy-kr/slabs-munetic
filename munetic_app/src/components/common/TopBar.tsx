@@ -6,7 +6,7 @@ const TopBarContainer = styled.div`
   width: 100%;
   height: 50px;
   background-color: #1d3557;
-  postion: sticky;
+  position: sticky;
   top: 0;
   z-index: 99;
   .topBarWrapper {

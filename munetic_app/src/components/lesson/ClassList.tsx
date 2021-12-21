@@ -63,8 +63,8 @@ const ClassItem = ({ lesson }: IProps) => {
 };
 
 export default function ClassList() {
-  const [getparams, setParams] = useSearchParams();
-  const categoryParam = getparams.get('category');
+  const [getParams, setParams] = useSearchParams();
+  const categoryParam = getParams.get('category');
   return (
     <ClassListContainer>
       {classData &&
