@@ -5,7 +5,8 @@ import { options } from './swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { Models } from './models';
+import { DatabaseInit, Models } from './models';
+import { createLesson, LessonEditable } from './service/lesson.service';
 
 const app: express.Application = express();
 
@@ -18,21 +19,18 @@ app.use('/api', router);
  * Swagger 연결
  */
 const specs = swaggerJSDoc(options);
+
+/**
+ * MariaDB 연결 init함수 호출
+ */
+
+DatabaseInit();
+
 app.use(
   '/swagger',
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true }),
 );
-
-/**
- * MariaDB 테이블 연결
- */
-Models()
-  .sync({ force: true })
-  .then(() => {
-    console.log('👍 Modeling Successed');
-  })
-  .catch(err => console.log(err, '🙀 Modeling Failed'));
 
 app.listen(3030, () =>
   console.log(`=============

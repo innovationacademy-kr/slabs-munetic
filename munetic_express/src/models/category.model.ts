@@ -1,7 +1,7 @@
 import { sequelize } from './index';
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-interface categoryAttributes {
+export interface categoryAttributes {
   id: number;
   name: string;
 }

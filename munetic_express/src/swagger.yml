@@ -343,6 +343,12 @@ paths:
       produces:
         - application/json
       parameters:
+        - name: 'tutor_id'
+          in: path
+          description: 'tutor id'
+          type: integer
+          format: int32
+          required: true
         - name: 'body'
           in: body
           description: 'lesson information for submission'
@@ -405,6 +411,16 @@ definitions:
         type: string
       name_public:
         type: boolean
+      gender:
+        type: string
+        enum:
+          - MALE
+          - FEMALE
+          - OTHER
+      age:
+        description: 'age of the tutor'
+        type: number
+        format: int32
       nickname:
         type: string
       mail:
@@ -420,38 +436,38 @@ definitions:
   Lesson:
     type: object
     required:
-      - lesson id
-      - tutor id
+      - lesson_id
+      - tutor_id
       - gender
       - age
     properties:
-      lesson id:
+      lesson_id:
         description: 'the id of the lesson ad'
         type: number
         format: int32
-      tutor id:
+      tutor_id:
         description: 'the id of the tutor'
         type: number
         format: int32
-      gender:
+      tutor_name:
+        description: 'name or nickname of the tutor'
         type: string
-        enum:
-          - male
-          - female
-          - other
-      age:
-        description: 'age of the tutor'
-        type: number
-        format: int32
+      profile_pic:
+        description: 'url of a tutor profile picture'
+        type: string
       editable:
         $ref: '#/definitions/LessonEditable'
     example:
       summary: 'an example of a lesson'
-      description: ''
-      lesson id: 14
-      tutor id: 3
+      description: 'the description!'
+      lesson_id: 14
+      tutor_id: 3
+      tutor_name: 'santa claus'
       gender: female
       age: 33
+      profile_pic: 'http://munetic.42cadet.kr/img/42'
+      editable:
+        $ref: '#/definitions/LessonEditable/example'
   LessonEditable:
     type: object
     properties:
@@ -468,7 +484,7 @@ definitions:
       location:
         description: available location of the tutor'
         type: string
-      minute per lesson:
+      minute_per_lesson:
         type: number
         format: int32
       content:

@@ -1,31 +1,19 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-enum Gender {
-  Male = 'Male',
-  Female = 'Female',
-  Other = 'Other',
-}
-
-interface lessonAttributes {
+export interface lessonAttributes {
   id: number;
-  title: string | null;
-  price: number | null;
-  gender: Gender | null;
-  location: string | null;
-  age: number | null;
-  minute_per_lesson: number | null;
-  content: string | null;
+  tutor_id: number;
+  category_id: number;
+  title?: string;
+  price?: number;
+  location?: string;
+  minute_per_lesson?: number;
+  content?: string;
 }
 
-type lessonCreationAttributes = Optional<
+export type lessonCreationAttributes = Optional<
   lessonAttributes,
-  | 'id'
-  | 'price'
-  | 'gender'
-  | 'location'
-  | 'age'
-  | 'minute_per_lesson'
-  | 'content'
+  'title' | 'price' | 'location' | 'minute_per_lesson' | 'content'
 >;
 
 export class Lesson
@@ -33,13 +21,13 @@ export class Lesson
   implements lessonAttributes
 {
   public id!: number;
+  public tutor_id!: number;
+  public category_id!: number;
   public title!: string;
-  public price!: number | null;
-  public gender!: Gender | null;
-  public location!: string | null;
-  public age!: number | null;
-  public minute_per_lesson!: number | null;
-  public content!: string | null;
+  public price?: number;
+  public location?: string;
+  public minute_per_lesson?: number;
+  public content?: string;
 
   static initModel(sequelize: Sequelize): typeof Lesson {
     return Lesson.init(
@@ -50,6 +38,18 @@ export class Lesson
           type: DataTypes.INTEGER,
           primaryKey: true,
         },
+        tutor_id: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          references: {
+            model: 'user',
+            key: 'id',
+          },
+        },
+        category_id: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+        },
         title: {
           allowNull: false,
           type: DataTypes.STRING(128),
@@ -58,17 +58,9 @@ export class Lesson
           allowNull: true,
           type: DataTypes.INTEGER,
         },
-        gender: {
-          allowNull: true,
-          type: DataTypes.ENUM('Male', 'Female', 'Other'),
-        },
         location: {
           allowNull: true,
           type: DataTypes.STRING(128),
-        },
-        age: {
-          allowNull: true,
-          type: DataTypes.INTEGER,
         },
         minute_per_lesson: {
           allowNull: true,

@@ -1,9 +1,10 @@
-import { User, userCreationAttributes } from '../models/user';
+import { User, userAttributes } from '../models/user.model';
+import { userToAttributes } from './user.service';
 
 export const createUser = async (
-  userInfo: userCreationAttributes,
-): Promise<userCreationAttributes> => {
-  const user = new User({ ...userInfo });
-  user.save();
-  return user;
+  userInfo: userAttributes,
+): Promise<userAttributes> => {
+  const createdUser = new User({ ...userInfo });
+  createdUser.save();
+  return userToAttributes(createdUser);
 };
