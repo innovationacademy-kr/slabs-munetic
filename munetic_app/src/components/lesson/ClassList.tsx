@@ -106,7 +106,14 @@ export const ClassItem = ({ lesson, mode }: IProps) => {
       {mode === 'manage' ? (
         <div className="buttons">
           <StyledButton to="/lesson/write/id">수정</StyledButton>
-          <StyledButton onClick={() => onClick(id)} deleteBtn to="">
+          <StyledButton
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClick(id);
+            }}
+            deleteBtn
+          >
             삭제
           </StyledButton>
         </div>
