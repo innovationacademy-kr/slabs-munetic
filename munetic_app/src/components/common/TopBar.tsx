@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import palette from '../../style/palette';
 
 const TopBarContainer = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #1d3557;
+  background-color: ${palette.darkBlue};
   position: sticky;
   top: 0;
   z-index: 99;
@@ -21,7 +22,7 @@ const TopBarContainer = styled.div`
     cursor: pointer;
   }
   .topBarIcon {
-    color: #f1faee;
+    color: ${palette.ivory};
   }
   .topBarIconText {
     width: 15px;
@@ -29,8 +30,8 @@ const TopBarContainer = styled.div`
     position: absolute;
     top: -3px;
     left: 10px;
-    background-color: #e63946;
-    color: #f1faee;
+    background-color: ${palette.red};
+    color: ${palette.ivory};
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -40,7 +41,7 @@ const TopBarContainer = styled.div`
   .logo {
     font-weight: bold;
     font-size: 26px;
-    color: #f1faee;
+    color: ${palette.ivory};
     cursor: pointer;
     line-height: 53px;
   }
@@ -57,12 +58,12 @@ const TopBarContainer = styled.div`
     text-align: right;
   }
   .topBarRightText {
-    color: #f1faee;
+    color: ${palette.ivory};
     font-size: 15px;
     font-weight: bold;
   }
   .topBarLeftText {
-    color: #f1faee;
+    color: ${palette.ivory};
     font-size: 15px;
     font-weight: bold;
   }

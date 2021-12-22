@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { categoryData } from '../../dummy/categoryData';
+import palette from '../../style/palette';
 
 const CategoryPageContainer = styled.div`
   margin: 30px;
   height: 70%;
-  background-color: #457b9d;
+  background-color: ${palette.grayBlue};
   border-radius: 5px;
   .categoryTitle {
     margin: 15px 0px 10px 0px;
-    color: #f1faee;
+    color: ${palette.ivory};
     font-size: 20px;
     font-weight: bold;
   }
@@ -32,7 +33,7 @@ const CategoryButton = styled(Link)`
   width: 28%;
   border: 0;
   border-radius: 7px;
-  background-color: #f1faee;
+  background-color: ${palette.ivory};
   margin: 5px 5px;
   padding: 0;
   position: relative;
@@ -49,7 +50,7 @@ const CategoryButton = styled(Link)`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #1d3557;
+    color: ${palette.darkBlue};
     font-size: 15px;
     font-weight: bold;
     text-align: center;

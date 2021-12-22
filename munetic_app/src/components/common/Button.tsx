@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import palette from '../../style/palette';
 
 const Container = styled.button`
   width: 100%;
   border: 0;
   border-radius: 20px;
-  background-color: #457b9d;
-  color: #f1faee;
+  background-color: ${palette.grayBlue};
+  color: ${palette.ivory};
   font-size: 20px;
   font-weight: bold;
   position: relative;

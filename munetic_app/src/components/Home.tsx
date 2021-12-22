@@ -27,7 +27,7 @@ export default function Home() {
           <Button to="/lesson/category">레슨 찾기</Button>
         </div>
         <div className="homeRegisterButton">
-          <Button to="/lesson/write">레슨 등록</Button>
+          <Button to="/lesson/manage">레슨 등록</Button>
         </div>
       </div>
     </Container>
