@@ -8,6 +8,6 @@ export const login: RequestHandler = (req, res) => {
 };
 
 export const signin: RequestHandler = (req, res) => {
-  const user = authService.createUser(req.body);
-  res.status(status.CREATED).json({ message: 'SUCCESS!', data: { ...user } });
+  // const user = authService.createUser(req.body);
+  // res.status(status.CREATED).json({ message: 'SUCCESS!', data: { ...user } });
 };

@@ -1,6 +1,6 @@
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
-enum ACCOUNT {
+export enum ACCOUNT {
   student = 'STUDENT',
   tutor = 'TUTOR',
 }
@@ -13,6 +13,7 @@ interface userAttributes {
   nickname: string;
   name: string | null;
   name_public: boolean | null;
+  birth: number;
   email: string | null;
   phone_number: string | null;
   phone_public: boolean | null;
@@ -27,6 +28,7 @@ export type userCreationAttributes = Optional<
   | 'login_password'
   | 'name'
   | 'name_public'
+  | 'birth'
   | 'email'
   | 'phone_number'
   | 'phone_public'
@@ -45,6 +47,7 @@ export class User
   public nickname!: string;
   public name!: string | null;
   public name_public!: boolean | null;
+  public birth!: number;
   public email!: string | null;
   public phone_number!: string | null;
   public phone_public!: boolean | null;
@@ -85,6 +88,10 @@ export class User
         name_public: {
           allowNull: true,
           type: DataTypes.BOOLEAN,
+        },
+        birth: {
+          allowNull: false,
+          type: DataTypes.DATE,
         },
         email: {
           allowNull: true,
