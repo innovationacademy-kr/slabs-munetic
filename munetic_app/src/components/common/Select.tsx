@@ -5,8 +5,9 @@ const Container = styled.div`
   width: 100%;
   margin: 5px 0px;
   span {
+    margin-top: 15px;
     display: block;
-    font-size: 15px;
+    font-size: 13px;
     color: ${palette.grayBlue};
     margin-bottom: 3px;
   }

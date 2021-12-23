@@ -73,28 +73,36 @@ const IntroContent = styled.div`
 `;
 
 interface InputBoxProps {
-  title: string;
+  inputName: string;
   isReadOnly?: boolean;
   useValidation?: boolean;
-  value?: string;
+  value?: string | number;
+  onChange?: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => void;
   type?: string;
 }
 
 const InputBox = ({
-  title,
+  inputName,
   isReadOnly,
   useValidation,
+  onChange,
   value,
   type,
 }: InputBoxProps) => {
   return (
     <InputBoxContainer>
-      <span className="inputTitle">{title}</span>
+      <span className="inputTitle">{inputName}</span>
       <Input
         value={value}
+        name={inputName}
         className="input"
         isReadOnly={isReadOnly}
         useValidation={useValidation}
+        onChange={onChange}
         type={type}
       />
     </InputBoxContainer>
@@ -102,34 +110,85 @@ const InputBox = ({
 };
 
 export default function ClassWrite() {
-  const [categoryValue, setCategoryValue] = useState('');
   //로그인한 유저의 user 데이터에서 연락처, 성별 받아와서 자동 입력
-  const { phone_number, gender } = userData[0];
+  const { nickname, image_url, phone_number, gender } = userData[0];
+  const [classInfo, setClassInfo] = useState({
+    title: '',
+    nickname,
+    image_url,
+    category: '',
+    price: 0,
+    phone_number,
+    gender,
+    place: '',
+    minute: '',
+    content: '',
+  });
+  const { title, category, price, place, minute, content } = classInfo;
+
+  const onChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { value, name } = e.target;
+    setClassInfo({
+      ...classInfo,
+      [name]: value,
+    });
+  };
   return (
     <Container>
-      <StyledTitleInput placeholder="제목" />
+      <StyledTitleInput
+        name="title"
+        placeholder="제목"
+        value={title}
+        onChange={onChange}
+      />
       <Select
+        title="카테고리"
         options={categoryData.filter(category => category !== '전체')}
-        disabledOptions={['카테고리']}
-        defaultValue={'카테고리'}
-        onChange={e => setCategoryValue(e.target.value)}
-        isValid={!!categoryValue}
+        value={category}
+        name="category"
+        onChange={onChange}
+        isValid={!!category}
         errorMessage="카테고리를 선택하세요."
       />
       <div className="infoName">레슨 기본 정보</div>
-      <InputBox title="가격" type="number" />
       <InputBox
-        title="연락처"
+        inputName="price"
+        type="number"
+        value={price}
+        onChange={onChange}
+      />
+      <InputBox
+        inputName="phone_number"
         isReadOnly
         useValidation={false}
         value={phone_number}
       />
-      <InputBox title="성별" isReadOnly useValidation={false} value={gender} />
-      <InputBox title="지역" />
-      <InputBox title="회차당 수업 시간" type="number" />
+      <InputBox
+        inputName="gender"
+        isReadOnly
+        useValidation={false}
+        value={gender}
+      />
+      <InputBox inputName="place" value={place} onChange={onChange} />
+      <InputBox
+        inputName="minute"
+        type="number"
+        value={minute}
+        onChange={onChange}
+      />
       <IntroContent>
         <div className="introTitle">본문</div>
-        <textarea className="introContent" placeholder="내용을 입력해주세요." />
+        <textarea
+          name="content"
+          className="introContent"
+          placeholder="내용을 입력해주세요."
+          value={content}
+          onChange={onChange}
+        />
       </IntroContent>
     </Container>
   );
