@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { classData } from '../../dummy/classData';
 import palette from '../../style/palette';
 import Button from '../common/Button';
-import ClassList, { ClassItem } from './ClassList';
+import { ClassItem } from './ClassList';
 
-const ClassManageContainer = styled.div``;
+const ClassManageContainer = styled.div`
+  height: calc(100vh + 56px);
+`;
 
 const WriteBtnWrapper = styled.div`
   padding: 80px 30px;
@@ -45,7 +46,6 @@ export default function ClassManage() {
             ))}
         </div>
       </ClassListWrapper>
-      <ClassList />
     </ClassManageContainer>
   );
 }
