@@ -42,20 +42,20 @@ export function Models() {
   LessonInstance = Lesson.initModel(sequelize);
   AdminInstance = Admin.initModel(sequelize);
 
-  Category.hasMany(Lesson, {
+  Category.hasMany(Lesson);
+  Lesson.belongsTo(Category, {
     foreignKey: {
       name: 'category_id',
       allowNull: false,
     },
   });
-  Lesson.belongsTo(Category);
-  User.hasMany(Lesson, {
+  User.hasMany(Lesson);
+  Lesson.belongsTo(User, {
     foreignKey: {
       name: 'tutor_id',
       allowNull: false,
     },
   });
-  Lesson.belongsTo(User);
   return sequelize;
 }
 
@@ -64,12 +64,18 @@ export function Models() {
  */
 
 Models()
-  .sync({ force: false })
+  .sync({ force: true }) // DB를 삭제하고 새로 만드는가의 옵션
   .then(() => {
     console.log('👍 Modeling Successed');
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 
+/**
+ * This executes Models(). When the file importing DatabaseInit() executed,
+ * Models() is executed before any code of the exported file.
+ * If Models was executed in the app.ts, this might cause execution of the
+ * Modeling process later than querying
+ */
 const DatabaseInit = () => {};
 
 export {

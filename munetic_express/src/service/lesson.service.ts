@@ -141,7 +141,20 @@ const lessonQueryOption = (id: number): FindOptions<lessonAttributes> => {
     where: {
       id,
     },
-    include: [{ model: Category }, { model: User }],
+    include: [
+      { model: Category, attributes: ['name'] },
+      {
+        model: User,
+        attributes: [
+          'name',
+          'nickname',
+          'name_public',
+          'age',
+          'gender',
+          'image_url',
+        ],
+      },
+    ],
   };
 };
 
@@ -154,9 +167,9 @@ const lessonQueryOption = (id: number): FindOptions<lessonAttributes> => {
  */
 export const createLesson = async (
   tutorId: number,
-  lessonInfo: unknown,
+  lessonInfo: LessonEditable, // 'unknown' in runtime
 ): Promise<LessonRes | string> => {
-  const lessonEditable = checkLessonEditable(lessonInfo);
+  const lessonEditable = checkLessonEditable(lessonInfo); // 'unknown' test
   if (!lessonEditable) return 'Invalid data passed';
 
   if (lessonEditable.category === undefined) return 'No category defined';
@@ -189,8 +202,6 @@ export const createLesson = async (
   )) as LessonAllInfo | null;
   if (lesson === null) return 'Lesson create failed';
   lesson.lesson_id = (lesson as any).dataValues.lesson_id; // 왠지 모르겠지만 바로 들어가지 않음. User와의 property 차이일까?
-  lesson.User = tutor;
-  lesson.Category = category;
   return LessonAllInfoToRes(lesson);
 };
 
@@ -205,8 +216,10 @@ export const getLesson = async (
 ): Promise<LessonRes | string> => {
   const lesson = (await LessonInstance.findOne(
     lessonQueryOption(lessonId),
-  )) as LessonAllInfo | null;
-  return lesson === null ? 'No such lesson' : LessonAllInfoToRes(lesson);
+  )) as unknown as LessonAllInfo | null;
+  if (lesson === null) return 'No such lesson';
+  lesson.lesson_id = (lesson as any).dataValues.lesson_id;
+  return LessonAllInfoToRes(lesson);
 };
 
 /**
@@ -218,16 +231,28 @@ export const getLesson = async (
  */
 export const editLesson = async (
   lessonId: number,
-  lessonInfo: unknown,
+  lessonInfo: LessonEditable, // 'unknown' in runtime
 ): Promise<LessonRes | string> => {
-  const lessonEditable = checkLessonEditable(lessonInfo);
+  const lessonEditable = checkLessonEditable(lessonInfo); // unknown check
   if (!lessonEditable) return 'Invalid data passed';
 
-  const [updatedNum] = await LessonInstance.update(lessonEditable, {
-    where: {
-      id: lessonId,
+  let category;
+  if (lessonEditable.category) {
+    category = await CategoryInstance.findOne({
+      attributes: ['id'],
+      where: { name: lessonEditable.category },
+    });
+    console.log(lessonEditable.category);
+    if (category === null) return 'No such category';
+  }
+  const [updatedNum] = await LessonInstance.update(
+    { ...lessonEditable, category_id: category?.id },
+    {
+      where: {
+        id: lessonId,
+      },
     },
-  });
+  );
   if (updatedNum === 0) return 'No such lesson';
   console.assert(updatedNum === 1);
 
@@ -235,6 +260,8 @@ export const editLesson = async (
     lessonQueryOption(lessonId),
   )) as LessonAllInfo | null;
   if (updatedLesson === null) return 'Lesson update failed';
+
+  updatedLesson.lesson_id = (updatedLesson as any).dataValues.lesson_id; // 이유를 알 수 없다.
 
   return LessonAllInfoToRes(updatedLesson);
 };
@@ -245,9 +272,7 @@ export const editLesson = async (
  * @param lessonId Lesson id to be deleted
  * @returns Whether the lesson is deleted or not. If there is no corresponding lesson, returns false
  */
-export const deleteLesson = async (
-  lessonId: number,
-): Promise<boolean | string> => {
+export const deleteLesson = async (lessonId: number): Promise<boolean> => {
   const deleteNum = await LessonInstance.destroy({ where: { id: lessonId } });
-  return deleteNum ? true : 'lesson delete failed';
+  return !!deleteNum;
 };
