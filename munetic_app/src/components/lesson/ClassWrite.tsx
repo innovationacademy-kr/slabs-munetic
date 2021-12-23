@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import WriteContext from '../../context/writeContext';
 import { categoryData } from '../../dummy/categoryData';
+import { classData } from '../../dummy/classData';
 import { userData } from '../../dummy/userData';
 import palette from '../../style/palette';
 import Input from '../common/Input';
@@ -110,33 +113,52 @@ const InputBox = ({
 };
 
 export default function ClassWrite() {
+  const navigate = useNavigate();
+  const { state, actions } = useContext(WriteContext);
+
   //로그인한 유저의 user 데이터에서 연락처, 성별 받아와서 자동 입력
   const { nickname, image_url, phone_number, gender } = userData[0];
+  const [classes, setClasses] = useState(classData);
   const [classInfo, setClassInfo] = useState({
+    id: 6,
     title: '',
-    nickname,
-    image_url,
+    img: image_url,
     category: '',
-    price: 0,
+    nickname,
     phone_number,
-    gender,
+    age: 0,
     place: '',
-    minute: '',
+    price: 0,
+    gender,
+    minute: 0,
     content: '',
   });
-  const { title, category, price, place, minute, content } = classInfo;
+  const { id, title, category, price, place, minute, content } = classInfo;
 
-  const onChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    const { value, name } = e.target;
-    setClassInfo({
-      ...classInfo,
-      [name]: value,
-    });
-  };
+  const onChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
+      const { value, name } = e.target;
+      setClassInfo({
+        ...classInfo,
+        [name]: value,
+      });
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (state.write) {
+      setClasses(classes.concat(classInfo));
+      // navigate(`/lesson/class/${id}`);
+      actions.setWrite(false);
+    }
+    return () => {};
+  }, [state]);
+
   return (
     <Container>
       <StyledTitleInput

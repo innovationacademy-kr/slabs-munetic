@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import palette from '../../style/palette';
+import { useContext } from 'react';
+import WriteContext from '../../context/writeContext';
 
 const TopBarContainer = styled.div`
   width: 100%;
@@ -70,10 +72,12 @@ const TopBarContainer = styled.div`
 `;
 
 export default function TopBar() {
+  const { actions } = useContext(WriteContext);
+
   //home에선 푸쉬알림&공백, 수정에선 Back&저장, 등록에선 Back&등록, 나머지는 Back&공백
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
-  let rightText;
+  let rightText: string;
   if (currentPath === '/') {
     rightText = '';
   } else if (currentPath.includes('edit')) {
@@ -83,6 +87,12 @@ export default function TopBar() {
   } else {
     rightText = '';
   }
+  const onClickWrite = (rightText: string) => {
+    if (rightText === '등록') {
+      actions.setWrite(true);
+    }
+  };
+
   return (
     <TopBarContainer>
       <div className="topBarWrapper">
@@ -104,7 +114,12 @@ export default function TopBar() {
           </Link>
         </div>
         <div className="topBarRight">
-          <span className="topBarRightText">{rightText}</span>
+          <span
+            className="topBarRightText"
+            onClick={() => onClickWrite(rightText)}
+          >
+            {rightText}
+          </span>
         </div>
       </div>
     </TopBarContainer>
