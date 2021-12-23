@@ -1,11 +1,13 @@
-import { User, ACCOUNT } from '../../../models/user';
+import { User, ACCOUNT } from '../../models/user';
 
-export const userInfo = new User({
+const newUser = new User({
   login_id: 'pca0046',
   login_password: '1234',
   type: ACCOUNT['student'],
-  birth: Date.now(),
+  birth: new Date('1995-11-05'),
   name: '박채인',
   nickname: 'chaepark',
   email: 'pca0046@gmail.com',
 });
+
+export default newUser;

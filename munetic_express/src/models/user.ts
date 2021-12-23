@@ -13,7 +13,7 @@ interface userAttributes {
   nickname: string;
   name: string | null;
   name_public: boolean | null;
-  birth: number;
+  birth: Date;
   email: string | null;
   phone_number: string | null;
   phone_public: boolean | null;
@@ -47,7 +47,7 @@ export class User
   public nickname!: string;
   public name!: string | null;
   public name_public!: boolean | null;
-  public birth!: number;
+  public birth!: Date;
   public email!: string | null;
   public phone_number!: string | null;
   public phone_public!: boolean | null;

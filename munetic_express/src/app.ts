@@ -30,12 +30,9 @@ app.use(
 Models()
   .sync({ force: true })
   .then(() => {
+    app.emit('dbconnected');
     console.log('👍 Modeling Successed');
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 
-app.listen(3030, () =>
-  console.log(`=============
-🚀 App listening on the port 3030
-============`),
-);
+export default app;
