@@ -42,7 +42,7 @@ const InputBoxContainer = styled.div`
 `;
 
 const StyledTitleInput = styled(Input)`
-  margin: 10px 0px;
+  margin-top: 10px;
   height: 35px;
   width: 100%;
   padding-left: 10px;
@@ -75,11 +75,18 @@ const IntroContent = styled.div`
 interface InputBoxProps {
   title: string;
   isReadOnly?: boolean;
+  useValidation?: boolean;
   value?: string;
   type?: string;
 }
 
-const InputBox = ({ title, isReadOnly, value, type }: InputBoxProps) => {
+const InputBox = ({
+  title,
+  isReadOnly,
+  useValidation,
+  value,
+  type,
+}: InputBoxProps) => {
   return (
     <InputBoxContainer>
       <span className="inputTitle">{title}</span>
@@ -87,6 +94,7 @@ const InputBox = ({ title, isReadOnly, value, type }: InputBoxProps) => {
         value={value}
         className="input"
         isReadOnly={isReadOnly}
+        useValidation={useValidation}
         type={type}
       />
     </InputBoxContainer>
@@ -95,13 +103,13 @@ const InputBox = ({ title, isReadOnly, value, type }: InputBoxProps) => {
 
 export default function ClassWrite() {
   const [categoryValue, setCategoryValue] = useState('');
+  //로그인한 유저의 user 데이터에서 연락처, 성별 받아와서 자동 입력
   const { phone_number, gender } = userData[0];
-  const category = categoryData.filter(category => category !== '전체');
   return (
     <Container>
       <StyledTitleInput placeholder="제목" />
       <Select
-        options={category}
+        options={categoryData.filter(category => category !== '전체')}
         disabledOptions={['카테고리']}
         defaultValue={'카테고리'}
         onChange={e => setCategoryValue(e.target.value)}
@@ -110,8 +118,13 @@ export default function ClassWrite() {
       />
       <div className="infoName">레슨 기본 정보</div>
       <InputBox title="가격" type="number" />
-      <InputBox title="연락처" isReadOnly value={phone_number} />
-      <InputBox title="성별" isReadOnly value={gender} />
+      <InputBox
+        title="연락처"
+        isReadOnly
+        useValidation={false}
+        value={phone_number}
+      />
+      <InputBox title="성별" isReadOnly useValidation={false} value={gender} />
       <InputBox title="지역" />
       <InputBox title="회차당 수업 시간" type="number" />
       <IntroContent>

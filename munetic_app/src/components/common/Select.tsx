@@ -3,7 +3,7 @@ import palette from '../../style/palette';
 
 const Container = styled.div`
   width: 100%;
-
+  margin: 5px 0px;
   span {
     display: block;
     font-size: 15px;
