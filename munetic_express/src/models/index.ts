@@ -64,7 +64,7 @@ export function Models() {
  */
 
 Models()
-  .sync({ force: true }) // DB를 삭제하고 새로 만드는가의 옵션
+  .sync({ force: false }) // DB를 삭제하고 새로 만드는가의 옵션
   .then(() => {
     console.log('👍 Modeling Successed');
   })

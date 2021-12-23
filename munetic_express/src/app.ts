@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
 import { DatabaseInit } from './models';
+import * as lesson from './routes/lesson.routes';
 import { simpleTest } from './simpletest';
 
 const app: express.Application = express();
@@ -32,10 +33,12 @@ app.use(
   swaggerUi.setup(specs, { explorer: true }),
 );
 
+app.use(lesson.path, lesson.router);
+
 app.listen(3030, () =>
   console.log(`=============
 🚀 App listening on the port 3030
 ============`),
 );
 
-simpleTest();
+// simpleTest();

@@ -3,9 +3,10 @@ import { Category } from '../models/category.model';
 import { lessonAttributes } from '../models/lesson.model';
 import { Gender, userAttributes } from '../models/user.model';
 import { User } from '../models/user.model';
-import { ResponseData } from '../types';
+import { ResponseData, ServiceResponse } from '../types';
 import { categoryAttributes } from '../models/category.model';
 import { CategoryInstance, LessonInstance, UserInstance } from '../models';
+import { BAD_REQUEST, CREATED, INTERNAL_SERVER_ERROR, OK } from 'http-status';
 
 /**
  * Lesson information form of response
@@ -168,24 +169,30 @@ const lessonQueryOption = (id: number): FindOptions<lessonAttributes> => {
 export const createLesson = async (
   tutorId: number,
   lessonInfo: LessonEditable, // 'unknown' in runtime
-): Promise<LessonRes | string> => {
+): Promise<ServiceResponse> => {
   const lessonEditable = checkLessonEditable(lessonInfo); // 'unknown' test
-  if (!lessonEditable) return 'Invalid data passed';
+  if (!lessonEditable)
+    throw new ServiceResponse(BAD_REQUEST, 'Invalid data passed');
 
-  if (lessonEditable.category === undefined) return 'No category defined';
+  if (typeof lessonEditable.category === undefined)
+    throw new ServiceResponse(BAD_REQUEST, 'Category name required');
+  if (lessonEditable.title === undefined)
+    throw new ServiceResponse(BAD_REQUEST, 'Title required');
+
   const tutor = await UserInstance.findOne({
     where: {
       id: tutorId,
     },
   });
-
-  if (tutor === null) return 'Invalid tutor id';
+  if (tutor === null)
+    throw new ServiceResponse(BAD_REQUEST, 'Invalid tutor id');
   const category = await CategoryInstance.findOne({
     where: {
       name: lessonEditable.category,
     },
   });
-  if (category === null) return 'invalid category name';
+  if (category === null)
+    throw new ServiceResponse(BAD_REQUEST, 'invalid category name');
 
   const categoryLess = { ...lessonEditable } as any;
   categoryLess.category = undefined;
@@ -200,9 +207,10 @@ export const createLesson = async (
   const lesson = (await LessonInstance.findOne(
     lessonQueryOption(newLesson.id),
   )) as LessonAllInfo | null;
-  if (lesson === null) return 'Lesson create failed';
+  if (lesson === null)
+    throw new ServiceResponse(INTERNAL_SERVER_ERROR, 'Lesson create failed');
   lesson.lesson_id = (lesson as any).dataValues.lesson_id; // 왠지 모르겠지만 바로 들어가지 않음. User와의 property 차이일까?
-  return LessonAllInfoToRes(lesson);
+  return new ServiceResponse(CREATED, LessonAllInfoToRes(lesson));
 };
 
 /**
@@ -211,15 +219,15 @@ export const createLesson = async (
  * @param lessonId Lesson id for finding a lesson
  * @returns A lesson corresponding to the `lessonId`. In there's no corresponding lesson, string is returned
  */
-export const getLesson = async (
+export const findLesson = async (
   lessonId: number,
-): Promise<LessonRes | string> => {
+): Promise<ServiceResponse> => {
   const lesson = (await LessonInstance.findOne(
     lessonQueryOption(lessonId),
   )) as unknown as LessonAllInfo | null;
-  if (lesson === null) return 'No such lesson';
+  if (lesson === null) throw new ServiceResponse(BAD_REQUEST, 'No such lesson');
   lesson.lesson_id = (lesson as any).dataValues.lesson_id;
-  return LessonAllInfoToRes(lesson);
+  return new ServiceResponse(OK, LessonAllInfoToRes(lesson));
 };
 
 /**
@@ -232,9 +240,10 @@ export const getLesson = async (
 export const editLesson = async (
   lessonId: number,
   lessonInfo: LessonEditable, // 'unknown' in runtime
-): Promise<LessonRes | string> => {
+): Promise<ServiceResponse> => {
   const lessonEditable = checkLessonEditable(lessonInfo); // unknown check
-  if (!lessonEditable) return 'Invalid data passed';
+  if (!lessonEditable)
+    throw new ServiceResponse(BAD_REQUEST, 'Invalid data passed');
 
   let category;
   if (lessonEditable.category) {
@@ -243,7 +252,8 @@ export const editLesson = async (
       where: { name: lessonEditable.category },
     });
     console.log(lessonEditable.category);
-    if (category === null) return 'No such category';
+    if (category === null)
+      throw new ServiceResponse(BAD_REQUEST, 'No such category');
   }
   const [updatedNum] = await LessonInstance.update(
     { ...lessonEditable, category_id: category?.id },
@@ -253,17 +263,19 @@ export const editLesson = async (
       },
     },
   );
-  if (updatedNum === 0) return 'No such lesson';
+  if (updatedNum === 0)
+    throw new ServiceResponse(BAD_REQUEST, 'No such lesson');
   console.assert(updatedNum === 1);
 
   const updatedLesson = (await LessonInstance.findOne(
     lessonQueryOption(lessonId),
   )) as LessonAllInfo | null;
-  if (updatedLesson === null) return 'Lesson update failed';
+  if (updatedLesson === null)
+    throw new ServiceResponse(INTERNAL_SERVER_ERROR, 'Lesson update failed');
 
   updatedLesson.lesson_id = (updatedLesson as any).dataValues.lesson_id; // 이유를 알 수 없다.
 
-  return LessonAllInfoToRes(updatedLesson);
+  return new ServiceResponse(OK, LessonAllInfoToRes(updatedLesson));
 };
 
 /**
@@ -272,7 +284,14 @@ export const editLesson = async (
  * @param lessonId Lesson id to be deleted
  * @returns Whether the lesson is deleted or not. If there is no corresponding lesson, returns false
  */
-export const deleteLesson = async (lessonId: number): Promise<boolean> => {
-  const deleteNum = await LessonInstance.destroy({ where: { id: lessonId } });
-  return !!deleteNum;
+export const removeLesson = async (
+  lessonId: number,
+): Promise<ServiceResponse> => {
+  const checkExistence = await LessonInstance.findOne({
+    where: { id: lessonId },
+  });
+  if (!checkExistence) throw new ServiceResponse(BAD_REQUEST, 'No such lesson');
+
+  await checkExistence.destroy();
+  return new ServiceResponse(OK, { removed: true });
 };
