@@ -153,7 +153,7 @@ export default function ClassWrite() {
   useEffect(() => {
     if (state.write) {
       setClasses(classes.concat(classInfo));
-      // navigate(`/lesson/class/${id}`);
+      navigate(`/lesson/class/${id}`);
       actions.setWrite(false);
     }
     return () => {};
@@ -171,33 +171,33 @@ export default function ClassWrite() {
         title="카테고리"
         options={categoryData.filter(category => category !== '전체')}
         value={category}
-        name="category"
+        name="카테고리"
         onChange={onChange}
         isValid={!!category}
         errorMessage="카테고리를 선택하세요."
       />
       <div className="infoName">레슨 기본 정보</div>
       <InputBox
-        inputName="price"
+        inputName="가격"
         type="number"
         value={price}
         onChange={onChange}
       />
       <InputBox
-        inputName="phone_number"
+        inputName="연락처"
         isReadOnly
         useValidation={false}
         value={phone_number}
       />
       <InputBox
-        inputName="gender"
+        inputName="성별"
         isReadOnly
         useValidation={false}
         value={gender}
       />
-      <InputBox inputName="place" value={place} onChange={onChange} />
+      <InputBox inputName="지역" value={place} onChange={onChange} />
       <InputBox
-        inputName="minute"
+        inputName="회차당 수업 시간"
         type="number"
         value={minute}
         onChange={onChange}
