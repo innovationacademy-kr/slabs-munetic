@@ -1,7 +1,5 @@
+import ClassWrite from '../../components/lesson/ClassWrite';
+
 export default function WriteClassPage() {
-  return (
-    <div>
-      <div>레슨 등록</div>
-    </div>
-  );
+  return <ClassWrite />;
 }
