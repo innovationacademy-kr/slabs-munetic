@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import WriteContext from '../../context/writeContext';
@@ -6,7 +6,7 @@ import { categoryData } from '../../dummy/categoryData';
 import { classData } from '../../dummy/classData';
 import { userData } from '../../dummy/userData';
 import palette from '../../style/palette';
-import Input from '../common/Input';
+import Input, { InputBox } from '../common/Input';
 import Select from '../common/Select';
 
 const Container = styled.div`
@@ -19,28 +19,6 @@ const Container = styled.div`
   height: calc(100vh + 56px);
   .infoName {
     margin-top: 15px;
-  }
-`;
-
-const InputBoxContainer = styled.div`
-  margin-top: 10px;
-  display: flex;
-  font-size: 16px;
-  .inputTitle {
-    line-height: 35px;
-    font-weight: bold;
-    color: ${palette.grayBlue};
-    flex: 1;
-    height: 30px;
-  }
-  .input {
-    font-weight: normal;
-    font-size: 16px;
-    text-align: center;
-    border: none;
-    border-bottom: 1px solid ${palette.grayBlue};
-    color: ${palette.grayBlue};
-    height: 30px;
   }
 `;
 
@@ -75,43 +53,6 @@ const IntroContent = styled.div`
   }
 `;
 
-interface InputBoxProps {
-  inputName: string;
-  isReadOnly?: boolean;
-  useValidation?: boolean;
-  value?: string | number;
-  onChange?: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => void;
-  type?: string;
-}
-
-const InputBox = ({
-  inputName,
-  isReadOnly,
-  useValidation,
-  onChange,
-  value,
-  type,
-}: InputBoxProps) => {
-  return (
-    <InputBoxContainer>
-      <span className="inputTitle">{inputName}</span>
-      <Input
-        value={value}
-        name={inputName}
-        className="input"
-        isReadOnly={isReadOnly}
-        useValidation={useValidation}
-        onChange={onChange}
-        type={type}
-      />
-    </InputBoxContainer>
-  );
-};
-
 export default function ClassWrite() {
   const navigate = useNavigate();
   const { state, actions } = useContext(WriteContext);
@@ -134,21 +75,17 @@ export default function ClassWrite() {
     content: '',
   });
   const { id, title, category, price, place, minute, content } = classInfo;
-
-  const onChange = useCallback(
-    (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >,
-    ) => {
-      const { value, name } = e.target;
-      setClassInfo({
-        ...classInfo,
-        [name]: value,
-      });
-    },
-    [],
-  );
+  const onChangeInput = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { value, name } = e.target;
+    setClassInfo({
+      ...classInfo,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
     if (state.write) {
@@ -156,7 +93,6 @@ export default function ClassWrite() {
       navigate(`/lesson/class/${id}`);
       actions.setWrite(false);
     }
-    return () => {};
   }, [state]);
 
   return (
@@ -165,14 +101,14 @@ export default function ClassWrite() {
         name="title"
         placeholder="제목"
         value={title}
-        onChange={onChange}
+        onChange={onChangeInput}
       />
       <Select
         title="카테고리"
         options={categoryData.filter(category => category !== '전체')}
         value={category}
-        name="카테고리"
-        onChange={onChange}
+        name="category"
+        onChange={onChangeInput}
         isValid={!!category}
         errorMessage="카테고리를 선택하세요."
       />
@@ -180,8 +116,9 @@ export default function ClassWrite() {
       <InputBox
         inputName="가격"
         type="number"
+        name="price"
         value={price}
-        onChange={onChange}
+        onChange={onChangeInput}
       />
       <InputBox
         inputName="연락처"
@@ -195,12 +132,18 @@ export default function ClassWrite() {
         useValidation={false}
         value={gender}
       />
-      <InputBox inputName="지역" value={place} onChange={onChange} />
+      <InputBox
+        inputName="지역"
+        name="place"
+        value={place}
+        onChange={onChangeInput}
+      />
       <InputBox
         inputName="회차당 수업 시간"
         type="number"
+        name="minute"
         value={minute}
-        onChange={onChange}
+        onChange={onChangeInput}
       />
       <IntroContent>
         <div className="introTitle">본문</div>
@@ -209,7 +152,7 @@ export default function ClassWrite() {
           className="introContent"
           placeholder="내용을 입력해주세요."
           value={content}
-          onChange={onChange}
+          onChange={onChangeInput}
         />
       </IntroContent>
     </Container>

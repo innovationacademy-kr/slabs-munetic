@@ -84,6 +84,8 @@ export default function TopBar() {
     rightText = '저장';
   } else if (currentPath === '/lesson/write') {
     rightText = '등록';
+  } else if (currentPath.includes('/auth')) {
+    return null;
   } else {
     rightText = '';
   }

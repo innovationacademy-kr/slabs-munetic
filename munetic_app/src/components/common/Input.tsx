@@ -27,6 +27,59 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
 }
 
+const InputBoxContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  font-size: 16px;
+  .inputTitle {
+    line-height: 35px;
+    font-weight: bold;
+    color: ${palette.grayBlue};
+    flex: 1;
+    height: 30px;
+  }
+  .input {
+    font-weight: normal;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid ${palette.grayBlue};
+    color: ${palette.grayBlue};
+    height: 30px;
+  }
+`;
+interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputName: string;
+  isReadOnly?: boolean;
+  useValidation?: boolean;
+  onChange?: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => void;
+}
+
+export const InputBox = ({
+  inputName,
+  isReadOnly,
+  useValidation,
+  onChange,
+  ...props
+}: InputBoxProps) => {
+  return (
+    <InputBoxContainer>
+      <span className="inputTitle">{inputName}</span>
+      <Input
+        className="input"
+        isReadOnly={isReadOnly}
+        useValidation={useValidation}
+        onChange={onChange}
+        {...props}
+      />
+    </InputBoxContainer>
+  );
+};
+
 export default function Input({
   isReadOnly = false,
   isValid,
