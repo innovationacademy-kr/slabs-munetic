@@ -2,16 +2,17 @@ import { User } from '../models/user';
 import { ServiceResponse } from '../modules/serviceResponse';
 import * as Status from 'http-status';
 
-export const checkIdExist = async (loginId: string) => {
-  const idExists = await User.findOne({
-    where: { login_id: loginId },
+export const checkAlreadyExists = async (login_id?: string, email?: string) => {
+  const result = await User.findOne({
+    where: login_id ? { login_id } : { email },
+    raw: true,
   });
-  if (idExists)
+  if (result)
     throw new ServiceResponse(
       Status.BAD_REQUEST,
-      '이미 존재하는 아이디입니다.',
+      '이미 존재하는 유저 정보입니다.',
     );
-  return new ServiceResponse(Status.OK, idExists);
+  return new ServiceResponse(Status.OK, '사용할 수 있는 Id/email 입니다.');
 };
 
 export const createUser = async (userInfo: User) => {

@@ -7,26 +7,29 @@ jest.mock('../../models/user');
 const newUserSave = jest.spyOn(newUser, 'save');
 const userFindOne = jest.spyOn(User, 'findOne');
 
-describe('회원가입 : AuthService.checkIdExist unit thest', () => {
+describe('회원가입 : AuthService.checkUserAlreadyExists unit thest', () => {
   const loginId = 'pca0046';
   it('입력받은 login_id가 db에 존재하는지 확인한다.', () => {
-    AuthService.checkIdExist(loginId).catch(
+    AuthService.checkAlreadyExists(loginId).catch(
       () => expect(userFindOne).toBeCalled,
     );
   });
   it('이미 존재하는 id이면 에러 메세지를 담은 에러 객체를 던진다', () => {
     userFindOne.mockResolvedValue(newUser);
-    AuthService.checkIdExist(loginId).catch(err => {
+    AuthService.checkAlreadyExists(loginId).catch(err => {
       expect(err.status).toBe(Status.BAD_REQUEST);
-      expect(err.resData.msg).toBe('이미 존재하는 아이디입니다.');
+      expect(err.resData.msg).toBe('이미 존재하는 유저 정보입니다.');
     });
   });
   it('존재하지 않는 id이면 성공 결과를 리턴한다.', () => {
     userFindOne.mockResolvedValueOnce(null);
-    return AuthService.checkIdExist(loginId).then(result => {
-      expect(result.status).toBe(Status.OK);
-      expect(result.resData.data).toBe(null);
-    });
+    AuthService.checkAlreadyExists(loginId)
+      .then(result => {
+        expect(result.status).toBe(Status.OK);
+        expect(result.resData.msg).toBe('사용할 수 있는 Id/email 입니다.');
+        expect(result.resData.data).toBe(null);
+      })
+      .catch(err => {});
   });
 });
 
