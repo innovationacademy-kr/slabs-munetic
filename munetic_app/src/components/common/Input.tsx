@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import palette from '../../style/palette';
+import Contexts from '../../context/Contexts';
 
 interface ContainerProps {
   isReadOnly: boolean;
@@ -30,7 +32,7 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const InputBoxContainer = styled.div`
   margin-top: 10px;
   display: flex;
-  font-size: 16px;
+  font-size: 15px;
   .inputTitle {
     line-height: 35px;
     font-weight: bold;
@@ -52,6 +54,8 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputName: string;
   isReadOnly?: boolean;
   useValidation?: boolean;
+  isValid?: boolean;
+  errorMessage?: string;
   onChange?: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -64,6 +68,8 @@ export const InputBox = ({
   isReadOnly,
   useValidation,
   onChange,
+  isValid,
+  errorMessage,
   ...props
 }: InputBoxProps) => {
   return (
@@ -73,7 +79,9 @@ export const InputBox = ({
         className="input"
         isReadOnly={isReadOnly}
         useValidation={useValidation}
+        isValid={isValid}
         onChange={onChange}
+        errorMessage={errorMessage}
         {...props}
       />
     </InputBoxContainer>
@@ -88,12 +96,12 @@ export default function Input({
   ...props
 }: IProps) {
   //폼 제출할 때 validationMode를 true 로 바꿔서 유효값이 들어갔는지 판단하기위한 것
-  const validationMode = false; //일단 state가 구현이 안됐으니 true로 둠
+  const { state } = useContext(Contexts);
 
   return (
     <Container isReadOnly={isReadOnly}>
       <input readOnly={isReadOnly} {...props} />
-      {useValidation && validationMode && !isValid && (
+      {useValidation && state.validationMode && !isValid && (
         <div className="errorMessage">
           <p>{errorMessage}</p>
         </div>

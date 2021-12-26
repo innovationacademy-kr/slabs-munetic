@@ -1,19 +1,19 @@
 import BottomMenu from './components/common/BottomMenu';
 import TopBar from './components/common/TopBar';
-import { WriteProvider } from './context/writeContext';
+import { ContextProvider } from './context/Contexts';
 import Routing from './Routing';
 import GlobalStyle from './style/GlobalStyle';
 
 function App() {
   return (
-    <WriteProvider>
+    <ContextProvider>
       <div>
         <GlobalStyle />
         <TopBar />
         <Routing />
         <BottomMenu />
       </div>
-    </WriteProvider>
+    </ContextProvider>
   );
 }
 

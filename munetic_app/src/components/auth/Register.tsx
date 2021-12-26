@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '../../style/palette';
 import Button from '../common/Button';
 import { InputBox } from '../common/Input';
 import Select from '../common/Select';
+import * as AuthAPI from '../../lib/api/auth';
+import Contexts from '../../context/Contexts';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -43,8 +46,9 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Register() {
+  const { state, actions } = useContext(Contexts);
   const [registerInfo, setRegisterInfo] = useState({
-    id: '',
+    userId: '',
     password: '',
     nickname: '',
     name: '',
@@ -53,8 +57,13 @@ export default function Register() {
     gender: undefined,
   });
 
-  const { id, password, nickname, name, email, phone_number, gender } =
+  const navigate = useNavigate();
+
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const { userId, password, nickname, name, email, phone_number, gender } =
     registerInfo;
+
   const onChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -67,27 +76,93 @@ export default function Register() {
     });
   };
 
-  const onSubmit = () => {
-    console.log('ddd');
+  const onChangePasswordConfirm = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    setPasswordConfirm(e.target.value);
   };
 
+  const validateSignupForm = () => {
+    if (
+      !userId ||
+      !password ||
+      !passwordConfirm ||
+      !nickname ||
+      !name ||
+      !gender ||
+      !email ||
+      !phone_number
+    ) {
+      return false;
+    }
+    if (password !== passwordConfirm) {
+      return false;
+    }
+    return true;
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    actions.setValidationMode(true);
+
+    if (validateSignupForm()) {
+      try {
+        await AuthAPI.signup(registerInfo);
+        navigate('/');
+      } catch (e) {
+        console.log(e, '회원가입 실패');
+      }
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      actions.setValidationMode(false);
+    };
+  }, []);
+
   return (
-    <Container>
-      <InputBox inputName="아이디" name="id" value={id} onChange={onChange} />
+    <Container onSubmit={onSubmit}>
       <InputBox
-        inputName="패스워드"
+        inputName="아이디"
+        name="userId"
+        value={userId}
+        onChange={onChange}
+        isValid={!!userId}
+      />
+      <InputBox
+        inputName="비밀번호"
         value={password}
         name="password"
         type="password"
         onChange={onChange}
+        isValid={!!password}
+      />
+      <InputBox
+        inputName="비밀번호 확인"
+        value={passwordConfirm}
+        name="passwordConfirm"
+        type="password"
+        isValid={!!passwordConfirm && password === passwordConfirm}
+        errorMessage="비밀번호를 확인해주세요."
+        onChange={e => onChangePasswordConfirm(e)}
       />
       <InputBox
         inputName="닉네임"
         value={nickname}
         name="nickname"
+        isValid={!!nickname}
         onChange={onChange}
       />
-      <InputBox inputName="이름" value={name} name="name" onChange={onChange} />
+      <InputBox
+        inputName="이름"
+        value={name}
+        name="name"
+        isValid={!!name}
+        onChange={onChange}
+      />
       <SelectContainer>
         <span className="selectTitle">성별</span>
         <div className="select">
@@ -108,6 +183,7 @@ export default function Register() {
         value={email}
         name="email"
         type="email"
+        isValid={!!email}
         onChange={onChange}
       />
       <InputBox
@@ -115,12 +191,11 @@ export default function Register() {
         placeholder=""
         value={phone_number}
         name="phone_number"
+        isValid={!!phone_number}
         onChange={onChange}
       />
       <div className="registerButton">
-        <StyledButton type="submit" onClick={onSubmit}>
-          가입하기
-        </StyledButton>
+        <StyledButton type="submit">가입하기</StyledButton>
       </div>
     </Container>
   );

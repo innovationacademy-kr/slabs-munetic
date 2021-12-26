@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import WriteContext from '../../context/writeContext';
+import Contexts from '../../context/Contexts';
 import { categoryData } from '../../dummy/categoryData';
 import { classData } from '../../dummy/classData';
 import { userData } from '../../dummy/userData';
@@ -55,8 +55,7 @@ const IntroContent = styled.div`
 
 export default function ClassWrite() {
   const navigate = useNavigate();
-  const { state, actions } = useContext(WriteContext);
-
+  const { state, actions } = useContext(Contexts);
   //로그인한 유저의 user 데이터에서 연락처, 성별 받아와서 자동 입력
   const { nickname, image_url, phone_number, gender } = userData[0];
   const [classes, setClasses] = useState(classData);
@@ -64,7 +63,7 @@ export default function ClassWrite() {
     id: 6,
     title: '',
     img: image_url,
-    category: '',
+    category: undefined,
     nickname,
     phone_number,
     age: 0,
@@ -87,13 +86,30 @@ export default function ClassWrite() {
     });
   };
 
+  const validateWriteForm = () => {
+    if (!title || !category || !price || !place || !minute) {
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (state.write) {
-      setClasses(classes.concat(classInfo));
-      navigate(`/lesson/class/${id}`);
+      actions.setValidationMode(true);
+      if (validateWriteForm()) {
+        setClasses(classes.concat(classInfo));
+        actions.setWrite(false);
+        navigate(`/lesson/class/${id}`);
+      }
       actions.setWrite(false);
     }
   }, [state]);
+
+  useEffect(() => {
+    return () => {
+      actions.setValidationMode(false);
+    };
+  }, []);
 
   return (
     <Container>
@@ -101,6 +117,7 @@ export default function ClassWrite() {
         name="title"
         placeholder="제목"
         value={title}
+        isValid={!!title}
         onChange={onChangeInput}
       />
       <Select
@@ -108,6 +125,8 @@ export default function ClassWrite() {
         options={categoryData.filter(category => category !== '전체')}
         value={category}
         name="category"
+        disabledOptions={['카테고리']}
+        defaultValue="카테고리"
         onChange={onChangeInput}
         isValid={!!category}
         errorMessage="카테고리를 선택하세요."
@@ -118,6 +137,7 @@ export default function ClassWrite() {
         type="number"
         name="price"
         value={price}
+        isValid={!!price}
         onChange={onChangeInput}
       />
       <InputBox
@@ -136,6 +156,7 @@ export default function ClassWrite() {
         inputName="지역"
         name="place"
         value={place}
+        isValid={!!place}
         onChange={onChangeInput}
       />
       <InputBox
@@ -143,6 +164,7 @@ export default function ClassWrite() {
         type="number"
         name="minute"
         value={minute}
+        isValid={!!minute}
         onChange={onChangeInput}
       />
       <IntroContent>

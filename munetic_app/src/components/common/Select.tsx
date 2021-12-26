@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+import Contexts from '../../context/Contexts';
 import palette from '../../style/palette';
 
 const Container = styled.div`
@@ -48,7 +50,7 @@ export default function Select({
   ...props
 }: IProps) {
   //폼 제출할 때 validationMode를 true 로 바꿔서 유효값이 들어갔는지 판단하기위한 것
-  const validationMode = true; //일단 state가 구현이 안됐으니 true로 둠
+  const { state } = useContext(Contexts);
 
   return (
     <Container>
@@ -67,7 +69,7 @@ export default function Select({
           ))}
         </select>
       </label>
-      {useValidation && validationMode && !isValid && (
+      {useValidation && state.validationMode && !isValid && (
         <div className="errorMessage">
           <p>{errorMessage}</p>
         </div>
