@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { ACCOUNT } from '../models/user';
 
-export const newUserObject = (req: Request) => {
+export const userObject = (req: Request) => {
   const { login_id, login_password, name, nickname, birth, type, email } =
     req.body as {
       login_id: string;

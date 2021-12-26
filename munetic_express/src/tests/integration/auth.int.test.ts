@@ -1,18 +1,8 @@
+import app from '../../app';
+import request from 'supertest';
+import httpStatus from 'http-status';
 import { sequelize } from './../../models';
 import userInfo from '../dummy/userInfo.json';
-import request from 'supertest';
-import app from '../../app';
-import httpStatus from 'http-status';
-
-// const userInfo = {
-//   login_id: 'pca0046',
-//   login_password: '1234',
-//   type: 'student',
-//   birth: Date.now(),
-//   name: '박채인',
-//   nickname: 'chaepark',
-//   email: 'pca0046@gmail.com',
-// };
 
 beforeEach(async () => {
   try {

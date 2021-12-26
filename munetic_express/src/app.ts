@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
 import { Models } from './models';
+import errorHandler from './modules/errorHandler';
 
 const app: express.Application = express();
 
@@ -35,4 +36,8 @@ Models()
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 
+/**
+ * 에러 핸들링
+ */
+app.use(errorHandler);
 export default app;

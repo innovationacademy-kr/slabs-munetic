@@ -10,17 +10,15 @@ export const login: RequestHandler = (req, res) => {
   } catch {}
 };
 
-export const signup: RequestHandler = async (req, res) => {
-  const userInfo = Reshape.newUserObject(req);
-  const createdUser = await AuthService.createUser(new User({ ...userInfo }));
-  if (createdUser)
-    res
-      .status(status.CREATED)
-      .json({ message: 'SUCCESS!', data: { ...createdUser.toJSON() } });
-  else
-    res
-      .status(status.INTERNAL_SERVER_ERROR)
-      .json({ message: 'FAILED, INTERNAL SERVER ERROR' });
+export const signup: RequestHandler = async (req, res, next) => {
+  try {
+    const userInfo = Reshape.userObject(req);
+    const result = await AuthService.createUser(new User({ ...userInfo }));
+    console.log(result.resData);
+    res.status(result.status).json(result.resData);
+  } catch (err) {
+    next(err);
+  }
 };
 
 // 아이디 중복 확인
