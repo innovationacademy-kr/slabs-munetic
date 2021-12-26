@@ -1,12 +1,12 @@
 export class ServiceResponse {
   public resData: {
     msg: string;
-    data: object | null;
+    data: object;
   };
 
   constructor(
     public readonly status: number,
-    data: string | object | null | [string, object],
+    data: string | object | [string, object],
   ) {
     if (typeof data === 'string') {
       this.resData = { msg: data, data: {} };
