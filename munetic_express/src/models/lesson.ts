@@ -15,6 +15,9 @@ interface lessonAttributes {
   age: number | null;
   minute_per_lesson: number | null;
   content: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
 }
 
 type lessonCreationAttributes = Optional<
@@ -26,6 +29,9 @@ type lessonCreationAttributes = Optional<
   | 'age'
   | 'minute_per_lesson'
   | 'content'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'deletedAt'
 >;
 
 export class Lesson
@@ -40,6 +46,9 @@ export class Lesson
   public age!: number | null;
   public minute_per_lesson!: number | null;
   public content!: string | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+  public readonly deletedAt!: Date;
 
   static initModel(sequelize: Sequelize): typeof Lesson {
     return Lesson.init(
@@ -77,6 +86,18 @@ export class Lesson
         content: {
           allowNull: true,
           type: DataTypes.STRING(8192),
+        },
+        createdAt: {
+          field: 'createdAt',
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          field: 'updatedAt',
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
+          field: 'deletedAt',
+          type: DataTypes.DATE,
         },
       },
       { tableName: 'Lesson', sequelize },

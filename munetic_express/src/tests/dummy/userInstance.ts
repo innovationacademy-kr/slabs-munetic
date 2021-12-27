@@ -1,6 +1,6 @@
 import { User, ACCOUNT } from '../../models/user';
 
-const newUser = new User({
+const UserInstance = new User({
   login_id: 'pca0046',
   login_password: '1234',
   type: ACCOUNT['student'],
@@ -10,4 +10,4 @@ const newUser = new User({
   email: 'pca0046@gmail.com',
 });
 
-export default newUser;
+export default UserInstance;

@@ -1,9 +1,12 @@
 {
+  "id": 1,
   "login_id": "pca0046",
   "login_password": "1234",
-  "type": "student",
-  "birth": "1995-11-05",
   "name": "박채인",
+  "birth": "1995-11-05T00:00:00.000Z",
   "nickname": "chaepark",
-  "email": "pca0046@gmail.com"
+  "email": "pca0046@gmail.com",
+  "type": "STUDENT",
+  "updatedAt": "2021-12-27T15:25:26.113Z",
+  "createdAt": "2021-12-27T15:25:26.113Z"
 }

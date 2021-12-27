@@ -1,8 +1,11 @@
-import { RequestHandler } from 'express';
-
+import e, { RequestHandler } from 'express';
+import * as Status from 'http-status';
+import { ResJSON } from '../modules/types';
 import { User } from '../models/user';
 import * as Reshape from './../modules/reshape';
 import * as AuthService from '../service/auth.service';
+import * as UserService from '../service/user.service';
+import ErrorResponse from '../modules/errorResponse';
 
 export const login: RequestHandler = (req, res) => {
   try {
@@ -12,8 +15,9 @@ export const login: RequestHandler = (req, res) => {
 export const signup: RequestHandler = async (req, res, next) => {
   try {
     const userInfo = Reshape.userObject(req);
-    const result = await AuthService.createUser(new User({ ...userInfo }));
-    res.status(result.status).json(result.resData);
+    const data = await AuthService.createAccount(new User({ ...userInfo }));
+    const result = new ResJSON('request success', data.toJSON());
+    res.status(Status.CREATED).json(result);
   } catch (err) {
     next(err);
   }
@@ -21,12 +25,16 @@ export const signup: RequestHandler = async (req, res, next) => {
 
 export const isValidInfo: RequestHandler = async (req, res, next) => {
   try {
-    const { login_id, email } = req.query as {
-      login_id?: string;
-      email?: string;
-    };
-    const result = await AuthService.checkAlreadyExists(login_id, email);
-    res.status(result.status).json(result.resData);
+    let result: ResJSON;
+    const userList = await UserService.search(req.query);
+    if (userList.length === 0) {
+      result = new ResJSON('사용할 수 있는 Id/email 입니다.', {});
+      res.status(Status.OK).json(result);
+    } else
+      throw new ErrorResponse(
+        Status.BAD_REQUEST,
+        '이미 존재하는 ID/email 입니다.',
+      );
   } catch (err) {
     next(err);
   }
