@@ -344,7 +344,7 @@ paths:
         - application/json
       parameters:
         - name: 'tutor_id'
-          in: path
+          in: query
           description: 'tutor id'
           type: integer
           format: int32
