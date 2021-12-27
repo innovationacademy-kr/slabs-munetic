@@ -79,20 +79,15 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            type: object
-            properties:
-              msg:
-                type: string
-                example: '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
-              data:
-                type: object
+            type: string
+            example: '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
 
   /auth/signup/user:
     get:
       tags:
         - Auth
       summary: Check if userInfo is valid
-      description: '중복 체크 하고 싶은 요소를 하나만 선택해 쿼리로 전달합니다. login_id와 email을 동시에 query로 전달할 수 없습니다.'
+      description: '중복 체크 하고 싶은 요소를 쿼리로 전달합니다. login_id와 email을 동시에 query로 전달할 수 없습니다.'
       consumes:
         - application/json
       produces:
@@ -110,7 +105,7 @@ paths:
           schema:
             type: object
             properties:
-              msg:
+              message:
                 type: string
                 example: '사용할 수 있는 Id/email 입니다.'
               data:
@@ -118,13 +113,8 @@ paths:
         '400':
           description: Bad_Request
           schema:
-            type: object
-            properties:
-              msg:
-                type: string
-                example: '이미 존재하는 유저 정보입니다.'
-              data:
-                type: object
+            type: string
+            example: '이미 존재하는 ID/email 입니다.'
 
   # USER 관련 API
   /user/{id}:
