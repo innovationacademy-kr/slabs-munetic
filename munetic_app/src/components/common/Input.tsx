@@ -14,6 +14,17 @@ const Container = styled.div<ContainerProps>`
     background-color: ${({ isReadOnly }) =>
       isReadOnly ? `${palette.ivory}` : ''};
   }
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #fff inset;
+    box-shadow: 0 0 0 30px #fff inset;
+    -webkit-text-fill-color: ${palette.grayBlue};
+  }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+  }
   .errorMessage {
     font-size: 12px;
     font-weight: normal;
@@ -34,10 +45,11 @@ const InputBoxContainer = styled.div`
   display: flex;
   font-size: 15px;
   .inputTitle {
+    width: 35%;
     line-height: 35px;
     font-weight: bold;
     color: ${palette.grayBlue};
-    flex: 1;
+    flex: 1 0 auto;
     height: 30px;
   }
   .input {
