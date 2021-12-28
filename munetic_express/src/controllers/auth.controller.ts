@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import * as Status from 'http-status';
 import { ResJSON } from '../modules/types';
 import { User } from '../models/user';
+import bcrypt from 'bcrypt';
 import * as Reshape from './../modules/reshape';
 import * as AuthService from '../service/auth.service';
 import * as UserService from '../service/user.service';
@@ -15,7 +16,9 @@ export const login: RequestHandler = (req, res) => {
 export const signup: RequestHandler = async (req, res, next) => {
   try {
     const userInfo = Reshape.userObject(req);
+    userInfo.login_password = bcrypt.hashSync(userInfo.login_password, 10);
     const data = await AuthService.createAccount(new User({ ...userInfo }));
+    console.log(data);
     const result = new ResJSON('request success', data.toJSON());
     res.status(Status.CREATED).json(result);
   } catch (err) {

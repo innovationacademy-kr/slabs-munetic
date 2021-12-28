@@ -84,9 +84,9 @@ export class User
         login_password: {
           allowNull: true,
           type: DataTypes.STRING(60),
-          get() {
-            return undefined; // 비밀번호는 db 조회 후 데이터 리턴시에 제외되도록 함
-          },
+          // get() {
+          //   return undefined; // 비밀번호는 db 조회 후 데이터 리턴시에 제외되도록 함
+          // },
         },
         nickname: {
           allowNull: false,
