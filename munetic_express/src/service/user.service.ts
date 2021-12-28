@@ -44,7 +44,7 @@ const userProfileFindByQuery = (id: number) => {
 };
 
 export const findAllUser = async (page: number) => {
-  let limit = 1;
+  let limit = 10;
   let offset = 0;
   if (page > 1) {
     offset = (page - 1) * limit;
