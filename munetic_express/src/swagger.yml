@@ -53,7 +53,7 @@ paths:
     post:
       tags:
         - Auth
-      summary: Signin User
+      summary: Signup User
       description: 'Model에서 required 요소만 req.body에 담아 전달합니다. email과 phone_number는 둘 중 하나는 반드시 포함되어야 합니다.'
       consumes:
         - application/json
@@ -64,7 +64,24 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            properties:
+              login_id:
+                type: string
+              login_password:
+                type: string
+              type:
+                type: string
+              birth:
+                type: string
+              name:
+                type: string
+              nickname:
+                type: string
+              email:
+                type: string
+              phone_number:
+                type: string
+
       responses:
         '201':
           description: Created User
@@ -99,6 +116,9 @@ paths:
         - in: query
           type: string
           name: email
+        - in: query
+          type: string
+          name: nickname
       responses:
         '200':
           description: OK

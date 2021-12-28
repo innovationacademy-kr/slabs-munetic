@@ -5,7 +5,7 @@ export const options = {
       title: 'MUNETIC API',
       version: '1.0.0',
     },
-    host: 'munetic.42cadet.kr',
+    host: 'munetic.dev.42cadet.kr/',
     basePath: '/api',
   },
   apis: ['./src/swagger.yml'],
