@@ -36,14 +36,14 @@ const StyledButton = styled(Button)`
 export default function Login() {
   const { state, actions } = useContext(Contexts);
   const [loginInfo, setLoginInfo] = useState({
-    userId: '',
-    password: '',
+    login_id: '',
+    login_password: '',
   });
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const navigate = useNavigate();
 
-  const { userId, password } = loginInfo;
+  const { login_id, login_password } = loginInfo;
 
   const onChange = (
     e: React.ChangeEvent<
@@ -58,7 +58,7 @@ export default function Login() {
   };
 
   const validateLoginForm = () => {
-    if (!userId || !password) {
+    if (!login_id || !login_password) {
       return false;
     }
     return true;
@@ -90,19 +90,19 @@ export default function Login() {
     <Container onSubmit={onSubmit}>
       <InputBox
         inputName="아이디"
-        name="userId"
-        value={userId}
+        name="login_id"
+        value={login_id}
         onChange={onChange}
-        isValid={!!userId}
+        isValid={!!login_id}
         errorMessage="아이디를 입력하세요."
       />
       <InputBox
         inputName="비밀번호"
-        value={password}
-        name="password"
+        value={login_password}
+        name="login_password"
         type="password"
         onChange={onChange}
-        isValid={!!password}
+        isValid={!!login_password}
         errorMessage="비밀번호를 입력하세요."
       />
       {showErrorMessage && (
