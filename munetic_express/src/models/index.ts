@@ -59,29 +59,4 @@ export function Models() {
   return sequelize;
 }
 
-/**
- * MariaDB 테이블 연결
- */
-
-Models()
-  .sync({ force: false }) // DB를 삭제하고 새로 만드는가의 옵션
-  .then(() => {
-    console.log('👍 Modeling Successed');
-  })
-  .catch(err => console.log(err, '🙀 Modeling Failed'));
-
-/**
- * This executes Models(). When the file importing DatabaseInit() executed,
- * Models() is executed before any code of the exported file.
- * If Models was executed in the app.ts, this might cause execution of the
- * Modeling process later than querying
- */
-const DatabaseInit = () => {};
-
-export {
-  CategoryInstance,
-  UserInstance,
-  LessonInstance,
-  AdminInstance,
-  DatabaseInit,
-};
+export { CategoryInstance, UserInstance, LessonInstance, AdminInstance };

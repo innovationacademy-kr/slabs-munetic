@@ -1,9 +1,9 @@
 import newUser from '../dummy/newUser';
-import { User } from '../../models/user';
+import { User } from '../../models/user.model';
 import * as Status from 'http-status';
 import * as AuthService from '../../service/auth.service';
 
-jest.mock('../../models/user');
+jest.mock('../../models/user.model');
 const newUserSave = jest.spyOn(newUser, 'save');
 const userFindOne = jest.spyOn(User, 'findOne');
 

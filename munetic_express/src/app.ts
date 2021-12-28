@@ -24,8 +24,6 @@ const specs = swaggerJSDoc(options);
  * MariaDB 연결 init함수 호출
  */
 
-DatabaseInit();
-
 app.use(
   '/swagger',
   swaggerUi.serve,
