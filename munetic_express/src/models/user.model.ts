@@ -1,8 +1,14 @@
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
-export enum ACCOUNT {
-  student = 'STUDENT',
-  tutor = 'TUTOR',
+export enum Account {
+  Student = 'Student',
+  Tutor = 'Tutor',
+}
+
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
 }
 
 export enum Gender {
@@ -13,18 +19,22 @@ export enum Gender {
 
 export interface userAttributes {
   id: number;
-  type: ACCOUNT;
+  type: Account;
   login_id: string | null;
   login_password: string | null;
   nickname: string;
-  name: string | null;
-  name_public: boolean | null;
+  name: string;
+  name_public: boolean;
   birth: Date;
+  gender: Gender;
   email: string | null;
   phone_number: string | null;
-  phone_public: boolean | null;
+  phone_public: boolean;
   image_url: string | null;
   introduction: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
 }
 
 export type userCreationAttributes = Optional<
@@ -35,11 +45,15 @@ export type userCreationAttributes = Optional<
   | 'name'
   | 'name_public'
   | 'birth'
+  | 'gender'
   | 'email'
   | 'phone_number'
   | 'phone_public'
   | 'image_url'
   | 'introduction'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'deletedAt'
 >;
 
 export class User
@@ -47,18 +61,22 @@ export class User
   implements userAttributes
 {
   public id!: number;
-  public type!: ACCOUNT;
+  public type!: Account;
   public login_id!: string | null;
   public login_password!: string | null;
   public nickname!: string;
-  public name!: string | null;
-  public name_public!: boolean | null;
+  public name!: string;
+  public name_public!: boolean;
   public birth!: Date;
+  public gender!: Gender;
   public email!: string | null;
   public phone_number!: string | null;
-  public phone_public!: boolean | null;
+  public phone_public!: boolean;
   public image_url!: string | null;
   public introduction!: string | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+  public readonly deletedAt!: Date;
 
   static initModel(sequelize: Sequelize): typeof User {
     return User.init(
@@ -88,16 +106,21 @@ export class User
           unique: true,
         },
         name: {
-          allowNull: true,
+          allowNull: false,
           type: DataTypes.STRING(50),
         },
         name_public: {
-          allowNull: true,
+          allowNull: false,
           type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         birth: {
           allowNull: false,
-          type: DataTypes.DATE,
+          type: DataTypes.DATEONLY,
+        },
+        gender: {
+          allowNull: false,
+          type: DataTypes.ENUM('Male', 'Female', 'Other'),
         },
         email: {
           allowNull: true,
@@ -110,8 +133,9 @@ export class User
           unique: true,
         },
         phone_public: {
-          allowNull: true,
+          allowNull: false,
           type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         image_url: {
           allowNull: true,
@@ -120,6 +144,18 @@ export class User
         introduction: {
           allowNull: true,
           type: DataTypes.STRING(8192),
+        },
+        createdAt: {
+          field: 'createdAt',
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          field: 'updatedAt',
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
+          field: 'deletedAt',
+          type: DataTypes.DATE,
         },
       },
       { tableName: 'User', sequelize },

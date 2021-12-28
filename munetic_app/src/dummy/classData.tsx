@@ -1,4 +1,19 @@
-export const classData = [
+export interface classDataType {
+  id: number;
+  title: string;
+  img: string;
+  category: string | undefined;
+  nickname: string;
+  phone_number: string;
+  age: number;
+  place: string;
+  price: number;
+  gender: string;
+  minute: number;
+  content: string;
+}
+
+export const classData: classDataType[] = [
   {
     id: 1,
     title: '하프 레슨 합니다.',
