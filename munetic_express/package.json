@@ -4,10 +4,10 @@
   "description": "backend server for the project munetic",
   "main": "index.js",
   "scripts": {
-    "test": "jest --config ./jest-config.js",
-    "test:watch": "jest --config ./jest-config.js --watch",
-    "dev": "tsc-watch --onSuccess \"ts-node dist/app.js\"",
-    "serve": "tsc && node dist/app.js"
+    "test": "jest",
+    "test:watch": "jest --watchAll ",
+    "dev": "tsc-watch --onSuccess \"ts-node dist/server.js\"",
+    "serve": "tsc && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +34,7 @@
     "eslint": "8.4.1",
     "eslint-config-airbnb": "19.0.2",
     "jest": "^27.4.5",
+    "node-mocks-http": "^1.11.0",
     "sequelize-cli": "^6.3.0",
     "supertest": "^6.1.6",
     "swagger-jsdoc": "^6.1.0",

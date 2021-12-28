@@ -1,6 +1,6 @@
 import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 
-export enum Account {
+export enum ACCOUNT {
   student = 'STUDENT',
   tutor = 'TUTOR',
 }
@@ -13,19 +13,18 @@ export enum Gender {
 
 export interface userAttributes {
   id: number;
-  type: Account;
-  login_id?: string;
-  login_password?: string;
-  nickname?: string;
-  name?: string;
-  name_public?: boolean;
-  gender?: Gender;
-  age?: number;
-  email?: string;
-  phone_number?: string;
-  phone_public?: boolean;
-  image_url?: string;
-  introduction?: string;
+  type: ACCOUNT;
+  login_id: string | null;
+  login_password: string | null;
+  nickname: string;
+  name: string | null;
+  name_public: boolean | null;
+  birth: Date;
+  email: string | null;
+  phone_number: string | null;
+  phone_public: boolean | null;
+  image_url: string | null;
+  introduction: string | null;
 }
 
 export type userCreationAttributes = Optional<
@@ -34,8 +33,8 @@ export type userCreationAttributes = Optional<
   | 'login_password'
   | 'nickname'
   | 'name'
-  | 'gender'
-  | 'age'
+  | 'name_public'
+  | 'birth'
   | 'email'
   | 'phone_number'
   | 'phone_public'
@@ -48,19 +47,18 @@ export class User
   implements userAttributes
 {
   public id!: number;
-  public type!: Account;
-  public login_id?: string;
-  public login_password?: string;
-  public nickname?: string;
-  public name?: string;
-  public name_public?: boolean;
-  public gender?: Gender;
-  public age?: number;
-  public email?: string;
-  public phone_number?: string;
-  public phone_public?: boolean;
-  public image_url?: string;
-  public introduction?: string;
+  public type!: ACCOUNT;
+  public login_id!: string | null;
+  public login_password!: string | null;
+  public nickname!: string;
+  public name!: string | null;
+  public name_public!: boolean | null;
+  public birth!: Date;
+  public email!: string | null;
+  public phone_number!: string | null;
+  public phone_public!: boolean | null;
+  public image_url!: string | null;
+  public introduction!: string | null;
 
   static initModel(sequelize: Sequelize): typeof User {
     return User.init(
@@ -97,13 +95,9 @@ export class User
           allowNull: true,
           type: DataTypes.BOOLEAN,
         },
-        gender: {
-          allowNull: true,
-          type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER'),
-        },
-        age: {
-          allowNull: true,
-          type: DataTypes.INTEGER,
+        birth: {
+          allowNull: false,
+          type: DataTypes.DATE,
         },
         email: {
           allowNull: true,

@@ -5,9 +5,8 @@ import { options } from './swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { DatabaseInit } from './models';
-import * as lesson from './routes/lesson.routes';
-import { simpleTest } from './simpletest';
+import { Models } from './models';
+import errorHandler from './modules/errorHandler';
 
 const app: express.Application = express();
 
@@ -33,12 +32,19 @@ app.use(
   swaggerUi.setup(specs, { explorer: true }),
 );
 
-app.use(lesson.path, lesson.router);
+/**
+ * MariaDB 테이블 연결
+ */
+Models()
+  .sync({ force: true })
+  .then(() => {
+    app.emit('dbconnected');
+    console.log('👍 Modeling Successed');
+  })
+  .catch(err => console.log(err, '🙀 Modeling Failed'));
 
-app.listen(3030, () =>
-  console.log(`=============
-🚀 App listening on the port 3030
-============`),
-);
-
-// simpleTest();
+/**
+ * 에러 핸들링
+ */
+app.use(errorHandler);
+export default app;

@@ -2,6 +2,7 @@
   "name": "munetic_app",
   "version": "0.0.0",
   "scripts": {
+    "start": "npx vite",
     "build": "tsc && npx vite build",
     "test": "vite-jest",
     "dev": "tsc && npx vite build && vite serve",
