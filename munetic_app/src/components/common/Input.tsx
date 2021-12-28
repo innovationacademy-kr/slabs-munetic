@@ -14,6 +14,9 @@ const Container = styled.div<ContainerProps>`
     background-color: ${({ isReadOnly }) =>
       isReadOnly ? `${palette.ivory}` : ''};
   }
+  input::placeholder {
+    font-size: 13px;
+  }
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #fff inset;
     box-shadow: 0 0 0 30px #fff inset;
