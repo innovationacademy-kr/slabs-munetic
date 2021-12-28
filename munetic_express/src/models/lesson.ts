@@ -1,16 +1,9 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-enum Gender {
-  Male = 'Male',
-  Female = 'Female',
-  Other = 'Other',
-}
-
 interface lessonAttributes {
   id: number;
   title: string | null;
   price: number | null;
-  gender: Gender | null;
   location: string | null;
   age: number | null;
   minute_per_lesson: number | null;
@@ -24,7 +17,6 @@ type lessonCreationAttributes = Optional<
   lessonAttributes,
   | 'id'
   | 'price'
-  | 'gender'
   | 'location'
   | 'age'
   | 'minute_per_lesson'
@@ -41,7 +33,6 @@ export class Lesson
   public id!: number;
   public title!: string;
   public price!: number | null;
-  public gender!: Gender | null;
   public location!: string | null;
   public age!: number | null;
   public minute_per_lesson!: number | null;
@@ -66,10 +57,6 @@ export class Lesson
         price: {
           allowNull: true,
           type: DataTypes.INTEGER,
-        },
-        gender: {
-          allowNull: true,
-          type: DataTypes.ENUM('Male', 'Female', 'Other'),
         },
         location: {
           allowNull: true,

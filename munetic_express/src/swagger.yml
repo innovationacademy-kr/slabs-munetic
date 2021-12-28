@@ -71,8 +71,17 @@ paths:
                 type: string
               type:
                 type: string
+                enum:
+                  - Student
+                  - Tutor
               birth:
                 type: string
+              gender:
+                type: string
+                enum:
+                  - Male
+                  - Female
+                  - Other
               name:
                 type: string
               nickname:
@@ -444,6 +453,7 @@ definitions:
       - 'type'
       - 'name'
       - 'birth'
+      - 'gender'
       - 'nickname'
     properties:
       login_id:
@@ -458,8 +468,15 @@ definitions:
         type: string
       name_public:
         type: boolean
+        example: false
       birth:
         type: string
+      gender:
+        type: string
+        enum:
+          - Male
+          - Female
+          - Other
       nickname:
         type: string
       email:
@@ -468,10 +485,12 @@ definitions:
         type: string
       phone_public:
         type: boolean
+        example: false
       image_url:
         type: string
       introduction:
         type: string
+
   Lesson:
     type: object
     required:
