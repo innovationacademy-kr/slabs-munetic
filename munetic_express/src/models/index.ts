@@ -14,6 +14,8 @@ export const sequelize = new Sequelize(database!, username!, password, {
   dialect: 'mariadb',
   dialectOptions: {
     charset: 'utf8mb4',
+    dateStrings: true,
+    typeCast: true,
   },
   timezone: '+09:00',
   define: {

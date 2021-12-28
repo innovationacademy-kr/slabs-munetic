@@ -49,11 +49,12 @@ paths:
               message:
                 type: string
                 example: 'Invalid id or password'
-  /auth/signin:
+  /auth/signup:
     post:
       tags:
         - Auth
-      summary: Signin User
+      summary: Signup User
+      description: 'Model에서 required 요소만 req.body에 담아 전달합니다. email과 phone_number는 둘 중 하나는 반드시 포함되어야 합니다.'
       consumes:
         - application/json
       produces:
@@ -63,7 +64,24 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            properties:
+              login_id:
+                type: string
+              login_password:
+                type: string
+              type:
+                type: string
+              birth:
+                type: string
+              name:
+                type: string
+              nickname:
+                type: string
+              email:
+                type: string
+              phone_number:
+                type: string
+
       responses:
         '201':
           description: Created User
@@ -72,17 +90,51 @@ paths:
             properties:
               message:
                 type: string
-                example: 'Success'
+                example: 'request success'
               data:
                 $ref: '#/definitions/User'
         '500':
           description: Internal Server Error
           schema:
+            type: string
+            example: '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+
+  /auth/signup/user:
+    get:
+      tags:
+        - Auth
+      summary: Check if userInfo is valid
+      description: '중복 체크 하고 싶은 요소를 쿼리로 전달합니다. login_id와 email을 동시에 query로 전달할 수 없습니다.'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          type: string
+          name: login_id
+        - in: query
+          type: string
+          name: email
+        - in: query
+          type: string
+          name: nickname
+      responses:
+        '200':
+          description: OK
+          schema:
             type: object
             properties:
               message:
                 type: string
-                example: 'Internal Server Error'
+                example: '사용할 수 있는 유저 정보 입니다.'
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: '이미 존재하는 유저 정보 입니다.'
 
   # USER 관련 API
   /user/{id}:
@@ -166,7 +218,7 @@ paths:
               message:
                 type: string
   #Lesson 관련 API
-  /api/lesson/{id}:
+  /lesson/{id}:
     get:
       tags:
         - Lesson
@@ -331,7 +383,7 @@ paths:
                 example: 'The request agent has no permission to delete'
               data:
                 type: object
-  /api/lesson/:
+  /lesson/:
     post:
       tags:
         - Lesson
@@ -387,27 +439,30 @@ definitions:
   User:
     type: object
     required:
-      - 'id'
-      - 'password'
+      - 'login_id'
+      - 'login_password'
       - 'type'
       - 'name'
+      - 'birth'
       - 'nickname'
     properties:
-      id:
+      login_id:
         type: string
-      password:
+      login_password:
         type: string
       type:
         enum:
-          - 'STUDENT'
-          - 'TUTOR'
+          - 'student'
+          - 'tutor'
       name:
         type: string
       name_public:
         type: boolean
+      birth:
+        type: string
       nickname:
         type: string
-      mail:
+      email:
         type: string
       phone_number:
         type: string
