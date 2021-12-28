@@ -107,14 +107,14 @@ paths:
             properties:
               message:
                 type: string
-                example: '사용할 수 있는 Id/email 입니다.'
+                example: '사용할 수 있는 유저 정보 입니다.'
               data:
                 type: object
         '400':
           description: Bad_Request
           schema:
             type: string
-            example: '이미 존재하는 ID/email 입니다.'
+            example: '이미 존재하는 유저 정보 입니다.'
 
   # USER 관련 API
   /user/{id}:
