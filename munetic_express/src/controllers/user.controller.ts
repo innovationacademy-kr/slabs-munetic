@@ -6,7 +6,7 @@ import * as UserService from '../service/user.service';
 export const getAllUserProfile: RequestHandler = async (req, res, next) => {
   try {
     let result: ResJSON;
-    const users = await UserService.findAllUser();
+    const users = await UserService.findAllUser(Number(req.query.page));
     result = new ResJSON(
       '모든 유저 프로필을 불러오는데 성공하였습니다.',
       users,

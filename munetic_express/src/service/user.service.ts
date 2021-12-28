@@ -43,8 +43,16 @@ const userProfileFindByQuery = (id: number) => {
   };
 };
 
-export const findAllUser = async () => {
-  const users = await User.findAll();
+export const findAllUser = async (page: number) => {
+  let limit = 1;
+  let offset = 0;
+  if (page > 1) {
+    offset = (page - 1) * limit;
+  }
+  const users = await User.findAndCountAll({
+    offset,
+    limit,
+  });
   if (!users) {
     throw new ErrorResponse(
       Status.INTERNAL_SERVER_ERROR,
