@@ -6,6 +6,7 @@ import * as Reshape from './../modules/reshape';
 import * as AuthService from '../service/auth.service';
 import * as UserService from '../service/user.service';
 import ErrorResponse from '../modules/errorResponse';
+import { json } from 'stream/consumers';
 
 export const login: RequestHandler = (req, res) => {
   try {
@@ -15,8 +16,11 @@ export const login: RequestHandler = (req, res) => {
 export const signup: RequestHandler = async (req, res, next) => {
   try {
     const userInfo = Reshape.userObject(req);
-    const data = await AuthService.createAccount(new User({ ...userInfo }));
-    const result = new ResJSON('request success', data.toJSON());
+    const data = (await (
+      await AuthService.createAccount(new User({ ...userInfo }))
+    ).toJSON()) as any;
+    delete data.login_password;
+    const result = new ResJSON('request success', data);
     res.status(Status.CREATED).json(result);
   } catch (err) {
     next(err);
