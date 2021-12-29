@@ -16,6 +16,7 @@ paths:
       tags:
         - Auth
       summary: Login
+      description: 응답 body에는 accessToken을 cookie에는 refreshToken을 전달합니다.
       consumes:
         - application/json
       produces:
@@ -34,21 +35,42 @@ paths:
             properties:
               message:
                 type: string
-                example: 'Success'
+                example: 'request success'
               data:
-                $ref: '#/definitions/Login'
+                type: string
           headers:
-            Set-Cookie:
-              description: JWT accessToken
+            cookie:
+              description: JWT refreshToken
               type: string
-        '400':
-          description: 'Bad Request: there is no corresponding user data'
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 입력하신 id에 해당하는 계정이 없습니다. or 잘못된 비밀번호 입니다.
+
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logout
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: refreshToken
+          type: string
+      responses:
+        '200':
+          description: logout success
           schema:
             type: object
             properties:
               message:
                 type: string
-                example: 'Invalid id or password'
+                example: 'logout complete'
+              data:
+                type: object
+
   /auth/signup:
     post:
       tags:
@@ -438,12 +460,12 @@ definitions:
   Login:
     type: object
     required:
-      - 'id'
-      - 'password'
+      - 'login_id'
+      - 'login_password'
     properties:
-      id:
+      login_id:
         type: string
-      password:
+      login_password:
         type: string
   User:
     type: object

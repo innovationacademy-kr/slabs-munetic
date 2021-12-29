@@ -35,7 +35,7 @@ export const userObject = (req: Request) => {
         ? Gender.Female
         : Gender.Other,
     nickname,
-    type: type === 'student' ? Account.Student : Account.Tutor,
+    type: type === 'Student' ? Account.Student : Account.Tutor,
     email,
     phone_number,
   };
