@@ -7,12 +7,14 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
 import { Models } from './models';
 import errorHandler from './modules/errorHandler';
+import passport from 'passport';
 
 const app: express.Application = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+app.use(passport.initialize());
 app.use('/api', router);
 
 /**

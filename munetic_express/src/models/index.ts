@@ -5,9 +5,7 @@ import { Lesson } from './lesson';
 import { User } from './user';
 
 const { development } = require('../config/config');
-
 const { host, port, database, username, password } = development;
-
 export const sequelize = new Sequelize(database!, username!, password, {
   host,
   port,

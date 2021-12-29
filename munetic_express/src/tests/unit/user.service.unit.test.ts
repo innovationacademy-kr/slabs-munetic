@@ -32,7 +32,7 @@ describe('전체 유저 프로필 검색: UserService.findAllUser unit test', ()
     expect(User.findAndCountAll).toBeCalled();
   });
   it('findAndCountAll 함수로 조회된 리스트를 리턴한다.', () => {
-    const resValue = { count: 3, rows: userProfileInstance };
+    const resValue = { count: [3], rows: userProfileInstance };
     userFindAndCountAll.mockResolvedValueOnce(resValue);
     UserService.findAllUser(page).then(data =>
       expect(data).toStrictEqual(resValue),
