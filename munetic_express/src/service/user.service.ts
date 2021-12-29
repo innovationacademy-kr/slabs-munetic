@@ -25,21 +25,9 @@ const userProfileFindByQuery = (id: number) => {
     where: {
       id,
     },
-    attributes: [
-      'id',
-      'type',
-      'login_id',
-      'nickname',
-      'name',
-      'name_public',
-      'birth',
-      'gender',
-      'email',
-      'phone_number',
-      'phone_public',
-      'image_url',
-      'introduction',
-    ],
+    attributes: {
+      exclude: ['login_password', 'createdAt', 'updatedAt', 'deletedAt'],
+    },
   };
 };
 
@@ -54,10 +42,7 @@ export const findAllUser = async (page: number) => {
     limit,
   });
   if (!users) {
-    throw new ErrorResponse(
-      Status.INTERNAL_SERVER_ERROR,
-      '유저들을 불러올 수 없습니다.',
-    );
+    throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
   }
   return users;
 };
