@@ -6,6 +6,7 @@ import { InputBox } from '../common/Input';
 import * as AuthAPI from '../../lib/api/auth';
 import Contexts from '../../context/Contexts';
 import { useNavigate } from 'react-router-dom';
+import client from '../../lib/api/client';
 
 const Container = styled.form`
   margin: 250px 30px 30px 30px;
@@ -34,7 +35,7 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Login() {
-  const { state, actions } = useContext(Contexts);
+  const { actions } = useContext(Contexts);
   const [loginInfo, setLoginInfo] = useState({
     login_id: '',
     login_password: '',
@@ -70,11 +71,20 @@ export default function Login() {
 
     if (validateLoginForm()) {
       try {
-        await AuthAPI.login(loginInfo);
+        const res = await AuthAPI.login(loginInfo);
+        const { data: accessToken } = res.data;
+        client.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`;
+        try {
+          localStorage.setItem('user', JSON.stringify(login_id));
+        } catch (e) {
+          console.log(e, 'localStorage is not working');
+        }
         navigate('/');
       } catch (e) {
         setShowErrorMessage(true);
-        console.log(e, '회원가입 실패');
+        console.log(e, '로그인 실패');
       }
     }
   };
@@ -84,6 +94,12 @@ export default function Login() {
       actions.setValidationMode(false);
       setShowErrorMessage(false);
     };
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      navigate('/');
+    }
   }, []);
 
   return (
