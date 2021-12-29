@@ -41,7 +41,7 @@ export const findAllUser = async (page: number) => {
     offset,
     limit,
   });
-  if (!users) {
+  if (users === null) {
     throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
   }
   return users;
@@ -49,7 +49,7 @@ export const findAllUser = async (page: number) => {
 
 export const findUserById = async (id: number) => {
   const user = await User.findOne(userProfileFindByQuery(id));
-  if (!user) {
+  if (user === null) {
     throw new ErrorResponse(
       Status.BAD_REQUEST,
       '유효하지 않은 유저 아이디입니다.',
