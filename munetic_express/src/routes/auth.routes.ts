@@ -13,6 +13,5 @@ passport.use('jwt', JwtStrategy());
 router.post('/login', Auth.login);
 router.get('/logout', Auth.logout);
 router.post('/signup', Auth.signup);
-router.get('/access', passport.authenticate('jwt'), Auth.accessCheck);
 router.get('/refresh', Auth.refresh);
 router.get('/signup/user', Auth.isValidInfo);

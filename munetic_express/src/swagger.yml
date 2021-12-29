@@ -167,37 +167,6 @@ paths:
             type: string
             example: '이미 존재하는 유저 정보 입니다.'
 
-  /auth/access:
-    get:
-      tags:
-        - Auth
-      summary: Check login status using accessToken
-      parameters:
-        - in: header
-          description: Bearer AccessTokenString
-          name: Authorization
-          type: string
-      responses:
-        '200':
-          description: 'valid accessToken'
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: authorized
-              data:
-                type: object
-                properties:
-                  login_id:
-                    type: string
-                    example: kunlee
-        '400':
-          description: 'expired accessToken'
-          schema:
-            type: string
-            example: 'Unauthorized'
-
   /auth/refresh:
     get:
       tags:

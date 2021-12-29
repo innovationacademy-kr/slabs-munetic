@@ -54,19 +54,6 @@ export const signup: RequestHandler = async (req, res, next) => {
 };
 
 /**
- * 로그인 상태 체크
- */
-export const accessCheck: RequestHandler = async (req, res, next) => {
-  try {
-    res
-      .status(Status.OK)
-      .json(new ResJSON('authorized', { login_id: req.user }));
-  } catch (err) {
-    next(err);
-  }
-};
-
-/**
  * accessToken 갱신
  */
 
