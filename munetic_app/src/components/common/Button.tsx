@@ -36,8 +36,8 @@ const Button = ({ children, to, ...props }: IProps) => {
   return (
     <Container
       onClick={e => {
-        e.preventDefault();
         if (to) {
+          e.preventDefault();
           e.stopPropagation();
           navigate(to);
         }

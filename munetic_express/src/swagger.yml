@@ -184,8 +184,8 @@ paths:
           required: true
           description: user ID
       responses:
-        '201':
-          description: succesful Signin
+        '200':
+          description: Succesfully got User profile
           schema:
             type: object
             properties:

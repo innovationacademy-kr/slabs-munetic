@@ -16,6 +16,7 @@
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^6.0.2",
+    "serve": "^13.0.2",
     "styled-components": "^5.3.3",
     "styled-reset": "^4.3.4"
   },

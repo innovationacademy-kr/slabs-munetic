@@ -3,7 +3,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import palette from '../../style/palette';
 import { useContext } from 'react';
-import WriteContext from '../../context/writeContext';
+import Contexts from '../../context/Contexts';
 
 const TopBarContainer = styled.div`
   width: 100%;
@@ -72,7 +72,7 @@ const TopBarContainer = styled.div`
 `;
 
 export default function TopBar() {
-  const { actions } = useContext(WriteContext);
+  const { actions } = useContext(Contexts);
 
   //home에선 푸쉬알림&공백, 수정에선 Back&저장, 등록에선 Back&등록, 나머지는 Back&공백
   const navigate = useNavigate();
@@ -84,6 +84,8 @@ export default function TopBar() {
     rightText = '저장';
   } else if (currentPath === '/lesson/write') {
     rightText = '등록';
+  } else if (currentPath.includes('/auth')) {
+    return null;
   } else {
     rightText = '';
   }
