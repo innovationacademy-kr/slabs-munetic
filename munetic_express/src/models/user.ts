@@ -11,7 +11,7 @@ export enum Gender {
   Other = 'Other',
 }
 
-interface userAttributes {
+export interface userAttributes {
   id: number;
   type: Account;
   login_id: string | null;
