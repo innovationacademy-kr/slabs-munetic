@@ -5,6 +5,7 @@ import * as UserService from '../service/user.service';
 const Strategy = passportLocal.Strategy;
 
 function verifyPassword(password: string, encryptedPassword: string): boolean {
+  console.log(password, encryptedPassword);
   return bcrypt.compareSync(password, encryptedPassword);
 }
 
@@ -18,7 +19,6 @@ const localStrategyCallback = async (
     return done(null, false, {
       message: '입력하신 id에 해당하는 계정이 없습니다.',
     });
-
   const encryptedPassword = (await user?.toJSON().login_password) as string;
   if (!(await verifyPassword(login_password, encryptedPassword)))
     return done(null, false, { message: '잘못된 비밀번호 입니다.' });

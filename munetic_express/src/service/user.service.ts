@@ -24,7 +24,6 @@ export const search = async (userInfo: IsearchUser) => {
       ...userInfo,
       deletedAt: null,
     },
-    attributes: { exclude: ['password'] },
   });
   return data;
 };
