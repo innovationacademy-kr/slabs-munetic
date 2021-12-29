@@ -54,6 +54,46 @@ export const signup: RequestHandler = async (req, res, next) => {
 };
 
 /**
+ * 로그인 상태 체크
+ */
+export const accessCheck: RequestHandler = async (req, res, next) => {
+  try {
+    res
+      .status(Status.OK)
+      .json(new ResJSON('authorized', { login_id: req.user }));
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * accessToken 갱신
+ */
+
+export const refresh: RequestHandler = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies['refreshToken'];
+    if (refreshToken) {
+      const payload = await jwt.checkRefreshToken(refreshToken, next);
+      if (!payload)
+        throw new ErrorResponse(
+          Status.BAD_REQUEST,
+          '해당하는 계정 정보가 없습니다.',
+        );
+      const accessToken = await jwt.accessToken(payload as User);
+      res.status(Status.OK).json(new ResJSON('request success', accessToken));
+    } else {
+      throw new ErrorResponse(
+        Status.BAD_REQUEST,
+        'refresh token이 존재하지 않습니다.',
+      );
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * 아이디/이메일/닉네임 중복검사
  */
 export const isValidInfo: RequestHandler = async (req, res, next) => {

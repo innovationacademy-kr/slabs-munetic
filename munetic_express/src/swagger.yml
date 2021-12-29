@@ -167,6 +167,69 @@ paths:
             type: string
             example: '이미 존재하는 유저 정보 입니다.'
 
+  /auth/access:
+    get:
+      tags:
+        - Auth
+      summary: Check login status using accessToken
+      parameters:
+        - in: header
+          description: Bearer AccessTokenString
+          name: Authorization
+          type: string
+      responses:
+        '200':
+          description: 'valid accessToken'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: authorized
+              data:
+                type: object
+                properties:
+                  login_id:
+                    type: string
+                    example: kunlee
+        '400':
+          description: 'expired accessToken'
+          schema:
+            type: string
+            example: 'Unauthorized'
+
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      summary: Refresh accessToken
+      parameters:
+        - in: header
+          type: string
+          name: refreshToken(cookie)
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: string
+        '400':
+          description: 'Bad_Request'
+          schema:
+            type: string
+            example: '해당하는 계정 정보가 없습니다. or refresh token이 존재하지 않습니다.'
+
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 'JWT expired'
+
   # USER 관련 API
   /user/{id}:
     get:
