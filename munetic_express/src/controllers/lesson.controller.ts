@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK } from 'http-status';
-import { Gender } from '../models/user.model';
+import { BAD_REQUEST, OK } from 'http-status';
+import { Gender } from '../models/user';
 import {
   createLesson,
   editLesson,
@@ -20,7 +20,7 @@ export interface LessonRes extends ResponseData {
   tutor_name: string;
   gender?: Gender;
   birth: Date;
-  image_url?: string;
+  image_url: string | null;
   editable: LessonEditable;
 }
 

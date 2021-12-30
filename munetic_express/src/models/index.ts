@@ -1,13 +1,11 @@
 import { Sequelize } from 'sequelize';
-import { Admin } from './admin.model';
-import { Category } from './category.model';
-import { Lesson } from './lesson.model';
-import { User } from './user.model';
-import { development } from '../config/config';
-// const { development } = require('../config/config');
+import { Admin } from './admin';
+import { Category } from './category';
+import { Lesson } from './lesson';
+import { User } from './user';
 
+const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
-
 export const sequelize = new Sequelize(database!, username!, password, {
   host,
   port,

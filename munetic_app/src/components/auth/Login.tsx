@@ -6,6 +6,7 @@ import { InputBox } from '../common/Input';
 import * as AuthAPI from '../../lib/api/auth';
 import Contexts from '../../context/Contexts';
 import { useNavigate } from 'react-router-dom';
+import client from '../../lib/api/client';
 
 const Container = styled.form`
   margin: 250px 30px 30px 30px;
@@ -34,16 +35,16 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Login() {
-  const { state, actions } = useContext(Contexts);
+  const { actions } = useContext(Contexts);
   const [loginInfo, setLoginInfo] = useState({
-    userId: '',
-    password: '',
+    login_id: '',
+    login_password: '',
   });
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const navigate = useNavigate();
 
-  const { userId, password } = loginInfo;
+  const { login_id, login_password } = loginInfo;
 
   const onChange = (
     e: React.ChangeEvent<
@@ -58,7 +59,7 @@ export default function Login() {
   };
 
   const validateLoginForm = () => {
-    if (!userId || !password) {
+    if (!login_id || !login_password) {
       return false;
     }
     return true;
@@ -70,11 +71,20 @@ export default function Login() {
 
     if (validateLoginForm()) {
       try {
-        await AuthAPI.login(loginInfo);
+        const res = await AuthAPI.login(loginInfo);
+        const { data: accessToken } = res.data;
+        client.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`;
+        try {
+          localStorage.setItem('user', JSON.stringify(login_id));
+        } catch (e) {
+          console.log(e, 'localStorage is not working');
+        }
         navigate('/');
       } catch (e) {
         setShowErrorMessage(true);
-        console.log(e, '회원가입 실패');
+        console.log(e, '로그인 실패');
       }
     }
   };
@@ -86,23 +96,29 @@ export default function Login() {
     };
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      navigate('/');
+    }
+  }, []);
+
   return (
     <Container onSubmit={onSubmit}>
       <InputBox
         inputName="아이디"
-        name="userId"
-        value={userId}
+        name="login_id"
+        value={login_id}
         onChange={onChange}
-        isValid={!!userId}
+        isValid={!!login_id}
         errorMessage="아이디를 입력하세요."
       />
       <InputBox
         inputName="비밀번호"
-        value={password}
-        name="password"
+        value={login_password}
+        name="login_password"
         type="password"
         onChange={onChange}
-        isValid={!!password}
+        isValid={!!login_password}
         errorMessage="비밀번호를 입력하세요."
       />
       {showErrorMessage && (

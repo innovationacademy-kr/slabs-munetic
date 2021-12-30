@@ -59,6 +59,8 @@ services: # 사용되는 서비스들입니다.
       - DB_USERNAME=${EXPRESS_USER}
       - DB_PASSWORD=${EXPRESS_PASSWORD}
       - DB_NAME=munetic
+      - ACCESS_SECRET=${ACCESS_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
       - MODE=${MODE}
     build:
       context: ./munetic_express

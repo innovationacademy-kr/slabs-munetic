@@ -200,7 +200,7 @@ export default function Register() {
     if (validateSignupForm()) {
       try {
         await AuthAPI.signup(registerInfo);
-        navigate('/');
+        navigate('/auth/login');
       } catch (e) {
         console.log(e, '회원가입 실패');
       }
@@ -208,7 +208,6 @@ export default function Register() {
   };
 
   const onClickCheckId = async (id: string) => {
-    //get 요청 query형태에 따라 다시 바꾸자. 현재는 /api/auth/user?kunlee
     if (id) {
       try {
         await AuthAPI.isValidInfo(`login_id=${id}`);

@@ -1,9 +1,9 @@
 import { FindOptions } from 'sequelize/dist';
-import { Category } from '../models/category.model';
-import { lessonAttributes } from '../models/lesson.model';
-import { userAttributes } from '../models/user.model';
-import { User } from '../models/user.model';
-import { categoryAttributes } from '../models/category.model';
+import { Category } from '../models/category';
+import { lessonAttributes } from '../models/lesson';
+import { userAttributes } from '../models/user';
+import { User } from '../models/user';
+import { categoryAttributes } from '../models/category';
 import { CategoryInstance, LessonInstance, UserInstance } from '../models';
 
 /**
