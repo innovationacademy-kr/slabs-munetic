@@ -31,7 +31,7 @@ services: # 사용되는 서비스들입니다.
     volumes:
       - ./munetic_app/src:/munetic_app/src
 
-  database:
+  munetic_database:
     container_name: munetic_database
     build:
       context: ./munetic_database
@@ -59,9 +59,13 @@ services: # 사용되는 서비스들입니다.
       - DB_USERNAME=${EXPRESS_USER}
       - DB_PASSWORD=${EXPRESS_PASSWORD}
       - DB_NAME=munetic
+      - MODE=${MODE}
     build:
       context: ./munetic_express
       dockerfile: Dockerfile
+    command: npm run ${MODE}
+    ports:
+      - '3030:3030'
     working_dir: /munetic_express
     networks:
       - munetic

@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
 import { Models } from './models';
+import errorHandler from './modules/errorHandler';
 
 const app: express.Application = express();
 
@@ -18,6 +19,11 @@ app.use('/api', router);
  * Swagger 연결
  */
 const specs = swaggerJSDoc(options);
+
+/**
+ * MariaDB 연결 init함수 호출
+ */
+
 app.use(
   '/swagger',
   swaggerUi.serve,
@@ -30,12 +36,13 @@ app.use(
 Models()
   .sync({ force: true })
   .then(() => {
+    app.emit('dbconnected');
     console.log('👍 Modeling Successed');
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 
-app.listen(3030, () =>
-  console.log(`=============
-🚀 App listening on the port 3030
-============`),
-);
+/**
+ * 에러 핸들링
+ */
+app.use(errorHandler);
+export default app;

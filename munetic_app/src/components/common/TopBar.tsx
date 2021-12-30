@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import palette from '../../style/palette';
+import { useContext } from 'react';
+import Contexts from '../../context/Contexts';
 
 const TopBarContainer = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #1d3557;
-  postion: sticky;
+  background-color: ${palette.darkBlue};
+  position: sticky;
   top: 0;
   z-index: 99;
   .topBarWrapper {
@@ -21,7 +24,7 @@ const TopBarContainer = styled.div`
     cursor: pointer;
   }
   .topBarIcon {
-    color: #f1faee;
+    color: ${palette.ivory};
   }
   .topBarIconText {
     width: 15px;
@@ -29,8 +32,8 @@ const TopBarContainer = styled.div`
     position: absolute;
     top: -3px;
     left: 10px;
-    background-color: #e63946;
-    color: #f1faee;
+    background-color: ${palette.red};
+    color: ${palette.ivory};
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -40,7 +43,7 @@ const TopBarContainer = styled.div`
   .logo {
     font-weight: bold;
     font-size: 26px;
-    color: #f1faee;
+    color: ${palette.ivory};
     cursor: pointer;
     line-height: 53px;
   }
@@ -57,31 +60,41 @@ const TopBarContainer = styled.div`
     text-align: right;
   }
   .topBarRightText {
-    color: #f1faee;
+    color: ${palette.ivory};
     font-size: 15px;
     font-weight: bold;
   }
   .topBarLeftText {
-    color: #f1faee;
+    color: ${palette.ivory};
     font-size: 15px;
     font-weight: bold;
   }
 `;
 
 export default function TopBar() {
+  const { actions } = useContext(Contexts);
+
   //home에선 푸쉬알림&공백, 수정에선 Back&저장, 등록에선 Back&등록, 나머지는 Back&공백
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
-  let rightText;
+  let rightText: string;
   if (currentPath === '/') {
     rightText = '';
   } else if (currentPath.includes('edit')) {
     rightText = '저장';
   } else if (currentPath === '/lesson/write') {
     rightText = '등록';
+  } else if (currentPath.includes('/auth')) {
+    return null;
   } else {
     rightText = '';
   }
+  const onClickWrite = (rightText: string) => {
+    if (rightText === '등록') {
+      actions.setWrite(true);
+    }
+  };
+
   return (
     <TopBarContainer>
       <div className="topBarWrapper">
@@ -103,7 +116,12 @@ export default function TopBar() {
           </Link>
         </div>
         <div className="topBarRight">
-          <span className="topBarRightText">{rightText}</span>
+          <span
+            className="topBarRightText"
+            onClick={() => onClickWrite(rightText)}
+          >
+            {rightText}
+          </span>
         </div>
       </div>
     </TopBarContainer>

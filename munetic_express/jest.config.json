@@ -1,0 +1,6 @@
+{
+  "verbose": false,
+  "transform": {
+    "^.+\\.ts?$": "ts-jest"
+  }
+}

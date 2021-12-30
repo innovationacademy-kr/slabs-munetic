@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize';
-import { Admin } from './admin';
-import { Category } from './category';
-import { Lesson } from './lesson';
-import { User } from './user';
-
-const { development } = require('../config/config');
+import { Admin } from './admin.model';
+import { Category } from './category.model';
+import { Lesson } from './lesson.model';
+import { User } from './user.model';
+import { development } from '../config/config';
+// const { development } = require('../config/config');
 
 const { host, port, database, username, password } = development;
 
@@ -14,6 +14,8 @@ export const sequelize = new Sequelize(database!, username!, password, {
   dialect: 'mariadb',
   dialectOptions: {
     charset: 'utf8mb4',
+    dateStrings: true,
+    typeCast: true,
   },
   timezone: '+09:00',
   define: {
@@ -22,6 +24,11 @@ export const sequelize = new Sequelize(database!, username!, password, {
     paranoid: true,
   },
 });
+
+let CategoryInstance: typeof Category;
+let UserInstance: typeof User;
+let LessonInstance: typeof Lesson;
+let AdminInstance: typeof Admin;
 
 sequelize
   .authenticate()
@@ -32,23 +39,19 @@ sequelize
   });
 
 export function Models() {
-  Category.initModel(sequelize);
-  User.initModel(sequelize);
-  Lesson.initModel(sequelize);
-  Admin.initModel(sequelize);
+  CategoryInstance = Category.initModel(sequelize);
+  UserInstance = User.initModel(sequelize);
+  LessonInstance = Lesson.initModel(sequelize);
+  AdminInstance = Admin.initModel(sequelize);
 
-  Category.hasMany(Lesson, {
-    foreignKey: 'category_id',
-  });
+  Category.hasMany(Lesson);
   Lesson.belongsTo(Category, {
     foreignKey: {
       name: 'category_id',
       allowNull: false,
     },
   });
-  User.hasMany(Lesson, {
-    foreignKey: 'tutor_id',
-  });
+  User.hasMany(Lesson);
   Lesson.belongsTo(User, {
     foreignKey: {
       name: 'tutor_id',
@@ -57,3 +60,5 @@ export function Models() {
   });
   return sequelize;
 }
+
+export { CategoryInstance, UserInstance, LessonInstance, AdminInstance };

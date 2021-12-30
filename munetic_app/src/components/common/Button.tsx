@@ -1,12 +1,13 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import palette from '../../style/palette';
 
 const Container = styled.button`
   width: 100%;
   border: 0;
   border-radius: 20px;
-  background-color: #457b9d;
-  color: #f1faee;
+  background-color: ${palette.grayBlue};
+  color: ${palette.ivory};
   font-size: 20px;
   font-weight: bold;
   position: relative;
@@ -27,16 +28,24 @@ const Container = styled.button`
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  to: string;
+  to?: string;
 }
 
-const Button: React.FC<IProps> = ({ children, to, ...props }) => {
+const Button = ({ children, to, ...props }: IProps) => {
+  const navigate = useNavigate();
   return (
-    <Link to={to}>
-      <Container {...props}>
-        <span className="buttonText">{children}</span>
-      </Container>
-    </Link>
+    <Container
+      onClick={e => {
+        if (to) {
+          e.preventDefault();
+          e.stopPropagation();
+          navigate(to);
+        }
+      }}
+      {...props}
+    >
+      <span className="buttonText">{children}</span>
+    </Container>
   );
 };
 

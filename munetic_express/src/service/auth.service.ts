@@ -1,9 +1,6 @@
-import { User, userCreationAttributes } from '../models/user';
+import { User } from '../models/user.model';
 
-export const createUser = async (
-  userInfo: userCreationAttributes,
-): Promise<userCreationAttributes> => {
-  const user = new User({ ...userInfo });
-  user.save();
-  return user;
+export const createAccount = async (userInfo: User) => {
+  const data = await userInfo.save();
+  return data;
 };
