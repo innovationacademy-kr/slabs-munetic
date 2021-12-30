@@ -10,7 +10,7 @@ export const path = '/lesson';
 export const router = Router();
 
 router
-  .post('/', postLesson)
-  .get('/:id', getLesson)
-  .patch('/:id', patchLesson)
-  .delete('/:id', deleteLesson);
+  .post('/', postLesson) // createLesson
+  .get('/:id', getLesson) // findLesson, findLessons(query string)
+  .patch('/:id', patchLesson) // editLesson
+  .delete('/:id', deleteLesson); // removeLesson

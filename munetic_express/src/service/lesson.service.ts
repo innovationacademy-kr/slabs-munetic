@@ -137,8 +137,6 @@ export const findLessons = async (
 ): Promise<LessonAllInfo[] | string> => {
   if (offset < 0 || limit < 0)
     return 'offset이나 limit 값으로 음수가 올 수 없습니다.';
-  if (!Number.isInteger(offset) || !Number.isInteger(limit))
-    return 'offset이나 limit 값으로 비정수 값이 올 수 없습니다.';
   const lessons = (await LessonInstance.findAll({
     ...lessonQueryOptions,
     offset,

@@ -5,6 +5,7 @@ import {
   createLesson,
   editLesson,
   findLesson,
+  findLessons,
   LessonAllInfo,
   LessonEditable,
   removeLesson,
@@ -67,10 +68,10 @@ const lessonAllInfoToRes = ({
   lesson_id,
   tutor_id,
   title,
-  price = undefined,
-  location = undefined,
-  minute_per_lesson = undefined,
-  content = undefined,
+  price,
+  location,
+  minute_per_lesson,
+  content,
   Category: { name: category },
   User: { name, nickname, name_public, gender, birth, image_url: image_url },
 }: LessonAllInfo): LessonRes => {
@@ -113,6 +114,16 @@ const processService = <T>(
     });
 };
 
+const funcMapArray = <T, U>(fn: (param: T) => U): ((param: T[]) => U[]) => {
+  return function (param: T[]) {
+    const retArray: U[] = [];
+    for (const elem of param) {
+      retArray.push(fn(elem));
+    }
+    return retArray;
+  };
+};
+
 export const postLesson: RequestHandler = (
   req: Request,
   res: Response,
@@ -131,21 +142,12 @@ export const postLesson: RequestHandler = (
   if (lessonEditable.title === undefined)
     res.status(BAD_REQUEST).send('Title required');
 
-  createLesson(parseInt(req.query.tutor_id as string), lessonEditable)
-    .then(result => {
-      if (typeof result === 'string') {
-        res.status(BAD_REQUEST).json(new ResJSON(result));
-      } else {
-        res
-          .status(OK)
-          .json(
-            new ResJSON('Successfully Retrieved', lessonAllInfoToRes(result)),
-          );
-      }
-    })
-    .catch((err: any) => {
-      next(err);
-    });
+  processService(
+    createLesson(parseInt(req.query.tutor_id as string), lessonEditable),
+    res,
+    next,
+    lessonAllInfoToRes,
+  );
 };
 
 export const getLesson: RequestHandler = (
@@ -153,15 +155,30 @@ export const getLesson: RequestHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!req.params.id)
-    res.status(BAD_REQUEST).send(new ResJSON('No lesson_id requested'));
-
-  processService(
-    findLesson(parseInt(req.params.id)),
-    res,
-    next,
-    lessonAllInfoToRes,
-  );
+  if (!req.params.id || !(req.query.offset && req.query.limit))
+    res
+      .status(BAD_REQUEST)
+      .send(new ResJSON('레슨 id, 혹은 offset과 limit이 주어지지 않았습니다.'));
+  if (req.params.id)
+    // params.id 먼저 처리
+    processService(
+      findLesson(parseInt(req.params.id)),
+      res,
+      next,
+      lessonAllInfoToRes,
+    );
+  else {
+    const offset = Number.parseInt(req.query.offset as string);
+    const limit = Number.parseInt(req.query.limit as string);
+    if (!Number.isInteger(offset) || !Number.isInteger(limit))
+      res.status(BAD_REQUEST).send('offset 혹은 limit이 정수가 아닙니다.');
+    processService(
+      findLessons(offset, limit),
+      res,
+      next,
+      funcMapArray(lessonAllInfoToRes),
+    );
+  }
 };
 
 export const patchLesson: RequestHandler = (
@@ -193,10 +210,5 @@ export const deleteLesson: RequestHandler = (
   if (!req.params.id)
     res.status(BAD_REQUEST).send(new ResJSON('No lesson_id requested'));
 
-  processService(
-    removeLesson(parseInt(req.params.id)),
-    res,
-    next,
-    (_: any) => _,
-  );
+  processService(removeLesson(parseInt(req.params.id)), res, next, _ => _);
 };
