@@ -1,12 +1,11 @@
 import { RequestHandler } from 'express';
 import * as Status from 'http-status';
 import { ResJSON } from '../modules/types';
-import { User } from '../models/user';
+import { User } from '../models/user.model';
 import * as Reshape from './../modules/reshape';
 import * as AuthService from '../service/auth.service';
 import * as UserService from '../service/user.service';
 import ErrorResponse from '../modules/errorResponse';
-import { json } from 'stream/consumers';
 
 export const login: RequestHandler = (req, res) => {
   try {

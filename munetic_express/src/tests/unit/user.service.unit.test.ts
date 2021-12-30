@@ -1,4 +1,4 @@
-import { User } from '../../models/user';
+import { User } from '../../models/user.model';
 import UserInstance from '../dummy/userInstance';
 import * as UserService from '../../service/user.service';
 

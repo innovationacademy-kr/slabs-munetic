@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Account, Gender } from '../models/user';
+import { Account, Gender } from '../models/user.model';
 
 export const userObject = (req: Request) => {
   const {

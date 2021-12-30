@@ -6,7 +6,7 @@ import userInfo from '../dummy/userInfo.json';
 
 beforeAll(async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
   } catch (e) {
     console.log(e);
   }

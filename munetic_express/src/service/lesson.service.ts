@@ -37,35 +37,30 @@ export type LessonAllInfo = {
 /**
  * Query option of 'find Lesson' to get all information about a lesson
  */
-const lessonQueryOption = (id: number): FindOptions<lessonAttributes> => {
-  return {
-    attributes: [
-      ['id', 'lesson_id'],
-      'tutor_id',
-      'title',
-      'price',
-      'location',
-      'minute_per_lesson',
-      'content',
-    ],
-    where: {
-      id,
+const lessonQueryOptions: FindOptions<lessonAttributes> = {
+  attributes: [
+    ['id', 'lesson_id'],
+    'tutor_id',
+    'title',
+    'price',
+    'location',
+    'minute_per_lesson',
+    'content',
+  ],
+  include: [
+    { model: Category, attributes: ['name'] },
+    {
+      model: User,
+      attributes: [
+        'name',
+        'nickname',
+        'name_public',
+        'birth',
+        'gender',
+        'image_url',
+      ],
     },
-    include: [
-      { model: Category, attributes: ['name'] },
-      {
-        model: User,
-        attributes: [
-          'name',
-          'nickname',
-          'name_public',
-          'age',
-          'gender',
-          'image_url',
-        ],
-      },
-    ],
-  };
+  ],
 };
 
 /**
@@ -84,13 +79,13 @@ export const createLesson = async (
       id: tutorId,
     },
   });
-  if (tutor === null) return 'No such tutor id';
+  if (tutor === null) return '해당하는 튜터가 없습니다.';
   const category = await CategoryInstance.findOne({
     where: {
       name: lessonEditable.category,
     },
   });
-  if (category === null) return 'No such category name';
+  if (category === null) return '해당하는 카테고리 이름이 없습니다.';
 
   const categoryLess = { ...lessonEditable } as any;
   categoryLess.category = undefined;
@@ -102,10 +97,11 @@ export const createLesson = async (
   });
   newLesson.save();
 
-  const lesson = (await LessonInstance.findOne(
-    lessonQueryOption(newLesson.id),
-  )) as LessonAllInfo | null;
-  if (lesson === null) throw new Error('Lesson create failed');
+  const lesson = (await LessonInstance.findOne({
+    ...lessonQueryOptions,
+    where: { id: newLesson.id },
+  })) as LessonAllInfo | null;
+  if (lesson === null) throw new Error('레슨 등록에 실패했습니다.');
   lesson.lesson_id = (lesson as any).dataValues.lesson_id; // 왠지 모르겠지만 바로 들어가지 않음. User와의 property 차이일까?
   return lesson;
 };
@@ -119,12 +115,39 @@ export const createLesson = async (
 export const findLesson = async (
   lessonId: number,
 ): Promise<LessonAllInfo | string> => {
-  const lesson = (await LessonInstance.findOne(
-    lessonQueryOption(lessonId),
-  )) as unknown as LessonAllInfo | null;
-  if (lesson === null) return 'No such lesson';
+  const lesson = (await LessonInstance.findOne({
+    ...lessonQueryOptions,
+    where: { id: lessonId },
+  })) as unknown as LessonAllInfo | null;
+  if (lesson === null) return '해당하는 레슨이 없습니다.';
   lesson.lesson_id = (lesson as any).dataValues.lesson_id;
   return lesson;
+};
+
+/**
+ * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다. 순서는 기본 순서인 생성 순입니다.
+ *
+ * @param offset
+ * @param limit
+ * @returns
+ */
+export const findLessons = async (
+  offset: number,
+  limit: number,
+): Promise<LessonAllInfo[] | string> => {
+  if (offset < 0 || limit < 0)
+    return 'offset이나 limit 값으로 음수가 올 수 없습니다.';
+  if (!Number.isInteger(offset) || !Number.isInteger(limit))
+    return 'offset이나 limit 값으로 비정수 값이 올 수 없습니다.';
+  const lessons = (await LessonInstance.findAll({
+    ...lessonQueryOptions,
+    offset,
+    limit,
+  })) as unknown[] as LessonAllInfo[];
+  for (const lesson of lessons) {
+    lesson.lesson_id = (lesson as any).dataValues.lesson_id;
+  }
+  return lessons;
 };
 
 /**
@@ -145,7 +168,7 @@ export const editLesson = async (
       where: { name: lessonEditable.category },
     });
     console.log(lessonEditable.category);
-    if (category === null) return 'No such category';
+    if (category === null) return '해당하는 카테고리 이름이 없습니다.';
   }
   const [updatedNum] = await LessonInstance.update(
     { ...lessonEditable, category_id: category?.id },
@@ -155,13 +178,14 @@ export const editLesson = async (
       },
     },
   );
-  if (updatedNum === 0) return 'No such lesson';
+  if (updatedNum === 0) return '해당하는 레슨이 없습니다.';
   console.assert(updatedNum === 1);
 
-  const updatedLesson = (await LessonInstance.findOne(
-    lessonQueryOption(lessonId),
-  )) as LessonAllInfo | null;
-  if (updatedLesson === null) throw new Error('Lesson update failed');
+  const updatedLesson = (await LessonInstance.findOne({
+    ...lessonQueryOptions,
+    where: { id: lessonId },
+  })) as LessonAllInfo | null;
+  if (updatedLesson === null) throw new Error('레슨 업데이트에 실패했습니다.');
 
   updatedLesson.lesson_id = (updatedLesson as any).dataValues.lesson_id; // 이유를 알 수 없다.
   return updatedLesson;
@@ -179,7 +203,7 @@ export const removeLesson = async (
   const checkExistence = await LessonInstance.findOne({
     where: { id: lessonId },
   });
-  if (!checkExistence) return 'No such lesson';
+  if (!checkExistence) return '해당하는 레슨이 없습니다.';
 
   await checkExistence.destroy();
   return { removed: true };

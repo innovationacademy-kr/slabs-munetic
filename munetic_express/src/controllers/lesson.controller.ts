@@ -18,8 +18,8 @@ export interface LessonRes extends ResponseData {
   tutor_id: number;
   tutor_name: string;
   gender?: Gender;
-  age?: number;
-  profile_pic?: string;
+  birth: Date;
+  image_url?: string;
   editable: LessonEditable;
 }
 
@@ -72,22 +72,15 @@ const lessonAllInfoToRes = ({
   minute_per_lesson = undefined,
   content = undefined,
   Category: { name: category },
-  User: {
-    name = undefined,
-    nickname = undefined,
-    name_public = undefined,
-    gender = undefined,
-    age = undefined,
-    image_url: profile_pic = undefined,
-  },
+  User: { name, nickname, name_public, gender, birth, image_url: image_url },
 }: LessonAllInfo): LessonRes => {
   return {
     lesson_id,
     tutor_id,
     tutor_name: (name_public ? name : nickname) as string,
     gender,
-    age,
-    profile_pic,
+    birth,
+    image_url,
     editable: {
       category,
       title,

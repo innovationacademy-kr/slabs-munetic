@@ -11,27 +11,21 @@ export enum Gender {
   Other = 'Other',
 }
 
-export enum Gender {
-  Male = 'MALE',
-  Female = 'FEMALE',
-  Other = 'OTHER',
-}
-
 export interface userAttributes {
   id: number;
   type: Account;
-  login_id: string | null;
-  login_password: string | null;
+  login_id?: string;
+  login_password?: string;
   nickname: string;
   name: string;
   name_public: boolean;
   birth: Date;
   gender: Gender;
-  email: string | null;
-  phone_number: string | null;
+  email?: string;
+  phone_number?: string;
   phone_public: boolean;
-  image_url: string | null;
-  introduction: string | null;
+  image_url?: string;
+  introduction?: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -39,6 +33,7 @@ export interface userAttributes {
 
 export type userCreationAttributes = Optional<
   userAttributes,
+  | 'id'
   | 'login_id'
   | 'login_password'
   | 'nickname'
@@ -62,18 +57,18 @@ export class User
 {
   public id!: number;
   public type!: Account;
-  public login_id!: string | null;
-  public login_password!: string | null;
+  public login_id?: string;
+  public login_password?: string;
   public nickname!: string;
   public name!: string;
   public name_public!: boolean;
   public birth!: Date;
   public gender!: Gender;
-  public email!: string | null;
-  public phone_number!: string | null;
+  public email?: string;
+  public phone_number?: string;
   public phone_public!: boolean;
-  public image_url!: string | null;
-  public introduction!: string | null;
+  public image_url?: string;
+  public introduction?: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
