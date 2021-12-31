@@ -12,7 +12,7 @@ export default function Menu() {
   ];
 
   const subMenuLists = [
-    ['회원 조회 및 관리'],
+    ['회원 조회 및 관리', '관리자 조회 및 관리'],
     ['게시물 조회 및 관리'],
     ['앱 가입 정책 관리', '회원 가입 양식', '오픈 소스 라이센스', '팝업 관리'],
     ['스토어 앱 버전 관리'],
@@ -21,6 +21,14 @@ export default function Menu() {
   ];
 
   const menuLinks = ['/users', '/posts', '', '', '', ''];
+  const subMenuLinks = [
+    ['/users', '/admin_users'],
+    ['/posts'],
+    ['', '', '', ''],
+    [''],
+    ['', '', ''],
+    ['', ''],
+  ];
 
   return (
     <MenuContainer>
@@ -33,13 +41,16 @@ export default function Menu() {
             <MainMenuList key={i}>
               <MainMenuContent>
                 <Link to={menuLinks[i]}>{menu}</Link>
-                <SubMenuContainer>
+                <SubMenuContainer />
+                <SubMenuListContainer>
                   <ul>
-                    {subMenuLists[i].map(subMenu => (
-                      <SubMenuList>{subMenu}</SubMenuList>
+                    {subMenuLists[i].map((subMenu, j) => (
+                      <SubMenuList>
+                        <Link to={subMenuLinks[i][j]}>{subMenu}</Link>
+                      </SubMenuList>
                     ))}
                   </ul>
-                </SubMenuContainer>
+                </SubMenuListContainer>
               </MainMenuContent>
             </MainMenuList>
           ))}
@@ -62,7 +73,7 @@ const MenuInner = styled.div`
 `;
 
 const Logo = styled.h1`
-  margin: 1rem 2rem 1rem 3rem;
+  margin: 2rem 2rem 2rem 3rem;
   a {
     font-size: 2.5rem;
     font-weight: 700;
@@ -81,7 +92,7 @@ const MainMenuList = styled.li`
     &::after {
       content: '';
       display: block;
-      margin-top: -0.25rem;
+      margin-top: 0.7rem;
       position: relative;
       height: 3px;
       weight: 100%;
@@ -91,6 +102,7 @@ const MainMenuList = styled.li`
 `;
 
 const MainMenuContent = styled.span`
+  margin-top: 1rem;
   position: relative;
   display: block;
   padding: 1.5rem 0.5rem;
@@ -107,24 +119,34 @@ const MainMenuContent = styled.span`
 const SubMenuContainer = styled.div`
   position: fixed;
   display: none;
-  top: 4.65rem;
+  top: 6.6rem;
   left: 0;
   width: 100%;
+  height: 6rem;
   font-size: 1.4rem;
-  padding: 1.4rem 0;
   background-color: white;
   border-bottom: 1px solid rgb(239, 239, 239);
   ${MainMenuList}:hover & {
     display: block;
   }
+`;
+
+const SubMenuListContainer = styled.div`
+  display: none;
+  ${MainMenuList}:hover & {
+    display: block;
+  }
   > ul {
-    padding-left: 14.7rem;
+    position: absolute;
     display: flex;
+    width: 1000rem;
+    margin: 4.5rem 0;
   }
 `;
 
 const SubMenuList = styled.li`
-  padding: 1rem 3rem;
+  margin-right: 3rem;
+
   &:hover {
     font-weight: 500;
     color: rgb(82, 111, 255);

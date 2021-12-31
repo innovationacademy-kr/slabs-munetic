@@ -4,7 +4,7 @@ import UserAuthType from './UserAuthType';
 import UserSpec from './UserSpec';
 import UserPosts from './UserPosts';
 
-export default function ModalUser() {
+export default function UserModal() {
   return (
     <>
       <UserOverview />
