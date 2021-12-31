@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ListLessonInfo from './ListLessonInfo';
 import ListUserInfo from './ListUserInfo';
 import Modal from '../Modal/Modal';
+import ListAdminUserInfo from './ListAdminUserInfo';
 
 export type UserInfoProps = {
   onOpenModal?: () => void;
@@ -28,9 +29,19 @@ export type LessonInfoProps = {
   deletedAt: string;
 };
 
+export type AdminUserInfoProps = {
+  onOpenModal?: () => void;
+  name: string;
+  team: string;
+  auth: string;
+  email: string;
+  createdAt: string;
+  deletedAt?: string | null;
+};
+
 export default function ListCard({
   ...cardInfo
-}: UserInfoProps | LessonInfoProps) {
+}: UserInfoProps | LessonInfoProps | AdminUserInfoProps) {
   const [modalOn, setModalOn] = useState(false);
   const onOpenModal = () => {
     setModalOn(true);
@@ -43,26 +54,28 @@ export default function ListCard({
     setModalOn(false);
   };
 
-  console.log(modalOn);
   const path = useLocation().pathname;
   return (
     <ListCardContainer>
       <Checkbox />
-      {path === '/users' ? (
+      {path === '/users' && (
         <ListUserInfo
           {...(cardInfo as UserInfoProps)}
           onOpenModal={onOpenModal}
         />
-      ) : (
+      )}
+      {path === '/users' && modalOn && <Modal onCloseModal={onCloseModal} />}
+      {path === '/posts' && (
         <ListLessonInfo
           {...(cardInfo as LessonInfoProps)}
           onOpenModal={onOpenModal}
         />
       )}
-      {path === '/users' && modalOn ? (
-        <Modal onCloseModal={onCloseModal} />
-      ) : (
-        ''
+      {path === '/admin_users' && (
+        <ListAdminUserInfo
+          {...(cardInfo as AdminUserInfoProps)}
+          onOpenModal={onOpenModal}
+        />
       )}
     </ListCardContainer>
   );

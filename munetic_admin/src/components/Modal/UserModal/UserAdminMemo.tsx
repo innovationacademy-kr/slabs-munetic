@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import NonFlexContainer from './NonFlexContainer';
-import ModalTitle from './ModalTitle';
+import NonFlexContainer from '../NonFlexContainer';
+import ModalTitle from '../ModalTitle';
 
 export default function UserAdminMemo() {
   return (
