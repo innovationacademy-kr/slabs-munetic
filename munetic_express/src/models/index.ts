@@ -37,10 +37,10 @@ sequelize
   });
 
 export function Models() {
-  CategoryInstance = Category.initModel(sequelize);
-  UserInstance = User.initModel(sequelize);
-  LessonInstance = Lesson.initModel(sequelize);
-  AdminInstance = Admin.initModel(sequelize);
+  Category.initModel(sequelize);
+  User.initModel(sequelize);
+  Lesson.initModel(sequelize);
+  Admin.initModel(sequelize);
 
   Category.hasMany(Lesson);
   Lesson.belongsTo(Category, {
@@ -58,5 +58,3 @@ export function Models() {
   });
   return sequelize;
 }
-
-export { CategoryInstance, UserInstance, LessonInstance, AdminInstance };
