@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 import HomePage from '../pages/HomePage';
 import PostListPage from '../pages/PostListPage';
 import UserListPage from '../pages/UserListPage';
+import AdminUserListPage from '../pages/AdminUserListPage';
 
 export default function Routing() {
   return (
@@ -10,6 +11,7 @@ export default function Routing() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/users" element={<UserListPage />} />
+        <Route path="/admin_users" element={<AdminUserListPage />} />
         <Route path="/posts" element={<PostListPage />} />
       </Routes>
     </RoutesContainer>
@@ -23,7 +25,6 @@ const RoutesContainer = styled.div`
   min-width: 110rem;
   height: 80vh;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   font-size: 1.6rem;
 `;

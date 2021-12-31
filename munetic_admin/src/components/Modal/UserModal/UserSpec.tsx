@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import ModalTitle from './ModalTitle';
-import NonFlexContainer from './NonFlexContainer';
-import { FlexInner, LeftContainer, RightContainer } from './FlexComponents';
+import ModalTitle from '../ModalTitle';
+import NonFlexContainer from '../NonFlexContainer';
+import { FlexInner, LeftContainer, RightContainer } from '../FlexComponents';
 
 export default function UserSpec() {
   return (

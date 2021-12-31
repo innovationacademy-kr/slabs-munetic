@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import {
-  editUserProfile,
-  getAllUserProfile,
-  getUserProfile,
-} from '../controllers/user.controller';
+import passport from 'passport';
+import * as UserAPI from '../controllers/user.controller';
+import JwtStrategy from '../modules/jwt.strategy';
 
 export const path = '/user';
 export const router = Router();
 
-router.get('/', getAllUserProfile);
-router.get('/:id', getUserProfile);
-router.patch('/:id', editUserProfile);
+passport.use('jwt', JwtStrategy());
+
+router.get('/', passport.authenticate('jwt'), UserAPI.getAllUserProfile);
+router.get('/profile/:id', UserAPI.getUserProfile);
+router.patch('/', passport.authenticate('jwt'), UserAPI.editUserProfile);
+router.get('/logged', passport.authenticate('jwt'), UserAPI.getMyProfile);

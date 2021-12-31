@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexContainer } from './FlexComponents';
+import { FlexContainer } from '../FlexComponents';
 
 export default function UserOverview() {
   return (

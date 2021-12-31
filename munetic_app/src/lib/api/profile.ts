@@ -8,6 +8,8 @@ export interface NewProfileInfoType {
   image_url?: string | null;
   introduction?: string | null;
 }
-export const updateProfile = (id: number, body: NewProfileInfoType) =>
-  client.patch(`/api/user/${id}`, body);
-export const getProfileById = (id: number) => client.get(`/api/user/${id}`);
+export const updateProfile = (body: NewProfileInfoType) =>
+  client.patch(`/api/user`, body);
+export const getProfileById = (id: number) =>
+  client.get(`/api/user/profile/${id}`);
+export const getMyProfile = () => client.get(`/api/user/logged`);

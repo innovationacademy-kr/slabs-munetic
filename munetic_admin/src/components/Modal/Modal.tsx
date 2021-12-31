@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 
-import ModalUser from './ModalUser';
+import UserModal from './UserModal/UserModal';
 
 type ModalProps = {
   onCloseModal?: () => void;
@@ -14,7 +14,7 @@ export default function Modal({ onCloseModal }: ModalProps) {
         <CloseIconDiv onClick={onCloseModal}>
           <CloseIcon fontSize="large" />
         </CloseIconDiv>
-        <ModalUser />
+        <UserModal />
       </ModalContainer>
     </ModalBackground>
   );
@@ -41,7 +41,7 @@ const ModalContainer = styled.div`
   position: relative;
   margin: 4rem auto;
   width: 50rem;
-  height: 70rem;
+  max-height: 67rem;
   background-color: white;
   border-radius: 0.5rem;
   overflow: scroll;

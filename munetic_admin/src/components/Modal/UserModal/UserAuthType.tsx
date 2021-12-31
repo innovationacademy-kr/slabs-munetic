@@ -4,8 +4,12 @@ import { MenuItem } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-import ModalTitle from './ModalTitle';
-import { FlexContainer, LeftContainer, RightContainer } from './FlexComponents';
+import ModalTitle from '../ModalTitle';
+import {
+  FlexContainer,
+  LeftContainer,
+  RightContainer,
+} from '../FlexComponents';
 
 export default function UserAuthType() {
   const [type, setType] = useState('tutor');
