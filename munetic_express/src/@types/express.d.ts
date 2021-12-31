@@ -3,6 +3,7 @@ declare module Express {
     user?: {
       login_id: string;
       id: number;
+      login_password?: string;
     };
   }
 }

@@ -23,8 +23,7 @@ const JwtStrategyCallback = async (
 ) => {
   const [user] = await UserService.search({ login_id: jwt_payload.login_id });
   if (user) {
-    const userData = { login_id: user.login_id, id: user.id };
-    return done(null, userData);
+    return done(null, user.toJSON());
   } else {
     return done(null, null);
   }

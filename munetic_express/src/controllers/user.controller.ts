@@ -26,7 +26,8 @@ export const getMyProfile: RequestHandler = async (req, res, next) => {
   try {
     if (req.user) {
       let result: ResJSON;
-      const userData = await UserService.findUserById(Number(req.user.id));
+      const userData = req.user;
+      delete userData.login_password;
       result = new ResJSON(
         '유저 프로필을 불러오는데 성공하였습니다.',
         userData,
