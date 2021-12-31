@@ -23,6 +23,11 @@ export const sequelize = new Sequelize(database!, username!, password, {
   },
 });
 
+let CategoryInstance: typeof Category;
+let UserInstance: typeof User;
+let LessonInstance: typeof Lesson;
+let AdminInstance: typeof Admin;
+
 sequelize
   .authenticate()
   .then(() => console.log('db connected🚀'))
@@ -37,18 +42,14 @@ export function Models() {
   Lesson.initModel(sequelize);
   Admin.initModel(sequelize);
 
-  Category.hasMany(Lesson, {
-    foreignKey: 'category_id',
-  });
+  Category.hasMany(Lesson);
   Lesson.belongsTo(Category, {
     foreignKey: {
       name: 'category_id',
       allowNull: false,
     },
   });
-  User.hasMany(Lesson, {
-    foreignKey: 'tutor_id',
-  });
+  User.hasMany(Lesson);
   Lesson.belongsTo(User, {
     foreignKey: {
       name: 'tutor_id',

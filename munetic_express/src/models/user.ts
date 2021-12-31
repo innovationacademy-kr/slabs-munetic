@@ -36,6 +36,7 @@ export type userCreationAttributes = Optional<
   | 'id'
   | 'login_id'
   | 'login_password'
+  | 'nickname'
   | 'name'
   | 'name_public'
   | 'birth'

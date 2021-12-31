@@ -27,6 +27,11 @@ app.use('/api', router);
  * Swagger 연결
  */
 const specs = swaggerJSDoc(options);
+
+/**
+ * MariaDB 연결 init함수 호출
+ */
+
 app.use(
   '/swagger',
   swaggerUi.serve,

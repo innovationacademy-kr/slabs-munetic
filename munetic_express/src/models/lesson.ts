@@ -1,11 +1,12 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-interface lessonAttributes {
+export interface lessonAttributes {
   id: number;
+  tutor_id: number;
+  category_id: number;
   title: string | null;
   price: number | null;
   location: string | null;
-  age: number | null;
   minute_per_lesson: number | null;
   content: string | null;
   createdAt: Date;
@@ -13,17 +14,9 @@ interface lessonAttributes {
   deletedAt: Date;
 }
 
-type lessonCreationAttributes = Optional<
+export type lessonCreationAttributes = Optional<
   lessonAttributes,
-  | 'id'
-  | 'price'
-  | 'location'
-  | 'age'
-  | 'minute_per_lesson'
-  | 'content'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'deletedAt'
+  'title' | 'price' | 'location' | 'minute_per_lesson' | 'content'
 >;
 
 export class Lesson
@@ -31,10 +24,11 @@ export class Lesson
   implements lessonAttributes
 {
   public id!: number;
+  public tutor_id!: number;
+  public category_id!: number;
   public title!: string;
   public price!: number | null;
   public location!: string | null;
-  public age!: number | null;
   public minute_per_lesson!: number | null;
   public content!: string | null;
   public readonly createdAt!: Date;
@@ -50,6 +44,22 @@ export class Lesson
           type: DataTypes.INTEGER,
           primaryKey: true,
         },
+        tutor_id: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          // references: {
+          //   model: 'user',
+          //   key: 'id',
+          // },
+        },
+        category_id: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          // references: {
+          //   model: 'category',
+          //   key: 'id',
+          // },
+        },
         title: {
           allowNull: false,
           type: DataTypes.STRING(128),
@@ -61,10 +71,6 @@ export class Lesson
         location: {
           allowNull: true,
           type: DataTypes.STRING(128),
-        },
-        age: {
-          allowNull: true,
-          type: DataTypes.INTEGER,
         },
         minute_per_lesson: {
           allowNull: true,

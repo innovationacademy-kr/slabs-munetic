@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services: # 사용되는 서비스들입니다.
   munetic_admin: # 서비스의 이름을 지정합니다.
@@ -12,7 +12,7 @@ services: # 사용되는 서비스들입니다.
     networks: # 사용할 네트워크(최하단)를 설정합니다.
       - munetic
     ports:
-      - "4242:4242"
+      - '4242:4242'
     volumes: # 볼륨을 쓰겠다는 선언입니다.
       - ./munetic_admin/src:/munetic_admin/src # ':' 왼쪽의 host 폴더를 오른쪽의 container 폴더에 마운트 하겠다는 뜻입니다.
 
@@ -27,11 +27,11 @@ services: # 사용되는 서비스들입니다.
     networks:
       - munetic
     ports:
-      - "2424:2424"
+      - '2424:2424'
     volumes:
       - ./munetic_app/src:/munetic_app/src
 
-  database:
+  munetic_database:
     container_name: munetic_database
     build:
       context: ./munetic_database
@@ -44,7 +44,6 @@ services: # 사용되는 서비스들입니다.
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./munetic_database/my.cnf:/etc/mysql/my.cnf:ro
       - ./munetic_database/db:/var/lib/mysql
     networks:
@@ -59,10 +58,15 @@ services: # 사용되는 서비스들입니다.
       - DB_USERNAME=${EXPRESS_USER}
       - DB_PASSWORD=${EXPRESS_PASSWORD}
       - DB_NAME=munetic
+      - ACCESS_SECRET=${ACCESS_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
+      - MODE=${MODE}
     build:
       context: ./munetic_express
       dockerfile: Dockerfile
     command: npm run ${MODE}
+    ports:
+      - '3030:3030'
     working_dir: /munetic_express
     networks:
       - munetic
@@ -72,16 +76,16 @@ services: # 사용되는 서비스들입니다.
   munetic_proxy:
     container_name: munetic_proxy
     environment:
-      - SERVER_HOST=munetic.dev.42cadet.kr
+      - SERVER_HOST=mnetic.dev.42cadet.kr
     build: ./munetic_proxy
     networks:
       - munetic
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - "./munetic_proxy/templates:/etc/nginx/templates:ro"
+      - './munetic_proxy/templates:/etc/nginx/templates:ro'
       # 아래 두 볼륨은 로컬에서 작동하지 않음
       - /var/www/certbot:/var/www/certbot # certbot acme 인증하기 위한 디렉토리
       - /etc/letsencrypt:/etc/letsencrypt # 인증서가 있는 곳

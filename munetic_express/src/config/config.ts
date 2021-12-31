@@ -1,8 +1,9 @@
 import * as dotenv from 'dotenv';
+import { Dialect } from 'sequelize/dist';
 dotenv.config();
 
-const development = {
-  host: process.env.DB_HOST,
+export const development = {
+  host: process.env.DB_HOST as string,
   port: parseInt(process.env.DB_PORT!, 10),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
@@ -15,4 +16,4 @@ const development = {
   // production: {},
 };
 
-module.exports = { development };
+// module.exports = { development };
