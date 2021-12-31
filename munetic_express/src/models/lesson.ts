@@ -47,14 +47,18 @@ export class Lesson
         tutor_id: {
           allowNull: false,
           type: DataTypes.INTEGER,
-          references: {
-            model: 'user',
-            key: 'id',
-          },
+          // references: {
+          //   model: 'user',
+          //   key: 'id',
+          // },
         },
         category_id: {
           allowNull: false,
           type: DataTypes.INTEGER,
+          // references: {
+          //   model: 'category',
+          //   key: 'id',
+          // },
         },
         title: {
           allowNull: false,

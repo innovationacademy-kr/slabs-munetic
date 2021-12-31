@@ -44,7 +44,6 @@ services: # 사용되는 서비스들입니다.
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./munetic_database/my.cnf:/etc/mysql/my.cnf:ro
       - ./munetic_database/db:/var/lib/mysql
     networks:
@@ -77,7 +76,7 @@ services: # 사용되는 서비스들입니다.
   munetic_proxy:
     container_name: munetic_proxy
     environment:
-      - SERVER_HOST=munetic.dev.42cadet.kr
+      - SERVER_HOST=mnetic.dev.42cadet.kr
     build: ./munetic_proxy
     networks:
       - munetic

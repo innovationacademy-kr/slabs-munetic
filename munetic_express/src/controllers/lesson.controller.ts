@@ -106,7 +106,7 @@ const processService = <T>(
       } else {
         res
           .status(OK)
-          .json(new ResJSON('Successfully Retrieved', processingFunc(result)));
+          .json(new ResJSON('응답에 성공하였습니다', processingFunc(result)));
       }
     })
     .catch((err: any) => {
@@ -114,7 +114,7 @@ const processService = <T>(
     });
 };
 
-const funcMapArray = <T, U>(fn: (param: T) => U): ((param: T[]) => U[]) => {
+const intoArrayFunc = <T, U>(fn: (param: T) => U): ((param: T[]) => U[]) => {
   return function (param: T[]) {
     const retArray: U[] = [];
     for (const elem of param) {
@@ -176,7 +176,7 @@ export const getLesson: RequestHandler = (
       findLessons(offset, limit),
       res,
       next,
-      funcMapArray(lessonAllInfoToRes),
+      intoArrayFunc(lessonAllInfoToRes),
     );
   }
 };

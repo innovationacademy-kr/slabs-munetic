@@ -1,10 +1,7 @@
 import { FindOptions } from 'sequelize/dist';
-import { Category } from '../models/category';
-import { lessonAttributes } from '../models/lesson';
-import { userAttributes } from '../models/user';
-import { User } from '../models/user';
-import { categoryAttributes } from '../models/category';
-import { CategoryInstance, LessonInstance, UserInstance } from '../models';
+import { Category, categoryAttributes } from '../models/category';
+import { Lesson, lessonAttributes } from '../models/lesson';
+import { User, userAttributes } from '../models/user';
 
 /**
  * Request body of post, patch of /api/lesson. These are editable value of lesson
@@ -74,13 +71,13 @@ export const createLesson = async (
   tutorId: number,
   lessonEditable: LessonEditable,
 ): Promise<LessonAllInfo | string> => {
-  const tutor = await UserInstance.findOne({
+  const tutor = await User.findOne({
     where: {
       id: tutorId,
     },
   });
   if (tutor === null) return '해당하는 튜터가 없습니다.';
-  const category = await CategoryInstance.findOne({
+  const category = await Category.findOne({
     where: {
       name: lessonEditable.category,
     },
@@ -90,14 +87,14 @@ export const createLesson = async (
   const categoryLess = { ...lessonEditable } as any;
   categoryLess.category = undefined;
 
-  const newLesson = await LessonInstance.create({
+  const newLesson = await Lesson.create({
     ...categoryLess,
     tutor_id: tutorId,
     category_id: category.id,
   });
   newLesson.save();
 
-  const lesson = (await LessonInstance.findOne({
+  const lesson = (await Lesson.findOne({
     ...lessonQueryOptions,
     where: { id: newLesson.id },
   })) as LessonAllInfo | null;
@@ -115,7 +112,7 @@ export const createLesson = async (
 export const findLesson = async (
   lessonId: number,
 ): Promise<LessonAllInfo | string> => {
-  const lesson = (await LessonInstance.findOne({
+  const lesson = (await Lesson.findOne({
     ...lessonQueryOptions,
     where: { id: lessonId },
   })) as unknown as LessonAllInfo | null;
@@ -137,7 +134,7 @@ export const findLessons = async (
 ): Promise<LessonAllInfo[] | string> => {
   if (offset < 0 || limit < 0)
     return 'offset이나 limit 값으로 음수가 올 수 없습니다.';
-  const lessons = (await LessonInstance.findAll({
+  const lessons = (await Lesson.findAll({
     ...lessonQueryOptions,
     offset,
     limit,
@@ -161,14 +158,14 @@ export const editLesson = async (
 ): Promise<LessonAllInfo | string> => {
   let category;
   if (lessonEditable.category) {
-    category = await CategoryInstance.findOne({
+    category = await Category.findOne({
       attributes: ['id'],
       where: { name: lessonEditable.category },
     });
     console.log(lessonEditable.category);
     if (category === null) return '해당하는 카테고리 이름이 없습니다.';
   }
-  const [updatedNum] = await LessonInstance.update(
+  const [updatedNum] = await Lesson.update(
     { ...lessonEditable, category_id: category?.id },
     {
       where: {
@@ -179,7 +176,7 @@ export const editLesson = async (
   if (updatedNum === 0) return '해당하는 레슨이 없습니다.';
   console.assert(updatedNum === 1);
 
-  const updatedLesson = (await LessonInstance.findOne({
+  const updatedLesson = (await Lesson.findOne({
     ...lessonQueryOptions,
     where: { id: lessonId },
   })) as LessonAllInfo | null;
@@ -198,7 +195,7 @@ export const editLesson = async (
 export const removeLesson = async (
   lessonId: number,
 ): Promise<{ removed: boolean } | string> => {
-  const checkExistence = await LessonInstance.findOne({
+  const checkExistence = await Lesson.findOne({
     where: { id: lessonId },
   });
   if (!checkExistence) return '해당하는 레슨이 없습니다.';

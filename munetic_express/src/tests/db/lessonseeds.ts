@@ -1,4 +1,4 @@
-import { Gender } from '../../models/user.model';
+import { Gender } from '../../models/user';
 
 export const user1 = {
   nickname: 'kunlee',

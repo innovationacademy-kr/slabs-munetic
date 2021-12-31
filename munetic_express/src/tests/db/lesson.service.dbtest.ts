@@ -178,12 +178,6 @@ export function lessonTest() {
         console.log('equal:', equal(expected, res));
       }
       {
-        const res = await findLessons(2.2, 4);
-        const expected = 'offset이나 limit 값으로 비정수 값이 올 수 없습니다.';
-        console.log('findLessons test4.');
-        console.log('equal:', equal(expected, res));
-      }
-      {
         const res = await findLessons(12341, 234234);
         const expected: void[] = [];
         console.log('findLessons test4.');
