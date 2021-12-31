@@ -200,7 +200,7 @@ paths:
             example: 'JWT expired'
 
   # USER 관련 API
-  /user/{id}:
+  /user/profile/{id}:
     get:
       tags:
         - User
@@ -234,16 +234,18 @@ paths:
               message:
                 type: string
                 example: 'Failed'
+
+  /user:
     patch:
       tags:
         - User
-      summary: Edit profile by ID
+      summary: Edit my profile
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: user ID
+        - in: header
           type: string
+          name: accessToken
+          required: true
+          description: user accessToken
         - name: body
           in: body
           description: Edit contents
@@ -251,7 +253,7 @@ paths:
             type: object
             properties:
               type:
-                enum: ['STUDENT', 'TUTOR']
+                enum: ['Student', 'Tutor']
               nickname:
                 type: string
               name_public:
@@ -273,13 +275,82 @@ paths:
                 example: 'Success'
               data:
                 $ref: '#/definitions/User'
-        '400':
-          description: Invalid ID
+        '401':
+          description: Unauthorized
           schema:
             type: object
             properties:
               message:
                 type: string
+
+    get:
+      tags:
+        - User
+      summary: Get All user profile
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+      responses:
+        '200':
+          description: Succesfully got All user profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+
+  /user/logged:
+    get:
+      tags:
+        - User
+      summary: Get My profile
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+      responses:
+        '200':
+          description: Succesfully got My profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
   #Lesson 관련 API
   /lesson/{id}:
     get:
