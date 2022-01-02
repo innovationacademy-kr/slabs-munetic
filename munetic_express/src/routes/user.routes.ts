@@ -10,5 +10,5 @@ passport.use('jwt', JwtStrategy());
 
 router.get('/', passport.authenticate('jwt'), UserAPI.getMyProfile);
 router.patch('/', passport.authenticate('jwt'), UserAPI.editUserProfile);
-router.get('/all', passport.authenticate('jwt'), UserAPI.getAllUserProfile);
+router.get('/all', /*passport.authenticate('jwt'),*/ UserAPI.getAllUserProfile);
 router.get('/:id', UserAPI.getUserProfile);

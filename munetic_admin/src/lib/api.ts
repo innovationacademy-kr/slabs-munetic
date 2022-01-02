@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const instance = axios.create({ baseURL: 'http://localhost:3030/api/' });
+const { VITE_BASE_URL } = import.meta.env;
+const instance = axios.create({ baseURL: VITE_BASE_URL as string });
 
 /**
  * API 예시
  */
 
 export const getAllUserList = async (page: number) => {
-  return await instance.get(`user?page=${page + 1}`);
+  return await instance.get(`user/all?page=${page + 1}`);
 };
