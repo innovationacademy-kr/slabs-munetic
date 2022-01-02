@@ -23,6 +23,7 @@ server {
   ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
   location /admin {
+    rewrite /admin(.*) /$1 break;
     # domain name을 ip 주소로 치환하기 위한 설정
     set $munetic_admin munetic_admin;
     proxy_pass http://$munetic_admin:4242;
