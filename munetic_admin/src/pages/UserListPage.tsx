@@ -1,22 +1,45 @@
-import Button from '@mui/material/Button';
-import userDummy from '../dummy/userDummy';
-import List from '../components/List/List';
-import ListCard from '../components/List/ListCard';
-import CustomPagination from '../components/CustomPagination';
+import { useState, useEffect } from 'react';
+import MUITable from '../components/Table/MUITable';
+import { getAllUserList } from '../lib/api';
 
 export default function UserListPage() {
-  const userList: JSX.Element[] = userDummy.map(user => <ListCard {...user} />);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rows, setRows] = useState<[]>([]);
+
+  /**
+   * Page 전환
+   */
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  /**
+   * 한 페이지에 노출하는 row수
+   */
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  useEffect(() => {
+    getAllUserList(page).then(({ data }: any) => {
+      setRows(data.data.rows);
+    });
+  }, [page]);
 
   return (
-    <div>
-      <Button sx={{ fontSize: 12 }} variant="outlined">
-        회원 생성
-      </Button>
-      <Button sx={{ fontSize: 12 }} variant="outlined">
-        export
-      </Button>
-      <List />
-      <CustomPagination />
-    </div>
+    <MUITable
+      page={page}
+      rows={rows}
+      rowsPerPage={rowsPerPage}
+      handleChangePage={handleChangePage}
+      handleChangeRowsPerPage={handleChangeRowsPerPage}
+    />
   );
 }
