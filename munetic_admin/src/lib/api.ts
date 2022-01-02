@@ -1,14 +1,12 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 
-dotenv.config();
-const apiUrl = process.env.REACT_APP_API as string;
-
-const instance = axios.create({ baseURL: apiUrl });
+const { VITE_BASE_URL } = import.meta.env;
+const instance = axios.create({ baseURL: VITE_BASE_URL as string });
 
 /**
  * API 예시
  */
-export const getUserList = async () => {
-  return await instance.get('/users');
+
+export const getAllUserList = async (page: number) => {
+  return await instance.get(`user/all?page=${page + 1}`);
 };

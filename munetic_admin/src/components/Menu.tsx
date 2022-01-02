@@ -63,6 +63,7 @@ export default function Menu() {
 const MenuContainer = styled.header`
   min-width: 100vw;
   position: fixed;
+  background-color: white;
   border-bottom: 1px solid rgb(239, 239, 239);
   z-index: 100;
 `;

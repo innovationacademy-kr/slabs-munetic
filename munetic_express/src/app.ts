@@ -14,7 +14,7 @@ const app: express.Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:2424',
+    origin: ['http://localhost:2424', 'http://localhost:4242'],
     credentials: true,
     exposedHeaders: 'Authorization',
   }),
