@@ -200,24 +200,25 @@ paths:
             example: 'JWT expired'
 
   # USER 관련 API
-  /user/profile/{id}:
+
+  /user:
     get:
       tags:
         - User
-      summary: Get user profile by ID
+      summary: Get My profile
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - name: 'id'
-          type: number
-          in: path
+        - in: header
+          type: string
+          name: accessToken
           required: true
-          description: user ID
+          description: user accessToken
       responses:
         '200':
-          description: Succesfully got User profile
+          description: Succesfully got My profile
           schema:
             type: object
             properties:
@@ -226,16 +227,14 @@ paths:
                 example: 'Success'
               data:
                 $ref: '#/definitions/User'
-        '400':
-          description: Invalid ID
+        '401':
+          description: Unauthorized
           schema:
             type: object
             properties:
               message:
                 type: string
                 example: 'Failed'
-
-  /user:
     patch:
       tags:
         - User
@@ -282,7 +281,42 @@ paths:
             properties:
               message:
                 type: string
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user profile by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'id'
+          type: number
+          in: path
+          required: true
+          description: user ID
+      responses:
+        '200':
+          description: Succesfully got User profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: Invalid ID
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
 
+  /user/all:
     get:
       tags:
         - User
@@ -297,6 +331,11 @@ paths:
           name: accessToken
           required: true
           description: user accessToken
+        - in: query
+          type: number
+          name: page
+          required: true
+          description: page number for pagination
       responses:
         '200':
           description: Succesfully got All user profile
@@ -317,40 +356,6 @@ paths:
                 type: string
                 example: 'Failed'
 
-  /user/logged:
-    get:
-      tags:
-        - User
-      summary: Get My profile
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: header
-          type: string
-          name: accessToken
-          required: true
-          description: user accessToken
-      responses:
-        '200':
-          description: Succesfully got My profile
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: 'Success'
-              data:
-                $ref: '#/definitions/User'
-        '401':
-          description: Unauthorized
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: 'Failed'
   #Lesson 관련 API
   /lesson/{id}:
     get:
