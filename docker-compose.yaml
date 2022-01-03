@@ -76,7 +76,7 @@ services: # 사용되는 서비스들입니다.
   munetic_proxy:
     container_name: munetic_proxy
     environment:
-      - SERVER_HOST=mnetic.dev.42cadet.kr
+      - SERVER_HOST=${SERVER_HOST}
     build: ./munetic_proxy
     networks:
       - munetic
