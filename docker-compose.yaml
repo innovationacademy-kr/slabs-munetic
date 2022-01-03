@@ -87,7 +87,7 @@ services: # 사용되는 서비스들입니다.
       - '443:443'
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - './munetic_proxy/templates:/etc/nginx/templates:ro'
+      - ./munetic_proxy/templates:/templates:ro
       # 아래 두 볼륨은 로컬에서 작동하지 않음
       - /var/www/certbot:/var/www/certbot # certbot acme 인증하기 위한 디렉토리
       - /etc/letsencrypt:/etc/letsencrypt # 인증서가 있는 곳
