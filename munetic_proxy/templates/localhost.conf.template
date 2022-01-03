@@ -1,0 +1,25 @@
+server {
+  listen 80;
+  server_name ${SERVER_HOST};
+
+  resolver 127.0.0.11;
+
+  # domain name을 ip 주소로 치환하기 위한 설정
+  set $admin munetic_admin;
+  set $app munetic_app;
+  set $express munetic_express;
+
+  location /admin {
+    rewrite /admin(.*) /$1 break;
+
+    proxy_pass http://$admin:4242;
+  }
+
+  location / {
+    proxy_pass http://$app:2424;
+  }
+
+  location /api {
+    proxy_pass http://$express:3030;
+  }
+}
