@@ -20,10 +20,10 @@ export default function Routing() {
 
 const RoutesContainer = styled.div`
   position: relative;
-  top: 7rem;
+  top: 6.5rem;
   padding: 3rem 3rem;
   min-width: 110rem;
-  height: 80vh;
+  /* height: 90vh; */
   display: flex;
   justify-content: center;
   font-size: 1.6rem;

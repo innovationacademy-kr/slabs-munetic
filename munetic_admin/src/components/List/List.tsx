@@ -11,7 +11,7 @@ import ListAdminUserColumn from './ListAdminUserColumn';
 
 export default function List() {
   const path = useLocation().pathname;
-  const userList: JSX.Element[] = userDummy.map(user => <ListCard {...user} />);
+  // const userList: JSX.Element[] = userDummy.map(user => <ListCard {...user} />);
   const lessonList: JSX.Element[] = lessonDummy.map(lesson => (
     <ListCard {...lesson} />
   ));
@@ -22,7 +22,7 @@ export default function List() {
   return (
     <ListContainer>
       {path === '/users' && <ListUserColumn />}
-      {path === '/users' && userList}
+      {/* {path === '/users' && userList} */}
       {path === '/posts' && <ListLessonColumn />}
       {path === '/posts' && lessonList}
       {path === '/admin_users' && <ListAdminUserColumn />}

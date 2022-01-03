@@ -8,7 +8,7 @@ export const router = Router();
 
 passport.use('jwt', JwtStrategy());
 
-router.get('/', passport.authenticate('jwt'), UserAPI.getAllUserProfile);
-router.get('/profile/:id', UserAPI.getUserProfile);
+router.get('/', passport.authenticate('jwt'), UserAPI.getMyProfile);
 router.patch('/', passport.authenticate('jwt'), UserAPI.editUserProfile);
-router.get('/logged', passport.authenticate('jwt'), UserAPI.getMyProfile);
+router.get('/all', /*passport.authenticate('jwt'),*/ UserAPI.getAllUserProfile);
+router.get('/:id', UserAPI.getUserProfile);

@@ -46,6 +46,7 @@ export const findAllUser = async (page: number) => {
     offset = (page - 1) * limit;
   }
   const users = await User.findAndCountAll({
+    attributes: { exclude: ['login_password'] },
     offset,
     limit,
   });

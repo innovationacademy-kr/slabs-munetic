@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
+    background-color: #ecf0f3;
     a {
       text-decoration:none;
     }
