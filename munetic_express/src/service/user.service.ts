@@ -1,3 +1,4 @@
+import { NextFunction } from 'express';
 import { Account, User } from '../models/user';
 import * as Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
@@ -7,6 +8,7 @@ export interface IsearchUser {
   nickname?: string;
   name?: string;
   email?: string;
+  type?: object;
 }
 
 export const createUser = async (userInfo: User) => {
@@ -18,7 +20,16 @@ export const createUser = async (userInfo: User) => {
   return dataJSON;
 };
 
-export const search = async (userInfo: IsearchUser) => {
+export const searchAllUser = async (userInfo: IsearchUser) => {
+  const data = await User.findAll({
+    where: {
+      ...userInfo,
+    },
+  });
+  return data;
+};
+
+export const searchActiveUser = async (userInfo: IsearchUser) => {
   const data = await User.findAll({
     where: {
       ...userInfo,

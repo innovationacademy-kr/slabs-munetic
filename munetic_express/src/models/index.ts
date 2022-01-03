@@ -23,11 +23,6 @@ export const sequelize = new Sequelize(database!, username!, password, {
   },
 });
 
-let CategoryInstance: typeof Category;
-let UserInstance: typeof User;
-let LessonInstance: typeof Lesson;
-let AdminInstance: typeof Admin;
-
 sequelize
   .authenticate()
   .then(() => console.log('db connected🚀'))

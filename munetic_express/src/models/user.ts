@@ -3,6 +3,8 @@ import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
 export enum Account {
   Student = 'Student',
   Tutor = 'Tutor',
+  Owner = 'Owner',
+  Admin = 'Admin',
 }
 
 export enum Gender {
@@ -84,7 +86,7 @@ export class User
         },
         type: {
           allowNull: false,
-          type: DataTypes.ENUM('STUDENT', 'TUTOR'),
+          type: DataTypes.ENUM('Student', 'Tutor', 'Owner', 'Admin'),
         },
         login_id: {
           allowNull: true,

@@ -8,17 +8,13 @@ function verifyPassword(password: string, encryptedPassword: string): boolean {
   return bcrypt.compareSync(password, encryptedPassword);
 }
 
-const localStrategyCallback = async (
+const adminStrategyCallback = async (
   login_id: string,
   login_password: string,
   done: any,
 ) => {
   const [user] = await UserService.searchActiveUser({ login_id });
-  if (
-    !user ||
-    (user.type !== 'Tutor' && user.type !== 'Student') ||
-    user.deletedAt !== null
-  )
+  if (!user || (user.type !== 'Admin' && user.type !== 'Owner'))
     return done(null, false, {
       message: '입력하신 id에 해당하는 계정이 없습니다.',
     });
@@ -29,10 +25,10 @@ const localStrategyCallback = async (
   return done(null, user.toJSON());
 };
 
-const LocalStrategy = () =>
+const AdminStrategy = () =>
   new Strategy(
     { usernameField: 'login_id', passwordField: 'login_password' },
-    localStrategyCallback,
+    adminStrategyCallback,
   );
 
-export default LocalStrategy;
+export default AdminStrategy;

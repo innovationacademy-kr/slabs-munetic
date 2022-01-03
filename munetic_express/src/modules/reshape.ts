@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { now } from 'sequelize/dist/lib/utils';
 import { Account, Gender } from '../models/user';
 
 export const userObject = (req: Request) => {
@@ -40,4 +41,26 @@ export const userObject = (req: Request) => {
     phone_number,
   };
   return user;
+};
+
+export const adminObject = (req: Request) => {
+  const { email, name, login_password, type } = req.body as {
+    email: string;
+    login_password: string;
+    name: string;
+    type: string;
+  };
+
+  const admin = {
+    login_id: email,
+    login_password,
+    name,
+    nickname: email,
+    birth: new Date(),
+    gender: Gender.Other,
+    type: type === 'Admin' ? Account.Admin : Account.Owner,
+    email,
+  };
+
+  return admin;
 };
