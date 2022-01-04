@@ -4,6 +4,7 @@ import GlobalStyle from './style/GlobalStyle';
 import LoginPage from './pages/LoginPage';
 import { useLogin, useLoginUpdate } from './contexts/login';
 import { useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
 import * as Api from './lib/api';
 
 function App() {
@@ -23,13 +24,16 @@ function App() {
       })
       .catch(err => {
         if (err.respose) alert(err.response.data);
+        setIsLoading(false);
       });
   }, []);
 
   return (
     <>
       <GlobalStyle />
-      {login || isLoading ? (
+      {isLoading ? (
+        <CircularProgress />
+      ) : login ? (
         <>
           <Menu />
           <Routing />{' '}
