@@ -6,6 +6,7 @@ import {
   editLesson,
   findLesson,
   findLessons,
+  findLessonsByUserId,
   LessonEditable,
   removeLesson,
 } from '../../service/lesson.service';
@@ -147,27 +148,39 @@ export function lessonTest() {
 
       {
         const res = await findLessons(0, 0);
-        const expected: void[] = [];
+        const expected = { count: 4, rows: [] };
         console.log('findLessons test1.');
         console.log('deepEqual:', deepEqual(expected, res));
       }
       {
         const res_raw = await findLessons(1, 1);
-        const res = [];
-        const expected = [seeds.lesson2];
-        for (const lesson of res_raw) {
-          res.push(JSON.parse(JSON.stringify(lesson)));
-        }
+        let res;
+
+        const expected = { count: 4, rows: [seeds.lesson2] };
+        if (typeof res_raw !== 'string') {
+          res = { ...res_raw };
+          res.rows = [];
+          for (const lesson of res.rows) {
+            res.rows.push(JSON.parse(JSON.stringify(lesson)));
+          }
+        } else res = res_raw;
         console.log('findLessons test2.');
         console.log('deepEqual:', deepEqual(expected, res));
       }
       {
         const res_raw = await findLessons(0, 3);
-        const res = [];
-        for (const lesson of res_raw) {
-          res.push(JSON.parse(JSON.stringify(lesson)));
-        }
-        const expected = [seeds.lesson1, seeds.lesson2, seeds.lesson3];
+        let res;
+        if (typeof res_raw !== 'string') {
+          res = { ...res_raw };
+          res.rows = [];
+          for (const lesson of res.rows) {
+            res.rows.push(JSON.parse(JSON.stringify(lesson)));
+          }
+        } else res = res_raw;
+        const expected = {
+          count: 4,
+          rows: [seeds.lesson1, seeds.lesson2, seeds.lesson3],
+        };
         console.log('findLessons test3.');
         console.log('deepEqual:', deepEqual(expected, res));
       }
@@ -179,9 +192,23 @@ export function lessonTest() {
       }
       {
         const res = await findLessons(12341, 234234);
-        const expected: void[] = [];
+        const expected = { count: 4, rows: [] };
         console.log('findLessons test4.');
         console.log('equal:', deepEqual(expected, res));
+      }
+      {
+        const res_raw = await findLessonsByUserId(2, 1, 1);
+        let res;
+        if (typeof res_raw !== 'string') {
+          res = { ...res_raw };
+          res.rows = [];
+          for (const lesson of res.rows) {
+            res.rows.push(JSON.parse(JSON.stringify(lesson)));
+          }
+        } else res = res_raw;
+        const expected = { count: 3, rows: [seeds.lesson2] };
+        console.log('findLessonByUserId test1.');
+        console.log('deepEqual:', deepEqual(expected, res));
       }
     } catch (e) {
       console.log(e);

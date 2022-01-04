@@ -377,7 +377,7 @@ paths:
           required: true
       responses:
         '200':
-          description: 'Successful: a lesson is returned'
+          description: 성공적으로 레슨 조회에 성공하였을 때
           schema:
             required:
               - message
@@ -385,11 +385,11 @@ paths:
             properties:
               message:
                 type: string
-                example: a lesson is successfully retrived
+                example: 응답에 성공하였습니다.
               data:
                 $ref: '#/definitions/Lesson'
         '400':
-          description: 'Bad Request: id is missing or not a number'
+          description: id에 맞는 레슨이 없을 때
           schema:
             required:
               - message
@@ -397,19 +397,7 @@ paths:
             properties:
               message:
                 type: string
-                example: 'id is missing or not a number'
-              data:
-                type: object
-        '409':
-          description: "Conflict: id is number but there's no corresponding data"
-          schema:
-            required:
-              - message
-              - data
-            properties:
-              message:
-                type: string
-                example: 'no such lesson'
+                example: 해당하는 레슨이 없습니다.
               data:
                 type: object
     patch:
@@ -523,6 +511,40 @@ paths:
               data:
                 type: object
   /lesson/:
+    get:
+      tags:
+        - Lesson
+      summary: '한 번에 여러 개의 레슨을 조회하는 api'
+      description: ''
+      operationId: getLessons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          required: true
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 최소 1 개의 레슨을 가져오는데 성공하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 응답에 성공하였습니다.
+              data:
+                $ref: '#/definitions/LessonCounts'
     post:
       tags:
         - Lesson
@@ -570,7 +592,79 @@ paths:
               data:
                 type: object
                 example:
+  /lesson/user/:id:
+    get:
+      tags:
+        - Lesson
+      summary: '한 유저의 레슨을 조회하는 api'
+      description: ''
+      operationId: getLessons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int32
+          required: true
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          required: true
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 최소 1 개의 레슨을 가져오는데 성공하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 응답에 성공하였습니다.
+              data:
+                $ref: '#/definitions/LessonCounts'
+        '400':
+          description: 레슨을 가져오는데 실패하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 해당하는 유저의 레슨이 더 이상 없습니다.
+              data:
+                type: object
+                example: {}
+
 definitions:
+  LessonCounts:
+    type: object
+    required:
+      - count
+      - rows
+    properties:
+      count:
+        type: integer
+      rows:
+        type: array
+        items:
+          $ref: '#/definitions/Lesson'
+    example:
+      count: 5
+      rows:
+        - $ref: '#/definitions/Lesson/example'
+        - $ref: '#/definitions/Lesson/example'
+        - $ref: '#/definitions/Lesson/example'
   Login:
     type: object
     required:

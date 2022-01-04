@@ -4,6 +4,14 @@ import { Lesson, lessonAttributes } from '../models/lesson';
 import { User, userAttributes } from '../models/user';
 
 /**
+ * findAndCountAll의 리턴 타입입니다.
+ */
+export interface CountRows<T> {
+  count: number;
+  rows: T[];
+}
+
+/**
  * Request body of post, patch of /api/lesson. These are editable value of lesson
  */
 export interface LessonEditable {
@@ -52,6 +60,7 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
         'name',
         'nickname',
         'name_public',
+        'phone_number',
         'birth',
         'gender',
         'image_url',
@@ -131,18 +140,18 @@ export const findLesson = async (
 export const findLessons = async (
   offset: number,
   limit: number,
-): Promise<LessonAllInfo[] | string> => {
+): Promise<CountRows<LessonAllInfo> | string> => {
   if (offset < 0 || limit < 0)
     return 'offset이나 limit 값으로 음수가 올 수 없습니다.';
-  const lessons = (await Lesson.findAll({
+  const lessonData = (await Lesson.findAndCountAll({
     ...lessonQueryOptions,
     offset,
     limit,
-  })) as unknown[] as LessonAllInfo[];
-  for (const lesson of lessons) {
+  })) as CountRows<unknown> as CountRows<LessonAllInfo>;
+  for (const lesson of lessonData.rows) {
     lesson.lesson_id = (lesson as any).dataValues.lesson_id;
   }
-  return lessons;
+  return lessonData;
 };
 
 /**
@@ -202,4 +211,27 @@ export const removeLesson = async (
 
   await checkExistence.destroy();
   return { removed: true };
+};
+
+/**
+ * 특정 유저가 작성한 레슨을 가져옵니다.
+ *
+ * @param userId
+ */
+export const findLessonsByUserId = async (
+  userId: number,
+  offset: number,
+  limit: number,
+): Promise<CountRows<LessonAllInfo> | string> => {
+  const lessonData = (await Lesson.findAndCountAll({
+    ...lessonQueryOptions,
+    where: { tutor_id: userId },
+    offset,
+    limit,
+  })) as CountRows<unknown> | null as CountRows<LessonAllInfo> | null;
+  if (lessonData === null) return '해당하는 유저의 레슨이 더 이상 없습니다.';
+  for (const lesson of lessonData.rows) {
+    lesson.lesson_id = (lesson as any).dataValues.lesson_id;
+  }
+  return lessonData;
 };
