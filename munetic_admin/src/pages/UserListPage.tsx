@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import MUITable from '../components/Table/MUITable';
-import { getAllUserList } from '../lib/api';
+import * as Api from '../lib/api';
 
 export default function UserListPage() {
   const [page, setPage] = useState<number>(0);
@@ -28,7 +28,7 @@ export default function UserListPage() {
   };
 
   useEffect(() => {
-    getAllUserList(page).then(({ data }: any) => {
+    Api.getAllUserList(page).then(({ data }: any) => {
       setRows(data.data.rows);
     });
   }, [page]);

@@ -1,19 +1,38 @@
-import Menu from './components/Menu';
+import Menu from './components/Menu/Menu';
 import Routing from './components/Routing';
 import GlobalStyle from './style/GlobalStyle';
 import LoginPage from './pages/LoginPage';
-import { useState } from 'react';
+import { useLogin, useLoginUpdate } from './contexts/login';
+import { useEffect, useState } from 'react';
+import * as Api from './lib/api';
 
 function App() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const login = useLogin();
+  const setLogin = useLoginUpdate();
+
+  useEffect(() => {
+    Api.refresh()
+      .then(res => {
+        Api.instance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${res.data.data}`;
+        if (setLogin) setLogin(true);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        if (err.respose) alert(err.response.data);
+      });
+  }, []);
 
   return (
     <>
       <GlobalStyle />
-      {isLogin ? (
+      {login || isLoading ? (
         <>
           <Menu />
-          <Routing />
+          <Routing />{' '}
         </>
       ) : (
         <LoginPage />

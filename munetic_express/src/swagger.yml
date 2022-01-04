@@ -679,7 +679,7 @@ paths:
   /admin/auth/refresh:
     get:
       tags:
-        - Admin User
+        - Admin Auth
       summary: Refresh accessToken
       parameters:
         - in: header
