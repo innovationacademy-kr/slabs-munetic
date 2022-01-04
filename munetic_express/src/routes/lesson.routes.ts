@@ -3,6 +3,7 @@ import {
   deleteLesson,
   getLesson,
   getLessons,
+  getUserLessons,
   patchLesson,
   postLesson,
 } from '../controllers/lesson.controller';
@@ -15,4 +16,5 @@ router
   .get('/', getLessons) // findLessons
   .get('/:id', getLesson) // findLesson
   .patch('/:id', patchLesson) // editLesson
-  .delete('/:id', deleteLesson); // removeLesson
+  .delete('/:id', deleteLesson) // removeLesson
+  .get('/user/:id', getUserLessons); // findLessonsByUserId
