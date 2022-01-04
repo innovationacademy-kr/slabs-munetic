@@ -1,12 +1,16 @@
-import { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { classData } from '../../dummy/classData';
 import palette from '../../style/palette';
+import { LessonData } from '../../types/lessonData';
 import Button from '../common/Button';
+import * as lessonAPI from '../../lib/api/lesson';
+import { useEffect, useState } from 'react';
+import * as LessonAPI from '../../lib/api/lesson';
+import Pagination from '../common/Pagination';
 
 const ClassListContainer = styled.div`
   margin: 30px;
+  margin-bottom: 66px;
 `;
 
 const ClassItemContainer = styled(Link)`
@@ -77,40 +81,38 @@ const StyledButton = styled(Button)<StyledButtonProps>`
     `}
 `;
 
-interface lessonType {
-  id: number;
-  title: string;
-  img: string;
-  category: string;
-}
-
 interface IProps {
-  lesson: lessonType;
+  lesson: LessonData;
   mode?: string;
 }
 
 export const ClassItem = ({ lesson, mode }: IProps) => {
-  const { id, title, img, category } = lesson;
+  const { lesson_id, image_url } = lesson;
+  const { title, category } = lesson.editable;
 
-  const onClick = useCallback(id => {
-    //추후 id로 레슨 삭제 예정
-    alert(`이 id:${id}를 삭제하시겠습니까?`);
-  }, []);
+  const onClick = async (id: number) => {
+    alert(`이 글을 삭제하시겠습니까?`);
+    try {
+      await lessonAPI.deleteLessonById(lesson_id);
+    } catch (e) {
+      console.log(e, '삭제를 실패했습니다.');
+    }
+  };
 
   return (
-    <ClassItemContainer to={`/lesson/class/${id}`}>
+    <ClassItemContainer to={`/lesson/class/${lesson_id}`}>
       <div className="classItemDescription">
         <span className="classItemCategory">카테고리 : {category}</span>
         <span className="classItemTitle">{title}</span>
       </div>
       {mode === 'manage' ? (
         <div className="buttons">
-          <StyledButton to="/lesson/write/id">수정</StyledButton>
+          <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>
           <StyledButton
             onClick={e => {
               e.preventDefault();
               e.stopPropagation();
-              onClick(id);
+              onClick(lesson_id);
             }}
             deleteBtn
           >
@@ -118,7 +120,7 @@ export const ClassItem = ({ lesson, mode }: IProps) => {
           </StyledButton>
         </div>
       ) : (
-        <img className="classItemImg" src={img} alt="" />
+        <img className="classItemImg" src={image_url} alt="" />
       )}
     </ClassItemContainer>
   );
@@ -126,19 +128,54 @@ export const ClassItem = ({ lesson, mode }: IProps) => {
 
 export default function ClassList() {
   const [getParams, setParams] = useSearchParams();
+  const [classes, setClasses] = useState<LessonData[]>();
+  const [classCount, setClassCount] = useState(0);
   const categoryParam = getParams.get('category');
+  const itemsPerPage = 5;
+
+  const handlePageClick = async (event: any) => {
+    const newOffset = (event.selected * itemsPerPage) % classCount;
+    try {
+      const res = await LessonAPI.getLessons(itemsPerPage, newOffset);
+      setClasses(res.data.data.rows);
+    } catch (e) {
+      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+    }
+  };
+
+  useEffect(() => {
+    async function getLessons(limit: number, offset: number) {
+      try {
+        const res = await LessonAPI.getLessons(limit, offset);
+        setClasses(res.data.data.rows);
+        setClassCount(res.data.data.count);
+      } catch (e) {
+        console.log(e, '레슨 전체 목록을 불러오지 못했습니다.');
+      }
+    }
+    getLessons(itemsPerPage, 0);
+  }, []);
   return (
     <ClassListContainer>
-      {classData &&
+      {classes &&
         (categoryParam === '전체'
-          ? classData.map(lesson => (
-              <ClassItem lesson={lesson} key={lesson.id} />
+          ? classes.map(lesson => (
+              <ClassItem lesson={lesson} key={lesson.lesson_id} />
             ))
-          : classData.map(lesson => {
-              if (lesson.category === categoryParam) {
-                return <ClassItem lesson={lesson} key={lesson.id} />;
+          : classes.map(lesson => {
+              if (lesson.editable.category === categoryParam) {
+                return <ClassItem lesson={lesson} key={lesson.lesson_id} />;
               }
             }))}
+      {classCount > 0 ? (
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          classCount={classCount}
+          handlePageClick={e => handlePageClick(e)}
+        />
+      ) : (
+        ''
+      )}
     </ClassListContainer>
   );
 }

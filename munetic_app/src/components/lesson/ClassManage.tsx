@@ -1,11 +1,16 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { classData } from '../../dummy/classData';
 import palette from '../../style/palette';
 import Button from '../common/Button';
 import { ClassItem } from './ClassList';
+import * as LessonAPI from '../../lib/api/lesson';
+import * as ProfileAPI from '../../lib/api/profile';
+import { UserDataType } from '../../types/userData';
+import { LessonData } from '../../types/lessonData';
+import Pagination from '../common/Pagination';
 
 const ClassManageContainer = styled.div`
-  height: calc(100vh + 56px);
+  margin-bottom: 76px;
 `;
 
 const WriteBtnWrapper = styled.div`
@@ -20,7 +25,7 @@ const StyledButton = styled(Button)`
 `;
 
 const ClassListWrapper = styled.div`
-  padding: 30px 30px;
+  padding: 30px 30px 10px 30px;
   font-weight: bold;
   font-size: 17px;
   color: ${palette.darkBlue};
@@ -30,7 +35,56 @@ const ClassListWrapper = styled.div`
 `;
 
 export default function ClassManage() {
-  // 나중에는 현재 로그인한 유저 정보 불러와서 매칭되는 레슨 글만 보이도록 해줄 것
+  const userLogged = localStorage.getItem('user');
+  const [userData, setUserData] = useState<UserDataType>();
+  const [myClasses, setMyClasses] = useState<LessonData[]>();
+  const [classCount, setClassCount] = useState(0);
+  const itemsPerPage = 5;
+
+  const handlePageClick = async (event: any) => {
+    if (userData) {
+      const newOffset = (event.selected * itemsPerPage) % classCount;
+      try {
+        const res = await LessonAPI.getLessonByUserId(
+          userData.id,
+          itemsPerPage,
+          newOffset,
+        );
+        setMyClasses(res.data.data.rows);
+      } catch (e) {
+        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      }
+    }
+  };
+
+  useEffect(() => {
+    async function getMyProfile() {
+      try {
+        const userProfile = await ProfileAPI.getMyProfile();
+        setUserData(userProfile.data.data);
+      } catch (e) {
+        console.log(e, '내 프로필을 불러오지 못했습니다.');
+      }
+    }
+    if (userLogged) {
+      getMyProfile();
+    }
+  }, []);
+
+  useEffect(() => {
+    async function getMyLessons(id: number, limit: number, offset: number) {
+      try {
+        const res = await LessonAPI.getLessonByUserId(id, limit, offset);
+        setMyClasses(res.data.data.rows);
+        setClassCount(res.data.data.count);
+      } catch (e) {
+        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      }
+    }
+    if (userData) {
+      getMyLessons(userData.id, itemsPerPage, 0);
+    }
+  }, [userData]);
 
   return (
     <ClassManageContainer>
@@ -40,12 +94,21 @@ export default function ClassManage() {
       <ClassListWrapper>
         등록된 레슨
         <div className="classList">
-          {classData &&
-            classData.map(lesson => (
-              <ClassItem lesson={lesson} mode="manage" key={lesson.id} />
+          {myClasses &&
+            myClasses.map(lesson => (
+              <ClassItem lesson={lesson} mode="manage" key={lesson.lesson_id} />
             ))}
         </div>
       </ClassListWrapper>
+      {classCount > 0 ? (
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          classCount={classCount}
+          handlePageClick={e => handlePageClick(e)}
+        />
+      ) : (
+        ''
+      )}
     </ClassManageContainer>
   );
 }
