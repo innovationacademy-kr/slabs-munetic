@@ -1,11 +1,13 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { BAD_REQUEST, OK } from 'http-status';
+import * as status from 'http-status';
 import { Gender } from '../models/user';
 import {
+  CountRows,
   createLesson,
   editLesson,
   findLesson,
   findLessons,
+  findLessonsByUserId,
   LessonAllInfo,
   LessonEditable,
   removeLesson,
@@ -20,6 +22,7 @@ export interface LessonRes extends ResponseData {
   tutor_name: string;
   gender?: Gender;
   birth: Date;
+  phone_number: string | null;
   image_url: string | null;
   editable: LessonEditable;
 }
@@ -73,7 +76,7 @@ const lessonAllInfoToRes = ({
   minute_per_lesson,
   content,
   Category: { name: category },
-  User: { name, nickname, name_public, gender, birth, image_url: image_url },
+  User: { name, nickname, name_public, phone_number, gender, birth, image_url },
 }: LessonAllInfo): LessonRes => {
   return {
     lesson_id,
@@ -81,6 +84,7 @@ const lessonAllInfoToRes = ({
     tutor_name: (name_public ? name : nickname) as string,
     gender,
     birth,
+    phone_number,
     image_url,
     editable: {
       category,
@@ -102,10 +106,10 @@ const processService = <T>(
   promise
     .then(result => {
       if (typeof result === 'string') {
-        res.status(BAD_REQUEST).json(new ResJSON(result));
+        res.status(status.BAD_REQUEST).json(new ResJSON(result));
       } else {
         res
-          .status(OK)
+          .status(status.OK)
           .json(new ResJSON('응답에 성공하였습니다', processingFunc(result)));
       }
     })
@@ -130,17 +134,17 @@ export const postLesson: RequestHandler = (
   next: NextFunction,
 ) => {
   if (!req.query.tutor_id)
-    res.status(BAD_REQUEST).send('No tutor_id requested');
+    res.status(status.BAD_REQUEST).send('No tutor_id requested');
 
   const lessonEditable = checkLessonEditable(req.body);
   if (lessonEditable === null) {
-    res.status(BAD_REQUEST).send('Invalid data passed');
+    res.status(status.BAD_REQUEST).send('Invalid data passed');
     return;
   }
   if (typeof lessonEditable.category === undefined)
-    res.status(BAD_REQUEST).send('Category name required');
+    res.status(status.BAD_REQUEST).send('Category name required');
   if (lessonEditable.title === undefined)
-    res.status(BAD_REQUEST).send('Title required');
+    res.status(status.BAD_REQUEST).send('Title required');
 
   processService(
     createLesson(parseInt(req.query.tutor_id as string), lessonEditable),
@@ -155,30 +159,37 @@ export const getLesson: RequestHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!req.params.id || !(req.query.offset && req.query.limit))
-    res
-      .status(BAD_REQUEST)
-      .send(new ResJSON('레슨 id, 혹은 offset과 limit이 주어지지 않았습니다.'));
-  if (req.params.id)
-    // params.id 먼저 처리
-    processService(
-      findLesson(parseInt(req.params.id)),
-      res,
-      next,
-      lessonAllInfoToRes,
-    );
-  else {
-    const offset = Number.parseInt(req.query.offset as string);
-    const limit = Number.parseInt(req.query.limit as string);
-    if (!Number.isInteger(offset) || !Number.isInteger(limit))
-      res.status(BAD_REQUEST).send('offset 혹은 limit이 정수가 아닙니다.');
-    processService(
-      findLessons(offset, limit),
-      res,
-      next,
-      intoArrayFunc(lessonAllInfoToRes),
-    );
-  }
+  processService(
+    findLesson(parseInt(req.params.id)),
+    res,
+    next,
+    lessonAllInfoToRes,
+  );
+};
+
+export const getLessons: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.query.offset || !req.query.limit)
+    res.status(status.BAD_REQUEST).send('offset 혹은 limit이 없습니다.');
+  const offset = Number.parseInt(req.query.offset as string);
+  const limit = Number.parseInt(req.query.limit as string);
+  if (!Number.isInteger(offset) || !Number.isInteger(limit))
+    res.status(status.BAD_REQUEST).send('offset 혹은 limit이 정수가 아닙니다.');
+  processService(
+    findLessons(offset, limit),
+    res,
+    next,
+    function (result: CountRows<LessonAllInfo>) {
+      const retCR: CountRows<LessonRes> = { count: result.count, rows: [] };
+      for (const elem of result.rows) {
+        retCR.rows.push(lessonAllInfoToRes(elem));
+      }
+      return retCR;
+    },
+  );
 };
 
 export const patchLesson: RequestHandler = (
@@ -186,11 +197,12 @@ export const patchLesson: RequestHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!req.params.id) res.status(BAD_REQUEST).send('No lesson_id requested');
+  if (!req.params.id)
+    res.status(status.BAD_REQUEST).send('No lesson_id requested');
 
   const lessonEditable = checkLessonEditable(req.body);
   if (lessonEditable === null) {
-    res.status(BAD_REQUEST).send(new ResJSON('Invalid data passed'));
+    res.status(status.BAD_REQUEST).send(new ResJSON('Invalid data passed'));
     return;
   }
 
@@ -208,7 +220,34 @@ export const deleteLesson: RequestHandler = (
   next: NextFunction,
 ) => {
   if (!req.params.id)
-    res.status(BAD_REQUEST).send(new ResJSON('No lesson_id requested'));
+    res.status(status.BAD_REQUEST).send(new ResJSON('레슨 아이디가 없습니다.'));
 
   processService(removeLesson(parseInt(req.params.id)), res, next, _ => _);
+};
+
+export const getUserLessons: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.params.id)
+    res.status(status.BAD_REQUEST).send(new ResJSON('레슨 아이디가 없습니다.'));
+  if (!req.query.offset || !req.query.limit)
+    res.status(status.BAD_REQUEST).send('offset 혹은 limit이 없습니다.');
+  const offset = Number.parseInt(req.query.offset as string);
+  const limit = Number.parseInt(req.query.limit as string);
+  if (!Number.isInteger(offset) || !Number.isInteger(limit))
+    res.status(status.BAD_REQUEST).send('offset 혹은 limit이 정수가 아닙니다.');
+  processService(
+    findLessonsByUserId(parseInt(req.params.id), offset, limit),
+    res,
+    next,
+    function (result: CountRows<LessonAllInfo>) {
+      const retCR: CountRows<LessonRes> = { count: result.count, rows: [] };
+      for (const elem of result.rows) {
+        retCR.rows.push(lessonAllInfoToRes(elem));
+      }
+      return retCR;
+    },
+  );
 };

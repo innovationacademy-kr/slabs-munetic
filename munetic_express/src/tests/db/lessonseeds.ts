@@ -5,6 +5,7 @@ export const user1 = {
   name: '쿠운리',
   gender: Gender.Male,
   name_public: true,
+  phone_number: '010-1234-1234',
   birth: '1994-03-02',
   image_url: '../../munetic_app/public/img/testImg.png',
 };
@@ -14,6 +15,7 @@ export const user2 = {
   name: '조올림',
   gender: Gender.Male,
   name_public: true,
+  phone_number: '010-5678-5678',
   birth: '1998-02-20',
   image_url: '../../munetic_app/public/img/testImg.png',
 };
