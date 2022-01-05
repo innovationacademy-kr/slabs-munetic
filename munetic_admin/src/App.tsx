@@ -36,7 +36,7 @@ function App() {
       ) : login ? (
         <>
           <Menu />
-          <Routing />{' '}
+          <Routing />
         </>
       ) : (
         <LoginPage />
