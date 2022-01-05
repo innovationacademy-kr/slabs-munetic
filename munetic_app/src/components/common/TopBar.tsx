@@ -84,13 +84,15 @@ export default function TopBar() {
     rightText = '저장';
   } else if (currentPath === '/lesson/write') {
     rightText = '등록';
+  } else if (currentPath.includes('/lesson/write/')) {
+    rightText = '수정';
   } else if (currentPath.includes('/auth')) {
     return null;
   } else {
     rightText = '';
   }
   const onClickWrite = (rightText: string) => {
-    if (rightText === '등록') {
+    if (rightText === '등록' || rightText === '수정') {
       actions.setWrite(true);
     }
   };

@@ -4,7 +4,6 @@ import CategoryPage from './pages/lesson/CategoryPage';
 import ClassPage from './pages/lesson/ClassPage';
 import ClassListPage from './pages/lesson/ClassListPage';
 import ManageClassPage from './pages/lesson/ManageClassPage';
-import EditClassPage from './pages/lesson/EditClassPage';
 import WriteClassPage from './pages/lesson/WriteClassPage';
 import ViewProfilePage from './pages/profile/ViewProfilePage';
 import ManageProfilePage from './pages/profile/ManageProfilePage';
@@ -21,7 +20,7 @@ export default function Routing() {
       <Route path="/lesson/class/:id" element={<ClassPage />} />
       <Route path="/lesson/manage" element={<ManageClassPage />} />
       <Route path="/lesson/write" element={<WriteClassPage />} />
-      <Route path="/lesson/write/:id" element={<EditClassPage />} />
+      <Route path="/lesson/write/:id" element={<WriteClassPage />} />
       <Route path="/profile/:id" element={<ViewProfilePage />} />
       <Route path="/profile/manage/:id" element={<ManageProfilePage />} />
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
