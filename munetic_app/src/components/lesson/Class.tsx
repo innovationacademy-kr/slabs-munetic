@@ -1,11 +1,16 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { classData } from '../../dummy/classData';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
+import * as LessonAPI from '../../lib/api/lesson';
+import * as ProfileAPI from '../../lib/api/profile';
+import { LessonData } from '../../types/lessonData';
+import { UserDataType } from '../../types/userData';
+import { Gender } from '../../types/enums';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -96,7 +101,7 @@ const ClassContent = styled.div`
 `;
 
 interface InfosType {
-  나이: number;
+  나이: string;
   '지역/장소': string;
   가격: number;
   '선생님 성별': string;
@@ -127,33 +132,65 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
 
 export default function Class() {
   const classId = useParams().id;
-  const getClass = classData.filter(lesson => lesson.id === Number(classId))[0];
-  const {
-    img,
-    nickname,
-    phone_number,
-    age,
-    place,
-    price,
-    gender,
-    minute,
-    content,
-  } = getClass;
+  const [userData, setUserData] = useState<UserDataType>();
+  const [classInfo, setClassInfo] = useState<LessonData>({
+    lesson_id: 0,
+    tutor_id: 0,
+    tutor_name: '',
+    gender: Gender.Male,
+    birth: '',
+    image_url: '',
+    editable: {
+      category: '',
+      title: '',
+      price: 0,
+      location: '',
+      minute_per_lesson: 0,
+      content: '',
+    },
+  });
+
+  const { tutor_id, image_url, tutor_name, birth, gender, editable } =
+    classInfo;
+  const { price, location, minute_per_lesson, content } = editable;
 
   const basicInfos = {
-    나이: age,
-    '지역/장소': place,
+    나이: birth,
+    '지역/장소': location,
     가격: price,
     '선생님 성별': gender,
-    '수업 시간': minute,
+    '수업 시간': minute_per_lesson,
   };
+
+  useEffect(() => {
+    async function getProfileById(id: number) {
+      try {
+        const userProfile = await ProfileAPI.getProfileById(id);
+        setUserData(userProfile.data.data);
+      } catch (e) {
+        console.log(e, '프로필을 불러오지 못했습니다.');
+      }
+    }
+    async function getLessonById(id: string) {
+      try {
+        const res = await LessonAPI.getLesson(Number(id));
+        setClassInfo(res.data.data);
+      } catch (e) {
+        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      }
+    }
+    if (classId) {
+      getLessonById(classId);
+      getProfileById(tutor_id);
+    }
+  }, [classId, tutor_id]);
 
   return (
     <ClassContainer>
       <ClassProfileWrapper>
         <div className="imgAndNickname">
-          <img className="profileImg" src={img} alt="" />
-          <span className="nickname">{nickname}</span>
+          <img className="profileImg" src={image_url} alt="" />
+          <span className="nickname">{tutor_name}</span>
         </div>
         <div className="sns">
           <div className="snsTop">
@@ -167,7 +204,10 @@ export default function Class() {
         </div>
       </ClassProfileWrapper>
       <ClassPhoneNumber>
-        연락처 : <span className="phoneNumber">{phone_number}</span>
+        연락처 :{' '}
+        <span className="phoneNumber">
+          {userData ? userData.phone_number : ''}
+        </span>
       </ClassPhoneNumber>
       <ClassBasicInfo>
         레슨 기본 정보

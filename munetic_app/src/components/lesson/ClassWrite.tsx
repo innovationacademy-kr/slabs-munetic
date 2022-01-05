@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Contexts from '../../context/Contexts';
 import { categoryData } from '../../dummy/categoryData';
-import { classData } from '../../dummy/classData';
-import { userData } from '../../dummy/userData';
 import palette from '../../style/palette';
+import { LessonWriteData } from '../../types/lessonData';
 import Input, { InputBox } from '../common/Input';
 import Select from '../common/Select';
+import * as LessonAPI from '../../lib/api/lesson';
+import * as ProfileAPI from '../../lib/api/profile';
+import { UserDataType } from '../../types/userData';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
@@ -54,40 +56,43 @@ const IntroContent = styled.div`
 `;
 
 export default function ClassWrite() {
+  const classId = useParams().id;
+
   const navigate = useNavigate();
   const { state, actions } = useContext(Contexts);
-  //로그인한 유저의 user 데이터에서 연락처, 성별 받아와서 자동 입력
-  const { nickname, image_url, phone_number, gender } = userData[0];
-  const [classes, setClasses] = useState(classData);
-  const [classInfo, setClassInfo] = useState({
-    id: 6,
+  const [userData, setUserData] = useState<UserDataType>();
+  const [classInfo, setClassInfo] = useState<LessonWriteData>({
     title: '',
-    img: image_url,
     category: undefined,
-    nickname,
-    phone_number,
-    age: 0,
-    place: '',
-    price: 0,
-    gender,
-    minute: 0,
+    location: '',
+    price: 10000,
+    minute_per_lesson: 30,
     content: '',
   });
-  const { id, title, category, price, place, minute, content } = classInfo;
+  const { title, category, price, location, minute_per_lesson, content } =
+    classInfo;
+
   const onChangeInput = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
   ) => {
     const { value, name } = e.target;
-    setClassInfo({
-      ...classInfo,
-      [name]: value,
-    });
+    if (name === 'price' || name === 'minute_per_lesson') {
+      setClassInfo({
+        ...classInfo,
+        [name]: parseInt(value),
+      });
+    } else {
+      setClassInfo({
+        ...classInfo,
+        [name]: value,
+      });
+    }
   };
 
   const validateWriteForm = () => {
-    if (!title || !category || !price || !place || !minute) {
+    if (!title || !category || !price || !location || !minute_per_lesson) {
       return false;
     }
     return true;
@@ -97,9 +102,13 @@ export default function ClassWrite() {
     if (state.write) {
       actions.setValidationMode(true);
       if (validateWriteForm()) {
-        setClasses(classes.concat(classInfo));
+        if (classId) {
+          LessonAPI.editLessonById(Number(classId), classInfo);
+        } else {
+          LessonAPI.postLesson(Number(userData?.id), classInfo);
+        }
         actions.setWrite(false);
-        navigate(`/lesson/class/${id}`);
+        navigate('/lesson/manage');
       }
       actions.setWrite(false);
     }
@@ -110,6 +119,29 @@ export default function ClassWrite() {
       actions.setValidationMode(false);
     };
   }, []);
+
+  useEffect(() => {
+    async function getMyProfile() {
+      try {
+        const userProfile = await ProfileAPI.getMyProfile();
+        setUserData(userProfile.data.data);
+      } catch (e) {
+        console.log(e, '내 프로필을 불러오지 못했습니다.');
+      }
+    }
+    async function getLessonById(id: string) {
+      try {
+        const res = await LessonAPI.getLesson(Number(id));
+        setClassInfo(res.data.data.editable);
+      } catch (e) {
+        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      }
+    }
+    getMyProfile();
+    if (classId) {
+      getLessonById(classId);
+    }
+  }, [classId]);
 
   return (
     <Container>
@@ -144,27 +176,27 @@ export default function ClassWrite() {
         inputName="연락처"
         isReadOnly
         useValidation={false}
-        value={phone_number}
+        value={userData?.phone_number ? userData.phone_number : ''}
       />
       <InputBox
         inputName="성별"
         isReadOnly
         useValidation={false}
-        value={gender}
+        value={userData?.gender ? userData.gender : ''}
       />
       <InputBox
         inputName="지역"
-        name="place"
-        value={place}
-        isValid={!!place}
+        name="location"
+        value={location}
+        isValid={!!location}
         onChange={onChangeInput}
       />
       <InputBox
         inputName="회차당 수업 시간"
         type="number"
-        name="minute"
-        value={minute}
-        isValid={!!minute}
+        name="minute_per_lesson"
+        value={minute_per_lesson}
+        isValid={!!minute_per_lesson}
         onChange={onChangeInput}
       />
       <IntroContent>
