@@ -2,7 +2,8 @@ import { Sequelize } from 'sequelize';
 import { Admin } from './admin';
 import { Category } from './category';
 import { Lesson } from './lesson';
-import { User } from './user';
+import { User, Gender, Account } from './user';
+import * as UserService from '../service/user.service';
 
 const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
@@ -52,4 +53,21 @@ export function Models() {
     },
   });
   return sequelize;
+}
+export function createFirstOwnerAccount() {
+  const admin = {
+    login_id: 'munetic@gmail.com',
+    login_password:
+      '$2b$10$9ZgatOfeQp5Di8QLo21ODuOFjrm1/zKwgOkJIPD7Yu0Ws.opQTeqK',
+    name: 'owner',
+    nickname: 'munetic@gmail.com',
+    birth: new Date(),
+    gender: Gender.Other,
+    type: Account.Owner,
+    email: 'munetic@gmail.com',
+  };
+
+  UserService.createUser(new User({ ...admin })).then(() =>
+    console.log('👑 Admin:First Owner account created'),
+  );
 }
