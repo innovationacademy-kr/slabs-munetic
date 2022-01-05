@@ -6,12 +6,19 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
-interface Login {
+interface LoginProps {
   login_id: string;
   login_password: string;
 }
 
-export const login = async (loginInfo: Login) => {
+interface createUserProps {
+  email: string;
+  login_password: string;
+  name: string;
+  type: string;
+}
+
+export const login = async (loginInfo: LoginProps) => {
   return await instance.post('admin/auth/login', loginInfo);
 };
 
@@ -21,6 +28,14 @@ export const logout = async () => {
 
 export const refresh = async () => {
   return await instance.get('admin/auth/refresh');
+};
+
+export const doubleCheck = async (query: string) => {
+  return await instance.get(`admin/user/check?${query}`);
+};
+
+export const createUser = async (userInfo: createUserProps) => {
+  return await instance.post('admin/auth/signup', userInfo);
 };
 
 export const getAllUserList = async (page: number) => {

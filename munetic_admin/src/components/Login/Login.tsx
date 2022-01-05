@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { useState } from 'react';
 import { useLoginUpdate } from '../../contexts/login';
-import { Button } from '../Button';
+import Button from '../Button';
 import * as Api from '../../lib/api';
 import { instance } from '../../lib/api';
 
