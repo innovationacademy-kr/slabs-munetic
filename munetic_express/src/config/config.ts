@@ -11,7 +11,7 @@ export const development = {
   dialect: 'mariadb',
   access_secret: process.env.ACCESS_SECRET,
   refresh_secret: process.env.REFRESH_SECRET,
-  domain: process.env.COOKIE_DOMAIN,
+  domain: process.env.SERVER_HOST,
   // test: {},
   // production: {},
 };

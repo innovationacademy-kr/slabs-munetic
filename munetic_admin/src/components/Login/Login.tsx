@@ -1,20 +1,55 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { useState } from 'react';
+import { useLoginUpdate } from '../../contexts/login';
 import { Button } from '../Button';
+import * as Api from '../../lib/api';
+import { instance } from '../../lib/api';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const setLogin = useLoginUpdate();
+
+  const loginHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    Api.login({ login_id: email, login_password: password })
+      .then(res => {
+        instance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${res.data.data}`;
+        localStorage.setItem('user', JSON.stringify(email));
+        if (setLogin) setLogin(true);
+      })
+      .catch(err => {
+        if (err.respose) alert(err.response.data);
+      });
+  };
+
   return (
     <LoginContainer>
       <LoginCard>
         <Logo>Munetic</Logo>
         <Fields>
           <InputContainer>
-            <input placeholder="email" name="email" type="email" />
+            <input
+              placeholder="email"
+              name="email"
+              type="email"
+              onChange={e => setEmail(e.target.value)}
+            />
           </InputContainer>
           <InputContainer>
-            <input placeholder="password" name="password" type="password" />
+            <input
+              placeholder="password"
+              name="password"
+              type="password"
+              onChange={e => setPassword(e.target.value)}
+            />
           </InputContainer>
         </Fields>
-        <CustomButton>Login</CustomButton>
+        <CustomButton onClick={loginHandler} disabled={!(email && password)}>
+          Login
+        </CustomButton>
       </LoginCard>
     </LoginContainer>
   );
@@ -74,4 +109,9 @@ const CustomButton = styled(Button)`
   margin: 0 auto;
   width: 100%;
   background-color: rgb(82, 111, 255);
+  ${props =>
+    props.disabled &&
+    css`
+      background-color: rgb(140, 140, 140);
+    `}
 `;

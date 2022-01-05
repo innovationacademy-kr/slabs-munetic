@@ -62,6 +62,7 @@ services: # 사용되는 서비스들입니다.
       - DB_NAME=munetic
       - ACCESS_SECRET=${ACCESS_SECRET}
       - REFRESH_SECRET=${REFRESH_SECRET}
+      - SERVER_HOST=${SERVER_HOST}
       - MODE=${MODE}
     build:
       context: ./munetic_express
