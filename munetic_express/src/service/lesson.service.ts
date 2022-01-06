@@ -236,29 +236,44 @@ export const findLessonsByUserId = async (
   return lessonData;
 };
 
+const lessonQueryOptionsforAdmin: FindOptions = {
+  attributes: [
+    'id',
+    'tutor_id',
+    'title',
+    'price',
+    'location',
+    'minute_per_lesson',
+    'content',
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+  ],
+  include: [
+    { model: Category, attributes: ['name'] },
+    {
+      model: User,
+      attributes: [
+        'login_id',
+        'name',
+        'nickname',
+        'name_public',
+        'phone_number',
+        'birth',
+        'gender',
+        'image_url',
+      ],
+    },
+  ],
+};
+
 /**
  * Admin용 deleted 게시물까지 포함
  * @param page
  */
 export const findAllLessons = async (offset: number, limit: number) => {
-  const newlessonQueryOptions: FindOptions = {
-    ...lessonQueryOptions,
-    attributes: [
-      ['id', 'lesson_id'],
-      'tutor_id',
-      'title',
-      'price',
-      'location',
-      'minute_per_lesson',
-      'content',
-      'createdAt',
-      'updatedAt',
-      'deletedAt',
-    ],
-  };
-
   const lessonData = await Lesson.findAndCountAll({
-    ...newlessonQueryOptions,
+    ...lessonQueryOptionsforAdmin,
     offset,
     limit,
     paranoid: false,

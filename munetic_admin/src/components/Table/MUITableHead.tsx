@@ -9,6 +9,7 @@ import {
   AdminUserHeadCell,
   adminUserHeadCells,
 } from './AdminUser/adminUserHeadCells';
+import { LessonHeadCell, lessonHeadCells } from './Lesson/LessonHeadCells';
 
 export interface MUITableProps {
   numSelected: number;
@@ -23,10 +24,14 @@ export default function MUITableHead({
 }: MUITableProps) {
   const path = useLocation().pathname;
 
-  let headCells: readonly UserHeadCell[] | AdminUserHeadCell[];
+  let headCells:
+    | readonly UserHeadCell[]
+    | readonly AdminUserHeadCell[]
+    | readonly LessonHeadCell[];
   headCells = [];
   if (path === '/users') headCells = userHeadCells;
   if (path === '/admin_users') headCells = adminUserHeadCells;
+  if (path === '/lessons') headCells = lessonHeadCells;
   return (
     <TableHead>
       <TableRow>

@@ -16,11 +16,11 @@ export const subMenuLists = [
   ['푸쉬 보내기', '푸쉬 히스토리'],
 ];
 
-export const menuLinks = ['/users', '/posts', '', '', '', ''];
+export const menuLinks = ['/users', '/lessons', '', '', '', ''];
 
 export const subMenuLinks = [
   ['/users', '/admin_users'],
-  ['/posts'],
+  ['/lessons'],
   ['', '', '', ''],
   [''],
   ['', '', ''],

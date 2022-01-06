@@ -4,6 +4,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { useLocation } from 'react-router-dom';
 import UserTableCell from './User/UserTableCell';
 import AdminUserTableCell from './AdminUser/AdminUserTableCell';
+import LessonTableCell from './Lesson/LessonTableCell';
 
 export interface MUITableRowProps {
   numSelected: number;
@@ -58,6 +59,7 @@ export default function MUITableRow({
       </TableCell>
       {path === '/users' && <UserTableCell row={row} />}
       {path === '/admin_users' && <AdminUserTableCell row={row} />}
+      {path === '/lessons' && <LessonTableCell row={row} />}
     </TableRow>
   );
 }
