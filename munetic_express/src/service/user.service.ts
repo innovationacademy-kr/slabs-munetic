@@ -1,4 +1,5 @@
 import { NextFunction } from 'express';
+import { Op } from 'sequelize';
 import { Account, User } from '../models/user';
 import * as Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
@@ -57,6 +58,50 @@ export const findAllUser = async (page: number) => {
     offset = (page - 1) * limit;
   }
   const users = await User.findAndCountAll({
+    attributes: { exclude: ['login_password'] },
+    offset,
+    limit,
+  });
+  if (users === null) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
+  }
+  return users;
+};
+
+export const findAllAppUser = async (page: number) => {
+  let limit = 10;
+  let offset = 0;
+  if (page > 1) {
+    offset = (page - 1) * limit;
+  }
+  const users = await User.findAndCountAll({
+    where: {
+      type: {
+        [Op.or]: ['Tutor', 'Student'],
+      },
+    },
+    attributes: { exclude: ['login_password'] },
+    offset,
+    limit,
+  });
+  if (users === null) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
+  }
+  return users;
+};
+
+export const findAllAdminUser = async (page: number) => {
+  let limit = 10;
+  let offset = 0;
+  if (page > 1) {
+    offset = (page - 1) * limit;
+  }
+  const users = await User.findAndCountAll({
+    where: {
+      type: {
+        [Op.or]: ['Owner', 'Admin'],
+      },
+    },
     attributes: { exclude: ['login_password'] },
     offset,
     limit,

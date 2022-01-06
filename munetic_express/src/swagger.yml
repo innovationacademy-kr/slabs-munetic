@@ -6,7 +6,7 @@
 #    By: chaepark <chaepark@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/04 22:56:13 by chaepark          #+#    #+#              #
-#    Updated: 2022/01/04 22:57:57 by chaepark         ###   ########.fr        #
+#    Updated: 2022/01/06 11:49:34 by chaepark         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -831,6 +831,96 @@ paths:
           schema:
             type: string
             example: '이미 존재하는 유저 정보 입니다.'
+
+  /admin/user/app?page=:
+    get:
+      tags:
+        - Admin User
+      summary: Get All app user profile
+      description: only owner account can access the request
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: admin user accessToken
+        - in: query
+          type: number
+          name: page
+          required: true
+          description: page number for pagination
+      responses:
+        '200':
+          description: Succesfully got All admin profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  rows:
+                    type: array
+                    items:
+                      $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+            example: 'UNATHORIZED or 권한이 없습니다. 관리자에게 문의하세요.'
+
+  /admin/user/admin?page=:
+    get:
+      tags:
+        - Admin User
+      summary: Get All admin user profile
+      description: only owner account can access the request
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: admin user accessToken
+        - in: query
+          type: number
+          name: page
+          required: true
+          description: page number for pagination
+      responses:
+        '200':
+          description: Succesfully got All admin profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  rows:
+                    type: array
+                    items:
+                      $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+            example: 'UNATHORIZED or 권한이 없습니다. 관리자에게 문의하세요.'
 
 definitions:
   LessonCounts:

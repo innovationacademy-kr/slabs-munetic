@@ -4,6 +4,7 @@ declare module Express {
       login_id: string;
       id: number;
       login_password?: string;
+      type: string;
     };
   }
 }
