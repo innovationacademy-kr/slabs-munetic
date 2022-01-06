@@ -21,7 +21,7 @@ export default function Routing() {
 
 const RoutesContainer = styled.div`
   position: relative;
-  padding: 3rem 3rem;
+  padding: 8rem 3rem 3rem 3rem;
   min-width: 110rem;
   justify-content: center;
   font-size: 1.6rem;

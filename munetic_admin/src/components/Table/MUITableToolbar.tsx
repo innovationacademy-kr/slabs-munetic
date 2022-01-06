@@ -44,7 +44,8 @@ export default function MUITableToolbar(props: MUITableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          {path === '/users' && 'All User'}
+          {path === '/users' && 'App User'}
+          {path === '/admin_users' && 'Admin User'}
         </Typography>
       )}
       {numSelected > 0 ? (

@@ -4,24 +4,6 @@ import ErrorResponse from '../modules/errorResponse';
 import { ResJSON } from '../modules/types';
 import * as UserService from '../service/user.service';
 
-export const getAllUserProfile: RequestHandler = async (req, res, next) => {
-  try {
-    // if (req.user) {
-    let result: ResJSON;
-    const users = await UserService.findAllUser(Number(req.query.page));
-    result = new ResJSON(
-      '모든 유저 프로필을 불러오는데 성공하였습니다.',
-      users,
-    );
-    res.status(Status.OK).json(result);
-    // } else {
-    //   next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
-    // }
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const getMyProfile: RequestHandler = async (req, res, next) => {
   try {
     if (req.user) {

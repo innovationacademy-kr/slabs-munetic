@@ -201,24 +201,6 @@ module.exports = {
         createdAt: Sequelize.fn('now'),
         updatedAt: Sequelize.fn('now'),
       },
-      {
-        type: 'Owner',
-        login_id: 'munetic@gmail.com',
-        login_password:
-          '$2b$10$9ZgatOfeQp5Di8QLo21ODuOFjrm1/zKwgOkJIPD7Yu0Ws.opQTeqK', //1234
-        nickname: 'munetic@gmail.com',
-        name: '박현재',
-        name_public: false,
-        gender: 'Other',
-        birth: Sequelize.fn('now'),
-        email: 'munetic@gmail.com',
-        phone_number: null,
-        phone_public: false,
-        image_url: null,
-        introduction: null,
-        createdAt: Sequelize.fn('now'),
-        updatedAt: Sequelize.fn('now'),
-      },
     ]);
   },
 
