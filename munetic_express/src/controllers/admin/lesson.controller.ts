@@ -7,7 +7,7 @@ export const getAllLessons: RequestHandler = async (req, res, next) => {
   try {
     const offset = parseInt(req.query.offset as string, 10);
     const limit = parseInt(req.query.limit as string, 10);
-    const lessons = await LessonService.findAllLessons(offset, limit);
+    const lessons = (await LessonService.findAllLessons(offset, limit)) as any;
     res
       .status(Status.OK)
       .json(

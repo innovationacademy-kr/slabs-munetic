@@ -241,11 +241,28 @@ export const findLessonsByUserId = async (
  * @param page
  */
 export const findAllLessons = async (offset: number, limit: number) => {
-  const lessonData = await Lesson.findAndCountAll({
+  const newlessonQueryOptions: FindOptions = {
     ...lessonQueryOptions,
+    attributes: [
+      ['id', 'lesson_id'],
+      'tutor_id',
+      'title',
+      'price',
+      'location',
+      'minute_per_lesson',
+      'content',
+      'createdAt',
+      'updatedAt',
+      'deletedAt',
+    ],
+  };
+
+  const lessonData = await Lesson.findAndCountAll({
+    ...newlessonQueryOptions,
     offset,
     limit,
     paranoid: false,
+    raw: true,
   });
   return lessonData;
 };
