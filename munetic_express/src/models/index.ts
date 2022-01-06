@@ -59,7 +59,7 @@ export function createFirstOwnerAccount() {
     login_id: 'munetic@gmail.com',
     login_password:
       '$2b$10$9ZgatOfeQp5Di8QLo21ODuOFjrm1/zKwgOkJIPD7Yu0Ws.opQTeqK',
-    name: 'owner',
+    name: '대표님',
     nickname: 'munetic@gmail.com',
     birth: new Date(),
     gender: Gender.Other,

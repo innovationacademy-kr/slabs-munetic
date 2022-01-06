@@ -6,6 +6,7 @@ export default function UserListPage() {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [rows, setRows] = useState<[]>([]);
+  const [count, setCount] = useState(0);
 
   /**
    * Page 전환
@@ -28,14 +29,16 @@ export default function UserListPage() {
   };
 
   useEffect(() => {
-    Api.getAllUserList(page).then(({ data }: any) => {
+    Api.getAppUserList(page).then(({ data }: any) => {
       setRows(data.data.rows);
+      setCount(parseInt(data.data.count, 10));
     });
   }, [page]);
 
   return (
     <MUITable
       page={page}
+      count={count}
       rows={rows}
       rowsPerPage={rowsPerPage}
       handleChangePage={handleChangePage}

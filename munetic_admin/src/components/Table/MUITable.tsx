@@ -13,6 +13,7 @@ import MUITableRow from './MUITableRow';
 
 export type TableProps = {
   page: number;
+  count: number;
   rows: [];
   rowsPerPage: number;
   handleChangePage: (
@@ -23,6 +24,7 @@ export type TableProps = {
 };
 
 export default function MUITable({
+  count,
   page,
   rows,
   rowsPerPage,
@@ -123,10 +125,9 @@ export default function MUITable({
           }}
           rowsPerPageOptions={[10]}
           component="div"
-          count={-1}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
-          nextIconButtonProps={{ disabled: emptyRows > 0 ? true : false }}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

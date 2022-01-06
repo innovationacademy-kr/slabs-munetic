@@ -8,7 +8,11 @@ import CustomSelect from '../Inputs/CustomSelect';
 import Button from '../Button';
 import * as Api from '../../lib/api';
 
-export function AddAdminUser() {
+interface AdminUserProps {
+  rerender: () => void;
+}
+
+export function AddAdminUser({ rerender }: AdminUserProps) {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [password, setPassword] = useState('1234');
@@ -33,6 +37,7 @@ export function AddAdminUser() {
     Api.createUser({ email, login_password: password, name, type: auth })
       .then(() => {
         alert('계정이 성공적으로 생성되었습니다.');
+        rerender();
       })
       .catch(err => alert(`${err.response}`));
   };
@@ -94,18 +99,21 @@ export function AddAdminUser() {
 }
 
 const CreateUserContainer = styled.div`
-  width: 97%;
+  width: 100%;
   background-color: white;
   border-radius: 0.3rem;
-  padding: 2rem;
+
+  margin-bottom: 1rem;
 `;
 
 const CreateUserHeader = styled.div`
-  margin-bottom: 2rem;
+  padding-top: 2rem;
+  padding-left: 2rem;
 `;
 
 const CreateUserInputContainer = styled.div`
   display: flex;
+  padding: 1rem 2rem;
 `;
 
 const EmailButton = styled(Button)`

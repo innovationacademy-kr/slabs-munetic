@@ -1,11 +1,14 @@
-import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { userHeadCells, UserData, UserHeadCell } from './userHeadCells';
+import { userHeadCells, UserHeadCell } from './User/userHeadCells';
 import { useLocation } from 'react-router-dom';
+import {
+  AdminUserHeadCell,
+  adminUserHeadCells,
+} from './AdminUser/adminUserHeadCells';
 
 export interface MUITableProps {
   numSelected: number;
@@ -20,9 +23,10 @@ export default function MUITableHead({
 }: MUITableProps) {
   const path = useLocation().pathname;
 
-  let headCells: readonly UserHeadCell[];
+  let headCells: readonly UserHeadCell[] | AdminUserHeadCell[];
+  headCells = [];
   if (path === '/users') headCells = userHeadCells;
-
+  if (path === '/admin_users') headCells = adminUserHeadCells;
   return (
     <TableHead>
       <TableRow>
@@ -37,7 +41,7 @@ export default function MUITableHead({
             }}
           />
         </TableCell>
-        {userHeadCells.map(headCell => (
+        {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'center' : 'left'}

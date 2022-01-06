@@ -76,11 +76,12 @@ export default function Menu() {
 }
 
 const MenuContainer = styled.header`
-  min-width: 100vh;
-  position: sticky;
+  min-width: 100%;
+  position: fixed;
   background-color: white;
   height: 6.5rem;
-  border-bottom: 1px solid rgb(239, 239, 239);
+  border-bottom: 1px solid rgb(206, 206, 206);
+  box-shadow: 0 4px 4px -4px rgb(206, 206, 206);
   z-index: 100;
 `;
 
@@ -143,6 +144,7 @@ const SubMenuContainer = styled.div`
   font-size: 1.4rem;
   background-color: white;
   border-bottom: 1px solid rgb(239, 239, 239);
+  box-shadow: 0 4px 4px -4px rgb(150, 148, 148);
   ${MainMenuList}:hover & {
     display: block;
   }
