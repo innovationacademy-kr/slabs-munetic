@@ -36,10 +36,17 @@ export const logout: RequestHandler = (req, res, next) => {
 
 export const signup: RequestHandler = async (req, res, next) => {
   try {
-    const adminInfo = Reshape.adminObject(req);
-    adminInfo.login_password = bcrypt.hashSync(adminInfo.login_password, 10);
-    const data = await UserService.createUser(new User({ ...adminInfo }));
-    res.status(Status.CREATED).json(new ResJSON('request success', data));
+    if (req.user?.type === 'Owner') {
+      const adminInfo = Reshape.adminObject(req);
+      adminInfo.login_password = bcrypt.hashSync(adminInfo.login_password, 10);
+      const data = await UserService.createUser(new User({ ...adminInfo }));
+      res.status(Status.CREATED).json(new ResJSON('request success', data));
+    } else {
+      throw new ErrorResponse(
+        Status.UNAUTHORIZED,
+        '권한이 없습니다. 관리자에게 문의해주세요.',
+      );
+    }
   } catch (err) {
     next(err);
   }

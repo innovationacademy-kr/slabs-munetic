@@ -1,6 +1,7 @@
 import { AddAdminUser } from '../components/InputsContainers/AddAdminUser';
 import MUITable from '../components/Table/MUITable';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Api from '../lib/api';
 
 export default function AdminUserPage() {
@@ -8,6 +9,8 @@ export default function AdminUserPage() {
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [rows, setRows] = useState<[]>([]);
   const [count, setCount] = useState(0);
+
+  const navigate = useNavigate();
 
   /**
    * Page 전환
@@ -37,10 +40,15 @@ export default function AdminUserPage() {
   };
 
   useEffect(() => {
-    Api.getAdminUserList(page).then(({ data }: any) => {
-      setRows(data.data.rows);
-      setCount(parseInt(data.data.count, 10));
-    });
+    Api.getAdminUserList(page)
+      .then(({ data }: any) => {
+        setRows(data.data.rows);
+        setCount(parseInt(data.data.count, 10));
+      })
+      .catch(err => {
+        if (err.response) alert(err.response.data);
+        navigate('/');
+      });
   }, [page, count]);
 
   return (
