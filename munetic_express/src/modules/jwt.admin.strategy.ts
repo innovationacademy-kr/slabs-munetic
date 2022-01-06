@@ -1,16 +1,9 @@
 import { Op } from 'sequelize';
-import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
-import {
-  accessOpts,
-  refreshOpts,
-  cookieExtractor,
-  JwtRefreshStrategy,
-} from './jwt.local.strategy';
-import * as UserService from '../service/user.service';
 import passport from 'passport';
+import { Strategy } from 'passport-jwt';
 
-const { development } = require('../config/config');
-const { access_secret } = development;
+import * as UserService from '../service/user.service';
+import { accessOpts, refreshOpts } from './jwt.local.strategy';
 
 const JwtAdminStrategyCallback = async (
   jwt_payload: { sub: any; login_id: any },
@@ -29,6 +22,7 @@ const JwtAdminStrategyCallback = async (
 
 export const JwtAdminAccessStrategy = () =>
   new Strategy(accessOpts, JwtAdminStrategyCallback);
+
 export const JwtAdminRefreshStrategy = () =>
   new Strategy(refreshOpts, JwtAdminStrategyCallback);
 

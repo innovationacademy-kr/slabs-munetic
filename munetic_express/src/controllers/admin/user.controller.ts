@@ -7,20 +7,14 @@ import * as UserService from '../../service/user.service';
 
 export const getAppUserList: RequestHandler = async (req, res, next) => {
   try {
-    if (req.user) {
-      let result: ResJSON;
-      const users = await UserService.findAllAppUser(Number(req.query.page));
-      result = new ResJSON(
-        '모든 유저 프로필을 불러오는데 성공하였습니다.',
-        users,
-      );
-      res.status(Status.OK).json(result);
-    } else {
-      throw new ErrorResponse(
-        Status.UNAUTHORIZED,
-        '권한이 없습니다. 관리자에게 문의해주세요.',
-      );
-    }
+    let result: ResJSON;
+    const users = await UserService.findAllAppUser(Number(req.query.page));
+    console.log(users);
+    result = new ResJSON(
+      '모든 유저 프로필을 불러오는데 성공하였습니다.',
+      users,
+    );
+    res.status(Status.OK).json(result);
   } catch (err) {
     next(err);
   }

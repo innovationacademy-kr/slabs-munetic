@@ -26,6 +26,7 @@ export const searchAllUser = async (userInfo: IsearchUser) => {
     where: {
       ...userInfo,
     },
+    paranoid: false,
   });
   return data;
 };
@@ -34,7 +35,6 @@ export const searchActiveUser = async (userInfo: IsearchUser) => {
   const data = await User.findAll({
     where: {
       ...userInfo,
-      deletedAt: null,
     },
   });
   return data;
@@ -49,23 +49,6 @@ const userProfileFindByQuery = (id: number) => {
       exclude: ['login_password', 'createdAt', 'updatedAt', 'deletedAt'],
     },
   };
-};
-
-export const findAllUser = async (page: number) => {
-  let limit = 10;
-  let offset = 0;
-  if (page > 1) {
-    offset = (page - 1) * limit;
-  }
-  const users = await User.findAndCountAll({
-    attributes: { exclude: ['login_password'] },
-    offset,
-    limit,
-  });
-  if (users === null) {
-    throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
-  }
-  return users;
 };
 
 export const findAllAppUser = async (page: number) => {
@@ -83,6 +66,7 @@ export const findAllAppUser = async (page: number) => {
     attributes: { exclude: ['login_password'] },
     offset,
     limit,
+    paranoid: false,
   });
   if (users === null) {
     throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');
@@ -105,6 +89,7 @@ export const findAllAdminUser = async (page: number) => {
     attributes: { exclude: ['login_password'] },
     offset,
     limit,
+    paranoid: false,
   });
   if (users === null) {
     throw new ErrorResponse(Status.BAD_REQUEST, '유저들을 불러올 수 없습니다.');

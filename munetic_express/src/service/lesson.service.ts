@@ -132,7 +132,7 @@ export const findLesson = async (
 
 /**
  * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다. 순서는 기본 순서인 생성 순입니다.
- *
+ * deletede된 게시물은 제외
  * @param offset
  * @param limit
  * @returns
@@ -233,5 +233,19 @@ export const findLessonsByUserId = async (
   for (const lesson of lessonData.rows) {
     lesson.lesson_id = (lesson as any).dataValues.lesson_id;
   }
+  return lessonData;
+};
+
+/**
+ * Admin용 deleted 게시물까지 포함
+ * @param page
+ */
+export const findAllLessons = async (offset: number, limit: number) => {
+  const lessonData = await Lesson.findAndCountAll({
+    ...lessonQueryOptions,
+    offset,
+    limit,
+    paranoid: false,
+  });
   return lessonData;
 };
