@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Route, Routes } from 'react-router';
 import HomePage from '../pages/HomePage';
-import PostListPage from '../pages/PostListPage';
+import LessonListPage from '../pages/LessonListPage';
 import UserListPage from '../pages/UserListPage';
 import AdminUserPage from '../pages/AdminUserPage';
 import LoginPage from '../pages/LoginPage';
@@ -13,7 +13,7 @@ export default function Routing() {
         <Route path="/" element={<HomePage />} />
         <Route path="/users" element={<UserListPage />} />
         <Route path="/admin_users" element={<AdminUserPage />} />
-        <Route path="/posts" element={<PostListPage />} />
+        <Route path="/lessons" element={<LessonListPage />} />
       </Routes>
     </RoutesContainer>
   );

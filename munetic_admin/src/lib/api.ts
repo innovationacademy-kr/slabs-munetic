@@ -45,3 +45,7 @@ export const getAppUserList = async (page: number) => {
 export const getAdminUserList = async (page: number) => {
   return await instance.get(`user/admin?page=${page + 1}`);
 };
+
+export const getAllLessons = async (offset: number, limit: number) => {
+  return await instance.get(`lesson?offset=${offset}&limit=${limit}`);
+};

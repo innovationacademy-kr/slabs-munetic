@@ -46,6 +46,7 @@ export default function MUITableToolbar(props: MUITableToolbarProps) {
         >
           {path === '/users' && 'App User'}
           {path === '/admin_users' && 'Admin User'}
+          {path === '/lessons' && 'Lesson'}
         </Typography>
       )}
       {numSelected > 0 ? (

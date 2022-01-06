@@ -132,7 +132,7 @@ export const findLesson = async (
 
 /**
  * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다. 순서는 기본 순서인 생성 순입니다.
- *
+ * deletede된 게시물은 제외
  * @param offset
  * @param limit
  * @returns
@@ -233,5 +233,51 @@ export const findLessonsByUserId = async (
   for (const lesson of lessonData.rows) {
     lesson.lesson_id = (lesson as any).dataValues.lesson_id;
   }
+  return lessonData;
+};
+
+const lessonQueryOptionsforAdmin: FindOptions = {
+  attributes: [
+    'id',
+    'tutor_id',
+    'title',
+    'price',
+    'location',
+    'minute_per_lesson',
+    'content',
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+  ],
+  include: [
+    { model: Category, attributes: ['name'] },
+    {
+      model: User,
+      attributes: [
+        'login_id',
+        'name',
+        'nickname',
+        'name_public',
+        'phone_number',
+        'birth',
+        'gender',
+        'image_url',
+      ],
+    },
+  ],
+};
+
+/**
+ * Admin용 deleted 게시물까지 포함
+ * @param page
+ */
+export const findAllLessons = async (offset: number, limit: number) => {
+  const lessonData = await Lesson.findAndCountAll({
+    ...lessonQueryOptionsforAdmin,
+    offset,
+    limit,
+    paranoid: false,
+    raw: true,
+  });
   return lessonData;
 };

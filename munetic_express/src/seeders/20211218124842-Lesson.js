@@ -37,6 +37,7 @@ module.exports = {
           '드럼드럼드럼드럼드럼드럼 더 이상 설명이 필요 없습니다. 믿고 따라오세요.',
         createdAt: Sequelize.fn('now'),
         updatedAt: Sequelize.fn('now'),
+        deletedAt: Sequelize.fn('now'),
       },
     ]);
   },
