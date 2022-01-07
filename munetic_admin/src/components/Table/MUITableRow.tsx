@@ -5,6 +5,8 @@ import { useLocation } from 'react-router-dom';
 import UserTableCell from './User/UserTableCell';
 import AdminUserTableCell from './AdminUser/AdminUserTableCell';
 import LessonTableCell from './Lesson/LessonTableCell';
+import { useUserUpdate } from '../../contexts/user';
+import { Link } from 'react-router-dom';
 
 export interface MUITableRowProps {
   numSelected: number;
@@ -24,8 +26,16 @@ export default function MUITableRow({
   handleClick,
 }: MUITableRowProps) {
   const path = useLocation().pathname;
+
+  const setUser = useUserUpdate();
+
+  const modalHandler = () => {
+    if (setUser) setUser(row);
+  };
   return (
     <TableRow
+      component={Link}
+      to={`${row.id}`}
       hover
       role="checkbox"
       aria-checked={isItemSelected}
@@ -37,6 +47,7 @@ export default function MUITableRow({
           fontSize: '1.25rem',
         },
       }}
+      onClick={modalHandler}
     >
       <TableCell padding="checkbox">
         <Checkbox
@@ -48,6 +59,7 @@ export default function MUITableRow({
           }}
         />
       </TableCell>
+
       <TableCell
         component="th"
         id={labelId}
