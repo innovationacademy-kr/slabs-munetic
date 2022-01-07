@@ -8,6 +8,7 @@ import * as AuthAPI from '../../lib/api/auth';
 import Contexts from '../../context/Contexts';
 import { useNavigate } from 'react-router-dom';
 import { dayList, monthList, yearList } from '../../lib/staticData';
+import { Account } from '../../types/enums';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -97,7 +98,7 @@ export default function Register() {
   const [registerInfo, setRegisterInfo] = useState({
     login_id: '',
     login_password: '',
-    type: 'student',
+    type: Account.Student,
     nickname: '',
     name: '',
     email: '',
@@ -132,6 +133,13 @@ export default function Register() {
     >,
   ) => {
     const { value, name } = e.target;
+    if (name === 'login_id') {
+      setIsValidId(false);
+    } else if (name === 'nickname') {
+      setIsValidNickname(false);
+    } else if (name === 'email') {
+      setIsValidEmail(false);
+    }
     setRegisterInfo({
       ...registerInfo,
       [name]: value,
