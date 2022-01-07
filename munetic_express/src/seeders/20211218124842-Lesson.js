@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Lesson', [
       {
-        tutor_id: 2,
+        tutor_id: 3,
         category_id: 1,
         title: '지금까지 이런 기타 레슨은 없었다.',
         price: 100000,
@@ -15,7 +15,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 3,
         category_id: 2,
         title: '기타만 잘 치는 줄 아셨죠? 바이올린도 합니다.',
         price: 200000,
@@ -27,7 +27,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 3,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -40,7 +40,7 @@ module.exports = {
         deletedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 6,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -52,7 +52,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 6,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -64,7 +64,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 9,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -76,7 +76,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 9,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -88,7 +88,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 9,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -100,7 +100,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 10,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -112,7 +112,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 10,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -124,7 +124,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 12,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
@@ -136,7 +136,7 @@ module.exports = {
         updatedAt: Sequelize.fn('now'),
       },
       {
-        tutor_id: 2,
+        tutor_id: 12,
         category_id: 3,
         title: '죄송합니다. 드럼도 가르쳐드립니다.',
         price: 50000,
