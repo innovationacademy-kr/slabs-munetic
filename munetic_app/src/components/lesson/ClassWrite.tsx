@@ -102,13 +102,28 @@ export default function ClassWrite() {
     if (state.write) {
       actions.setValidationMode(true);
       if (validateWriteForm()) {
+        let madeClassId;
         if (classId) {
-          LessonAPI.editLessonById(Number(classId), classInfo);
+          LessonAPI.editLessonById(Number(classId), classInfo)
+            .then(res => {
+              madeClassId = res.data.data.lesson_id;
+              actions.setWrite(false);
+              navigate(`/lesson/class/${madeClassId}`, { replace: true });
+            })
+            .catch(e => {
+              console.log(e);
+            });
         } else {
-          LessonAPI.postLesson(Number(userData?.id), classInfo);
+          LessonAPI.postLesson(Number(userData?.id), classInfo)
+            .then(res => {
+              madeClassId = res.data.data.lesson_id;
+              actions.setWrite(false);
+              navigate(`/lesson/class/${madeClassId}`, { replace: true });
+            })
+            .catch(e => {
+              console.log(e);
+            });
         }
-        actions.setWrite(false);
-        navigate('/lesson/manage');
       }
       actions.setWrite(false);
     }

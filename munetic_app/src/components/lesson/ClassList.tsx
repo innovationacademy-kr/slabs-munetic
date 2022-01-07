@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import palette from '../../style/palette';
 import { LessonData } from '../../types/lessonData';
 import Button from '../common/Button';
-import * as lessonAPI from '../../lib/api/lesson';
 import { useEffect, useState } from 'react';
 import * as LessonAPI from '../../lib/api/lesson';
 import Pagination from '../common/Pagination';
@@ -84,20 +83,12 @@ const StyledButton = styled(Button)<StyledButtonProps>`
 interface IProps {
   lesson: LessonData;
   mode?: string;
+  onClickDelete?: (id: number) => void;
 }
 
-export const ClassItem = ({ lesson, mode }: IProps) => {
+export const ClassItem = ({ lesson, mode, onClickDelete }: IProps) => {
   const { lesson_id, image_url } = lesson;
   const { title, category } = lesson.editable;
-
-  const onClick = async (id: number) => {
-    alert(`이 글을 삭제하시겠습니까?`);
-    try {
-      await lessonAPI.deleteLessonById(lesson_id);
-    } catch (e) {
-      console.log(e, '삭제를 실패했습니다.');
-    }
-  };
 
   return (
     <ClassItemContainer to={`/lesson/class/${lesson_id}`}>
@@ -105,14 +96,14 @@ export const ClassItem = ({ lesson, mode }: IProps) => {
         <span className="classItemCategory">카테고리 : {category}</span>
         <span className="classItemTitle">{title}</span>
       </div>
-      {mode === 'manage' ? (
+      {mode === 'manage' && onClickDelete ? (
         <div className="buttons">
           <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>
           <StyledButton
             onClick={e => {
               e.preventDefault();
               e.stopPropagation();
-              onClick(lesson_id);
+              onClickDelete(lesson_id);
             }}
             deleteBtn
           >

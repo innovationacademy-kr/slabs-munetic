@@ -6,6 +6,7 @@ export interface LessonData {
   tutor_name: string;
   gender: Gender;
   birth: string;
+  phone_number: string;
   image_url: string;
   editable: {
     category: string;

@@ -7,9 +7,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
-import * as ProfileAPI from '../../lib/api/profile';
 import { LessonData } from '../../types/lessonData';
-import { UserDataType } from '../../types/userData';
 import { Gender } from '../../types/enums';
 
 const ClassContainer = styled.div`
@@ -132,13 +130,13 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
 
 export default function Class() {
   const classId = useParams().id;
-  const [userData, setUserData] = useState<UserDataType>();
   const [classInfo, setClassInfo] = useState<LessonData>({
     lesson_id: 0,
     tutor_id: 0,
     tutor_name: '',
     gender: Gender.Male,
     birth: '',
+    phone_number: '',
     image_url: '',
     editable: {
       category: '',
@@ -150,7 +148,7 @@ export default function Class() {
     },
   });
 
-  const { tutor_id, image_url, tutor_name, birth, gender, editable } =
+  const { image_url, tutor_name, birth, phone_number, gender, editable } =
     classInfo;
   const { price, location, minute_per_lesson, content } = editable;
 
@@ -163,14 +161,6 @@ export default function Class() {
   };
 
   useEffect(() => {
-    async function getProfileById(id: number) {
-      try {
-        const userProfile = await ProfileAPI.getProfileById(id);
-        setUserData(userProfile.data.data);
-      } catch (e) {
-        console.log(e, '프로필을 불러오지 못했습니다.');
-      }
-    }
     async function getLessonById(id: string) {
       try {
         const res = await LessonAPI.getLesson(Number(id));
@@ -181,9 +171,8 @@ export default function Class() {
     }
     if (classId) {
       getLessonById(classId);
-      getProfileById(tutor_id);
     }
-  }, [classId, tutor_id]);
+  }, [classId]);
 
   return (
     <ClassContainer>
@@ -204,10 +193,7 @@ export default function Class() {
         </div>
       </ClassProfileWrapper>
       <ClassPhoneNumber>
-        연락처 :{' '}
-        <span className="phoneNumber">
-          {userData ? userData.phone_number : ''}
-        </span>
+        연락처 : <span className="phoneNumber">{phone_number}</span>
       </ClassPhoneNumber>
       <ClassBasicInfo>
         레슨 기본 정보

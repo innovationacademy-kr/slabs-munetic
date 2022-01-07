@@ -9,6 +9,6 @@ export interface NewProfileInfoType {
   introduction?: string | null;
 }
 export const updateProfile = (body: NewProfileInfoType) =>
-  client.patch('/api/user', body);
-export const getProfileById = (id: number) => client.get(`/api/user/${id}`);
-export const getMyProfile = () => client.get('/api/user');
+  client.patch('/user', body);
+export const getProfileById = (id: number) => client.get(`/user/${id}`);
+export const getMyProfile = () => client.get('/user');

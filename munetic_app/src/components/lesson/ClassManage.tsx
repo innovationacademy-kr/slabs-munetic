@@ -39,6 +39,7 @@ export default function ClassManage() {
   const [userData, setUserData] = useState<UserDataType>();
   const [myClasses, setMyClasses] = useState<LessonData[]>();
   const [classCount, setClassCount] = useState(0);
+  const [isUpdate, setIsUpdate] = useState(false);
   const itemsPerPage = 5;
 
   const handlePageClick = async (event: any) => {
@@ -53,6 +54,17 @@ export default function ClassManage() {
         setMyClasses(res.data.data.rows);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      }
+    }
+  };
+
+  const onClickDelete = async (id: number) => {
+    if (confirm(`이 글을 삭제하시겠습니까?`)) {
+      try {
+        await LessonAPI.deleteLessonById(id);
+        setIsUpdate(prev => !prev);
+      } catch (e) {
+        console.log(e, '삭제를 실패했습니다.');
       }
     }
   };
@@ -84,7 +96,7 @@ export default function ClassManage() {
     if (userData) {
       getMyLessons(userData.id, itemsPerPage, 0);
     }
-  }, [userData]);
+  }, [userData, isUpdate]);
 
   return (
     <ClassManageContainer>
@@ -96,7 +108,12 @@ export default function ClassManage() {
         <div className="classList">
           {myClasses &&
             myClasses.map(lesson => (
-              <ClassItem lesson={lesson} mode="manage" key={lesson.lesson_id} />
+              <ClassItem
+                lesson={lesson}
+                mode="manage"
+                onClickDelete={() => onClickDelete(lesson.lesson_id)}
+                key={lesson.lesson_id}
+              />
             ))}
         </div>
       </ClassListWrapper>
