@@ -22,7 +22,7 @@ services: # 사용되는 서비스들입니다.
     container_name: munetic_app
     restart: always
     environment:
-      - VITE_BASE_URL=${SERVER_HOST}/api
+      - VITE_BASE_URL=/api
     build:
       context: ./munetic_app
       dockerfile: Dockerfile
