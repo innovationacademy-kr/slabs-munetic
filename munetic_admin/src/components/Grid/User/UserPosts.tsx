@@ -1,11 +1,10 @@
-import styled from 'styled-components';
-import Title from '../Common/Title';
 import MUITable from '../../Table/MUITable';
 import { useEffect, useState } from 'react';
 import { useUser } from '../../../contexts/user';
+import * as Api from '../../../lib/api';
 
 export default function UserPosts() {
-  const userInfo = useUser();
+  const user = useUser() as any;
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [rows, setRows] = useState<[]>([]);
@@ -31,12 +30,14 @@ export default function UserPosts() {
     setPage(0);
   };
 
-  //   useEffect(() => {
-  //     Api.getAppUserList(page).then(({ data }: any) => {
-  //       setRows(data.data.rows);
-  //       setCount(parseInt(data.data.count, 10));
-  //     });
-  //   }, [page]);
+  useEffect(() => {
+    const limit = 5;
+    const offset = page * limit;
+    Api.getUserLessons(user!.id, offset, limit).then(({ data }: any) => {
+      setRows(data.data.rows);
+      setCount(parseInt(data.data.count, 10));
+    });
+  }, [page]);
 
   return (
     <>

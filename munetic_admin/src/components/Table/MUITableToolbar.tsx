@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { alpha } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
+import { useUser } from '../../contexts/user';
 
 interface MUITableToolbarProps {
   numSelected: number;
@@ -14,6 +15,9 @@ interface MUITableToolbarProps {
 export default function MUITableToolbar(props: MUITableToolbarProps) {
   const { numSelected } = props;
   const path = useLocation().pathname;
+
+  const user = useUser() as any;
+
   return (
     <Toolbar
       sx={{
@@ -46,7 +50,7 @@ export default function MUITableToolbar(props: MUITableToolbarProps) {
         >
           {path === '/users' && 'App User'}
           {path === '/admin_users' && 'Admin User'}
-          {path === '/lessons' && 'Lesson'}
+          {(path === '/lessons' || path === `/users/${user!.id}`) && 'Lesson'}
         </Typography>
       )}
       {numSelected > 0 ? (

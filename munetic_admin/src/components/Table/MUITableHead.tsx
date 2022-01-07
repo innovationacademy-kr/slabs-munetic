@@ -24,7 +24,7 @@ export default function MUITableHead({
   onSelectAllClick,
 }: MUITableProps) {
   const path = useLocation().pathname;
-  const userInfo = useUser() as any;
+  const user = useUser() as any;
 
   let headCells:
     | readonly UserHeadCell[]
@@ -34,7 +34,7 @@ export default function MUITableHead({
 
   if (path === '/users') headCells = userHeadCells;
   if (path === '/admin_users') headCells = adminUserHeadCells;
-  if (path === '/lessons' || path === `/users/${userInfo!.id}`)
+  if (path === '/lessons' || path === `/users/${user!.id}`)
     headCells = lessonHeadCells;
 
   return (

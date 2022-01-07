@@ -4,8 +4,11 @@ import OverView from './OverView';
 import UserInfo from './UserInfo';
 import AdminMemo from './AdminMemo';
 import UserPosts from './UserPosts';
+import { useUser } from '../../../contexts/user';
 
 export default function UserGrid() {
+  const user = useUser() as any;
+
   return (
     <Grid container spacing={2} sx={{ flexGrow: 1 }}>
       <Grid item xs={3} sx={{ mb: 3 }}>
@@ -23,9 +26,11 @@ export default function UserGrid() {
           <AdminMemo />
         </Item>
       </Grid>
-      <Grid item xs={12} sx={{ mb: 3 }}>
-        <UserPosts />
-      </Grid>
+      {user.type === 'Tutor' && (
+        <Grid item xs={12} sx={{ mb: 3 }}>
+          <UserPosts />
+        </Grid>
+      )}
     </Grid>
   );
 }
