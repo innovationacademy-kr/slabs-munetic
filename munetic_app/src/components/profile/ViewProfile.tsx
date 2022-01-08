@@ -12,7 +12,7 @@ import Pagination from '../common/Pagination';
 import { ClassItem } from '../lesson/ClassList';
 
 const Container = styled.div`
-  margin: 30px 10px;
+  margin: 30px 10px 60px 10px;
   padding: 10px;
   background-color: ${palette.green};
   .img {
@@ -26,7 +26,7 @@ const Container = styled.div`
   .nickname {
     margin: 15px;
     text-align: center;
-    font-size: 25px;
+    font-size: 21px;
     font-weight: bold;
     color: ${palette.darkBlue};
   }
@@ -50,12 +50,12 @@ const InfoWrapper = styled.div<InfoNameProps>`
   word-wrap: break-word;
   .infoName {
     flex: 1 0 0;
-    font-size: 21px;
+    font-size: 18px;
     color: ${palette.grayBlue};
     ${({ column }) => (column ? 'margin-bottom: 10px' : null)};
   }
   .infoContent {
-    font-size: 21px;
+    font-size: 18px;
   }
 `;
 
@@ -78,7 +78,7 @@ const UserClassList = ({ userId }: UserClassListProps) => {
       );
       setClasses(res.data.data.rows);
     } catch (e) {
-      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      console.log(e, '레슨을 불러오지 못했습니다.');
     }
   };
 
@@ -89,7 +89,7 @@ const UserClassList = ({ userId }: UserClassListProps) => {
         setClasses(res.data.data.rows);
         setClassCount(res.data.data.count);
       } catch (e) {
-        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+        console.log(e, '레슨을 불러오지 못했습니다.');
       }
     }
     getUserLessons(userId, itemsPerPage, 0);
@@ -122,7 +122,7 @@ export default function ViewProfile() {
         const userProfile = await ProfileAPI.getProfileById(Number(userId));
         setUserData(userProfile.data.data);
       } catch (e) {
-        console.log(e, '내 프로필을 불러오지 못했습니다.');
+        console.log(e, '프로필을 불러오지 못했습니다.');
       }
     }
     getProfile();

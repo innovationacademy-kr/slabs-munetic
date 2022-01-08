@@ -74,7 +74,7 @@ export default function Home() {
   const onClickProfileEdit = async () => {
     try {
       const newData = {
-        type: 'Student',
+        type: 'Tutor',
         nickname: 'kunkun',
         name_public: true,
         phone_public: true,

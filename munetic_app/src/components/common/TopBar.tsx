@@ -92,7 +92,7 @@ export default function TopBar() {
     rightText = '';
   }
   const onClickWrite = (rightText: string) => {
-    if (rightText === '등록' || rightText === '수정') {
+    if (rightText === '등록' || rightText === '수정' || rightText === '저장') {
       actions.setWrite(true);
     }
   };

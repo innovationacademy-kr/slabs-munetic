@@ -111,7 +111,7 @@ export default function ManageProfile() {
             <div className="imgAndNickname">
               <img className="profileImg" src={userData.image_url} alt="" />
               <div className="nickname">
-                <Link to={`/profile/${userData.id}`}>{userData.name}</Link>
+                <Link to={`/profile/${userData.id}`}>{userData.nickname}</Link>
               </div>
             </div>
             <div className="sns">
