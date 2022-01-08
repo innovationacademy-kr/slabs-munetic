@@ -268,12 +268,30 @@ const lessonQueryOptionsforAdmin: FindOptions = {
 };
 
 /**
- * Admin용 deleted 게시물까지 포함
- * @param page
+ * Admin용 findAllLessons(deleted 게시물까지 포함)
  */
 export const findAllLessons = async (offset: number, limit: number) => {
   const lessonData = await Lesson.findAndCountAll({
     ...lessonQueryOptionsforAdmin,
+    offset,
+    limit,
+    paranoid: false,
+    raw: true,
+  });
+  return lessonData;
+};
+
+/**
+ * Admin용 findLessonsByUserId(deleted 게시물까지 포함)
+ */
+export const findAllLessonsByUserId = async (
+  userId: number,
+  offset: number,
+  limit: number,
+) => {
+  const lessonData = await Lesson.findAndCountAll({
+    ...lessonQueryOptionsforAdmin,
+    where: { tutor_id: userId },
     offset,
     limit,
     paranoid: false,

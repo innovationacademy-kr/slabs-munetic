@@ -5,6 +5,8 @@ import { useLocation } from 'react-router-dom';
 import UserTableCell from './User/UserTableCell';
 import AdminUserTableCell from './AdminUser/AdminUserTableCell';
 import LessonTableCell from './Lesson/LessonTableCell';
+import { useUserUpdate, useUser } from '../../contexts/user';
+import { Link } from 'react-router-dom';
 
 export interface MUITableRowProps {
   numSelected: number;
@@ -16,16 +18,23 @@ export interface MUITableRowProps {
 }
 
 export default function MUITableRow({
-  numSelected,
-  rowCount,
   isItemSelected,
   labelId,
   row,
   handleClick,
 }: MUITableRowProps) {
   const path = useLocation().pathname;
+
+  const setUser = useUserUpdate();
+  const user = useUser() as any;
+
+  const modalHandler = () => {
+    if (setUser) setUser(row);
+  };
   return (
     <TableRow
+      component={Link}
+      to={`${row.id}`}
       hover
       role="checkbox"
       aria-checked={isItemSelected}
@@ -37,6 +46,7 @@ export default function MUITableRow({
           fontSize: '1.25rem',
         },
       }}
+      onClick={modalHandler}
     >
       <TableCell padding="checkbox">
         <Checkbox
@@ -48,6 +58,7 @@ export default function MUITableRow({
           }}
         />
       </TableCell>
+
       <TableCell
         component="th"
         id={labelId}
@@ -59,7 +70,9 @@ export default function MUITableRow({
       </TableCell>
       {path === '/users' && <UserTableCell row={row} />}
       {path === '/admin_users' && <AdminUserTableCell row={row} />}
-      {path === '/lessons' && <LessonTableCell row={row} />}
+      {(path === '/lessons' || path === `/users/${user!.id}`) && (
+        <LessonTableCell row={row} />
+      )}
     </TableRow>
   );
 }

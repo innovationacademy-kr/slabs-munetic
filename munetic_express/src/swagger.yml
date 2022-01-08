@@ -913,6 +913,53 @@ paths:
             type: string
             example: Unauthorized
 
+  /admin/lesson/user/{id}?:
+    get:
+      tags:
+        - Admin Lesson
+      summary: Get All User Lessons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          required: true
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 응답에 성공하였습니다.
+              data:
+                $ref: '#/definitions/AdminLessons'
+        '401':
+          description: Unathorized
+          schema:
+            type: string
+            example: Unauthorized
+
 definitions:
   LessonCounts:
     type: object

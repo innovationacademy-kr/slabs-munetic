@@ -55,6 +55,7 @@ export default function MUITable({
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
+    event.stopPropagation();
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
@@ -96,14 +97,16 @@ export default function MUITable({
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 return (
-                  <MUITableRow
-                    numSelected={selected.length}
-                    rowCount={rows.length}
-                    isItemSelected={isItemSelected}
-                    labelId={labelId}
-                    row={row}
-                    handleClick={handleClick}
-                  ></MUITableRow>
+                  <>
+                    <MUITableRow
+                      numSelected={selected.length}
+                      rowCount={rows.length}
+                      isItemSelected={isItemSelected}
+                      labelId={labelId}
+                      row={row}
+                      handleClick={handleClick}
+                    />
+                  </>
                 );
               })}
               {emptyRows > 0 && (

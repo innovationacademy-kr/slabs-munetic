@@ -5,16 +5,21 @@ import LessonListPage from '../pages/LessonListPage';
 import UserListPage from '../pages/UserListPage';
 import AdminUserPage from '../pages/AdminUserPage';
 import LoginPage from '../pages/LoginPage';
+import UserProvider from '../contexts/user';
+import UserInfoPage from '../pages/UserInfoPage';
 
 export default function Routing() {
   return (
     <RoutesContainer>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/users" element={<UserListPage />} />
-        <Route path="/admin_users" element={<AdminUserPage />} />
-        <Route path="/lessons" element={<LessonListPage />} />
-      </Routes>
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/users" element={<UserListPage />} />
+          <Route path="/users/:id" element={<UserInfoPage />} />
+          <Route path="/admin_users" element={<AdminUserPage />} />
+          <Route path="/lessons" element={<LessonListPage />} />
+        </Routes>
+      </UserProvider>
     </RoutesContainer>
   );
 }
