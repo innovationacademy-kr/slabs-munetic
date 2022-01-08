@@ -78,7 +78,7 @@ export default function Home() {
         nickname: 'kunkun',
         name_public: true,
         phone_public: false,
-        image_url: '/img/test.png',
+        image_url: '/img/testImg.png',
         introduction: 'test',
       };
       const res = await ProfileAPI.updateProfile(newData);

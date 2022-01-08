@@ -12,7 +12,7 @@ export interface UserDataType {
   email: string | null;
   phone_number: string | null;
   phone_public: boolean;
-  image_url: string | null;
+  image_url: string;
   introduction: string | null;
   createdAt: Date;
   updatedAt: Date;
