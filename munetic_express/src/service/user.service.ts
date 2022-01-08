@@ -153,3 +153,18 @@ export const editUserById = async (
   }
   return newUserProfile as Promise<User>;
 };
+
+export const findAllUserById = async (id: number) => {
+  const user = await User.findOne({
+    where: { id: id },
+    attributes: { exclude: ['login_password'] },
+    paranoid: false,
+  });
+  if (user === null) {
+    throw new ErrorResponse(
+      Status.BAD_REQUEST,
+      '유효하지 않은 유저 아이디입니다.',
+    );
+  }
+  return user;
+};

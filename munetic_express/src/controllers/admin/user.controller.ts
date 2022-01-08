@@ -48,7 +48,7 @@ export const getUserInfo: RequestHandler = async (req, res, next) => {
       res.status(Status.BAD_REQUEST).send('유저 아이디가 없습니다.');
     }
     const userId = parseInt(req.params.id, 10);
-    const user = await UserService.findUserById(userId);
+    const user = await UserService.findAllUserById(userId);
     res
       .status(Status.OK)
       .json(new ResJSON('유저 프로필을 불러오는데 성공하였습니다.', user));
