@@ -12,13 +12,14 @@ router.get(
   UserApi.getAdminUserList,
 );
 router.get('/check', passport.authenticate('jwt-admin'), UserApi.doubleCheck);
-router.delete(
-  '/:id',
-  passport.authenticate('jwt-admin'),
-  UserApi.deleteUserByAdmin,
-);
+router.get('/:id', passport.authenticate('jwt-admin'), UserApi.getUserInfo);
 router.patch(
   '/:id',
   passport.authenticate('jwt-admin'),
   UserApi.patchUserByAdmin,
+);
+router.delete(
+  '/:id',
+  passport.authenticate('jwt-admin'),
+  UserApi.deleteUserByAdmin,
 );

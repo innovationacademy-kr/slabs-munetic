@@ -42,6 +42,21 @@ export const getAdminUserList: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      res.status(Status.BAD_REQUEST).send('유저 아이디가 없습니다.');
+    }
+    const userId = parseInt(req.params.id, 10);
+    const user = await UserService.findUserById(userId);
+    res
+      .status(Status.OK)
+      .json(new ResJSON('유저 프로필을 불러오는데 성공하였습니다.', user));
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const doubleCheck: RequestHandler = async (req, res, next) => {
   try {
     const userList = await UserService.searchAllUser(req.query);
