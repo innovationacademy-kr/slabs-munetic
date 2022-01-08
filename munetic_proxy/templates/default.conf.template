@@ -1,0 +1,42 @@
+server {
+    listen 80;
+    server_name ${SERVER_HOST};
+
+    location /.well-known/acme-challenge/ {
+      root /var/www/certbot;
+    }
+    location / {
+      return 301 https://$host$request_uri;
+    }
+}
+
+server {
+  listen 443 ssl;
+  server_name ${SERVER_HOST};
+  resolver 127.0.0.11 valid=5s; # 도커 네트워크 내부의 기본 DNS 서버 주소
+
+  ssl_certificate /etc/letsencrypt/live/${SERVER_HOST}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/${SERVER_HOST}/privkey.pem;
+
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  # domain name을 ip 주소로 치환하기 위한 설정
+  set $admin munetic_admin;
+  set $app munetic_app;
+  set $express munetic_express;
+
+  location /admin {
+    rewrite /admin(.*) /$1 break;
+
+    proxy_pass http://$admin:4242;
+  }
+
+  location / {
+    proxy_pass http://$app:2424;
+  }
+
+  location /api {
+    proxy_pass http://$express:3030;
+  }
+}

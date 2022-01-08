@@ -1,41 +1,47 @@
-import { useState } from 'react';
+import Menu from './components/Menu/Menu';
+import Routing from './components/Routing';
+import GlobalStyle from './style/GlobalStyle';
+import LoginPage from './pages/LoginPage';
+import { useLogin, useLoginUpdate } from './contexts/login';
+import { useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
+import * as Api from './lib/api';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const login = useLogin();
+  const setLogin = useLoginUpdate();
+
+  useEffect(() => {
+    Api.refresh()
+      .then(res => {
+        Api.instance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${res.data.data}`;
+        if (setLogin) setLogin(true);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        if (err.respose) alert(err.response.data);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      {isLoading ? (
+        <CircularProgress />
+      ) : login ? (
+        <>
+          <Menu />
+          <Routing />
+        </>
+      ) : (
+        <LoginPage />
+      )}
+    </>
   );
 }
 

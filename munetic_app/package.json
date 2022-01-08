@@ -2,20 +2,38 @@
   "name": "munetic_app",
   "version": "0.0.0",
   "scripts": {
-    "dev": "npx vite",
+    "start": "npx vite",
     "build": "tsc && npx vite build",
-    "serve": "npx vite preview"
+    "test": "vite-jest",
+    "dev": "tsc && npx vite build && vite serve",
+    "serve": "tsc && npx vite build && serve dist -l 2424"
   },
   "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.1",
+    "@mui/material": "^5.2.3",
+    "@mui/styled-engine": "^5.2.0",
+    "@mui/styled-engine-sc": "^5.1.0",
+    "@types/styled-components": "^5.1.17",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react-dom": "^17.0.0",
+    "react-paginate": "^8.1.0",
+    "react-router-dom": "^6.0.2",
+    "serve": "^13.0.2",
+    "styled-components": "^5.3.3",
+    "styled-reset": "^4.3.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@vitejs/plugin-react": "^1.0.0",
+    "axios": "^0.24.0",
     "eslint": "^8.4.1",
     "eslint-config-airbnb": "^19.0.2",
     "eslint-config-prettier": "^8.3.0",
@@ -24,7 +42,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "jest": "^27.4.4",
+    "jest-environment-jsdom": "^27.4.4",
     "typescript": "^4.3.2",
-    "vite": "^2.6.4"
+    "vite": "^2.6.4",
+    "vite-jest": "^0.1.4"
   }
 }

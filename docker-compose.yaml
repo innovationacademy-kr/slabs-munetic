@@ -1,0 +1,99 @@
+version: "3"
+
+services: # 사용되는 서비스들입니다.
+  munetic_admin: # 서비스의 이름을 지정합니다.
+    container_name: munetic_admin # 컨테이너의 이름이 됩니다.
+    restart: always
+    environment:
+      - VITE_BASE_URL=/api
+    build: # 이미지를 빌드해서 사용하겠다는 선언입니다.
+      context: ./munetic_admin # 사용할 도커파일의 경로를 적어줍니다.
+      dockerfile: Dockerfile # 도커파일의 이름을 명시적으로 적어줍니다.
+    command: npm run ${MODE}
+    working_dir: /munetic_admin # 컨테이너 내부에서 기본적으로 사용할 디렉토리를 지정해줍니다.
+    networks: # 사용할 네트워크(최하단)를 설정합니다.
+      - munetic
+    ports:
+      - "4242:4242"
+    volumes: # 볼륨을 쓰겠다는 선언입니다.
+      - ./munetic_admin/src:/munetic_admin/src # ':' 왼쪽의 host 폴더를 오른쪽의 container 폴더에 마운트 하겠다는 뜻입니다.
+
+  munetic_app:
+    container_name: munetic_app
+    restart: always
+    environment:
+      - VITE_BASE_URL=
+    build:
+      context: ./munetic_app
+      dockerfile: Dockerfile
+    command: npm run ${MODE}
+    working_dir: /munetic_app
+    networks:
+      - munetic
+    ports:
+      - "2424:2424"
+    volumes:
+      - ./munetic_app/src:/munetic_app/src
+
+  munetic_database:
+    container_name: munetic_database
+    build:
+      context: ./munetic_database
+      args:
+        EXPRESS_USER: ${EXPRESS_USER}
+        EXPRESS_PASSWORD: ${EXPRESS_PASSWORD}
+    restart: always
+    environment:
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./munetic_database/my.cnf:/etc/mysql/my.cnf:ro
+      - ./munetic_database/db:/var/lib/mysql
+    networks:
+      - munetic
+
+  munetic_express:
+    container_name: munetic_express
+    restart: always
+    environment:
+      - DB_HOST=munetic_database
+      - DB_PORT=3306
+      - DB_USERNAME=${EXPRESS_USER}
+      - DB_PASSWORD=${EXPRESS_PASSWORD}
+      - DB_NAME=munetic
+      - ACCESS_SECRET=${ACCESS_SECRET}
+      - REFRESH_SECRET=${REFRESH_SECRET}
+      - SERVER_HOST=${SERVER_HOST}
+      - MODE=${MODE}
+    build:
+      context: ./munetic_express
+      dockerfile: Dockerfile
+    command: npm run ${MODE}
+    ports:
+      - "3030:3030"
+    working_dir: /munetic_express
+    networks:
+      - munetic
+    volumes:
+      - ./munetic_express/src:/munetic_express/src
+
+  munetic_proxy:
+    container_name: munetic_proxy
+    environment:
+      - SERVER_HOST=${SERVER_HOST}
+    build: ./munetic_proxy
+    networks:
+      - munetic
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./munetic_proxy/templates:/templates:ro
+      # 아래 두 볼륨은 로컬에서 작동하지 않음
+      - /var/www/certbot:/var/www/certbot # certbot acme 인증하기 위한 디렉토리
+      - /etc/letsencrypt:/etc/letsencrypt # 인증서가 있는 곳
+
+networks: # 네트워크를 사용하겠다는 선언입니다. 선언하지 않을 경우 기본 네트워크가 사용됩니다.
+  munetic: {} # 기본 설정을 이용하여 munetic이라는 네트워크를 선언합니다. munetic network를 사용하는 컨테이너들은 서로 간에 서비스의 이름으로 접근할 수 있습니다.

@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Databse
+munetic_database/db
+
+# package-lock
+package-lock.json
+
+_*
+.DS_Store
