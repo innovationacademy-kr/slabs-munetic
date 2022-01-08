@@ -125,7 +125,6 @@ const TextField_ = styled.div`
   display: flex;
   width: 100%;
   & p {
-    margin-top: 0.5rem;
     border-left: 0.1rem solid grey;
     padding-left: 3rem;
     font-size: 1.3rem;
