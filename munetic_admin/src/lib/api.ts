@@ -46,6 +46,9 @@ export const getAdminUserList = async (page: number) => {
   return await instance.get(`user/admin?page=${page + 1}`);
 };
 
+export const getUserInfo = async (userId: number) => {
+  return await instance.get(`user/${userId}`);
+};
 export const deleteUser = async (userId: number) => {
   return await instance.delete(`user/${userId}`);
 };
