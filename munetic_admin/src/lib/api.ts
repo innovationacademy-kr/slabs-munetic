@@ -46,6 +46,10 @@ export const getAdminUserList = async (page: number) => {
   return await instance.get(`user/admin?page=${page + 1}`);
 };
 
+export const deleteUser = async (userId: number) => {
+  return await instance.delete(`user/${userId}`);
+};
+
 export const getAllLessons = async (offset: number, limit: number) => {
   return await instance.get(`lesson?offset=${offset}&limit=${limit}`);
 };
