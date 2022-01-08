@@ -58,3 +58,28 @@ export const doubleCheck: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteUserByAdmin: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const result = await UserService.deleteUser(userId);
+    if (result)
+      res
+        .status(Status.OK)
+        .json(new ResJSON('유저가 성공적으로 삭제되었습니다.', {}));
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const patchUserByAdmin: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const user = await UserService.editUserById(userId, req.body);
+    res
+      .status(Status.OK)
+      .json(new ResJSON('유저 프로필을 성공적으로 수정하였습니다.', user));
+  } catch (err) {
+    next(err);
+  }
+};

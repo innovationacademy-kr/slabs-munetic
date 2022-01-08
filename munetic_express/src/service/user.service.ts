@@ -21,6 +21,18 @@ export const createUser = async (userInfo: User) => {
   return dataJSON;
 };
 
+export const deleteUser = async (userId: number) => {
+  const user = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  if (!user)
+    throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');
+  await user.destroy();
+  return true;
+};
+
 export const searchAllUser = async (userInfo: IsearchUser) => {
   const data = await User.findAll({
     where: {

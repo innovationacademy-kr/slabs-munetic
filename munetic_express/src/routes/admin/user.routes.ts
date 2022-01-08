@@ -12,3 +12,13 @@ router.get(
   UserApi.getAdminUserList,
 );
 router.get('/check', passport.authenticate('jwt-admin'), UserApi.doubleCheck);
+router.delete(
+  '/:id',
+  passport.authenticate('jwt-admin'),
+  UserApi.deleteUserByAdmin,
+);
+router.patch(
+  '/:id',
+  passport.authenticate('jwt-admin'),
+  UserApi.patchUserByAdmin,
+);
