@@ -56,6 +56,7 @@ const InputBoxContainer = styled.div`
     height: 30px;
   }
   .input {
+    width: 100%;
     font-weight: normal;
     font-size: 16px;
     text-align: center;
