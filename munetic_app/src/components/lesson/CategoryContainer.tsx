@@ -10,7 +10,7 @@ const CategoryPageContainer = styled.div`
   border-radius: 5px;
   .categoryTitle {
     margin: 15px 0px 10px 0px;
-    color: ${palette.ivory};
+    color: ${palette.green};
     font-size: 20px;
     font-weight: bold;
   }
@@ -32,7 +32,7 @@ const CategoryPageContainer = styled.div`
 const StyledButton = styled(Button)`
   width: 28%;
   border-radius: 7px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   margin: 5px 5px;
   padding: 0;
   .buttonText {

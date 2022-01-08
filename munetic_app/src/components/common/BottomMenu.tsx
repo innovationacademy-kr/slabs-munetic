@@ -15,7 +15,7 @@ const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
   &.Mui-selected {
     color: ${palette.darkBlue};
   }
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   color: ${palette.grayBlue};
 `);
 

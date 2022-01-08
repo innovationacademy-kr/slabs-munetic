@@ -117,15 +117,11 @@ export default function ClassManage() {
             ))}
         </div>
       </ClassListWrapper>
-      {classCount > 0 ? (
-        <Pagination
-          itemsPerPage={itemsPerPage}
-          classCount={classCount}
-          handlePageClick={e => handlePageClick(e)}
-        />
-      ) : (
-        ''
-      )}
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        classCount={classCount}
+        handlePageClick={e => handlePageClick(e)}
+      />
     </ClassManageContainer>
   );
 }

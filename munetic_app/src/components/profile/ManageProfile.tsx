@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const ProfileWrapper = styled.div`
   display: flex;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   justify-content: space-between;
   margin: 10px;
   .imgAndNickname {
@@ -110,7 +110,9 @@ export default function ManageProfile() {
           <ProfileWrapper>
             <div className="imgAndNickname">
               <img className="profileImg" src={userData.image_url} alt="" />
-              <span className="nickname">{userData.name}</span>
+              <div className="nickname">
+                <Link to={`/profile/${userData.id}`}>{userData.name}</Link>
+              </div>
             </div>
             <div className="sns">
               <StyledEditButton to={`/profile/edit/${userData.id}`}>

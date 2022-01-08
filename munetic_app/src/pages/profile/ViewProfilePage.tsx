@@ -1,9 +1,10 @@
 import BottomMenu from '../../components/common/BottomMenu';
+import ViewProfile from '../../components/profile/ViewProfile';
 
 export default function ViewProfilePage() {
   return (
     <>
-      <div>프로필 뷰 페이지</div>
+      <ViewProfile />
       <BottomMenu />
     </>
   );

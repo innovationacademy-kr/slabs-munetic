@@ -7,7 +7,7 @@ const Container = styled.button`
   border: 0;
   border-radius: 20px;
   background-color: ${palette.grayBlue};
-  color: ${palette.ivory};
+  color: ${palette.green};
   font-size: 20px;
   font-weight: bold;
   position: relative;

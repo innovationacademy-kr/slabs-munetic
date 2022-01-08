@@ -12,7 +12,7 @@ const Container = styled.div<ContainerProps>`
     border-radius: 4px;
     outline: none;
     background-color: ${({ isReadOnly }) =>
-      isReadOnly ? `${palette.ivory}` : ''};
+      isReadOnly ? `${palette.green}` : ''};
   }
   input::placeholder {
     font-size: 13px;

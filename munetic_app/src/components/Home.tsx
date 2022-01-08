@@ -77,9 +77,10 @@ export default function Home() {
         type: 'Student',
         nickname: 'kunkun',
         name_public: true,
-        phone_public: false,
+        phone_public: true,
         image_url: '/img/testImg.png',
-        introduction: 'test',
+        introduction:
+          'testafajsfjsadfhasjfhawfhaofhouasdhfuasdhfausfhasudfhasudfhasfhsaduofhasodufhasduofhasdfasdfjkashfj',
       };
       const res = await ProfileAPI.updateProfile(newData);
       console.log(res.data.data);

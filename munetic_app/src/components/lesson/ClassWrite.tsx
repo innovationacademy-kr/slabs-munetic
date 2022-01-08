@@ -13,7 +13,7 @@ import { UserDataType } from '../../types/userData';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   padding: 15px 20px;
   font-size: 17px;
   font-weight: bold;
