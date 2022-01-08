@@ -13,7 +13,7 @@ export default function UserInfoPage() {
     Api.getUserInfo(userId).then(res => {
       if (setUser) setUser(res.data.data);
     });
-  });
+  }, []);
 
   return <CustomGrid />;
 }

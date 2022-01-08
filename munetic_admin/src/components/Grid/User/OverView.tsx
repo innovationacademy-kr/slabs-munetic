@@ -13,8 +13,7 @@ export default function OverView() {
       Api.deleteUser(userInfo.id)
         .then(() => {
           alert('삭제되었습니다.');
-          // window.location.replace(`admin/users/${userInfo.id}`);
-          navigate(`/users/${userInfo.id}`);
+          window.location.replace(`${userInfo.id}`);
         })
         .catch(err => alert(err.response.data));
     }

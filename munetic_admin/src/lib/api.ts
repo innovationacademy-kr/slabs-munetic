@@ -18,6 +18,14 @@ interface createUserProps {
   type: string;
 }
 
+interface editUserProps {
+  type?: string;
+  password?: string;
+  nickname?: string;
+  name?: string;
+  birth?: string;
+}
+
 export const login = async (loginInfo: LoginProps) => {
   return await instance.post('auth/login', loginInfo);
 };
@@ -65,4 +73,11 @@ export const getUserLessons = async (
   return await instance.get(
     `lesson/user/${userId}?offset=${offset}&limit=${limit}`,
   );
+};
+
+export const updateUserInfo = async (
+  userId: number,
+  userInfo: editUserProps,
+) => {
+  return await instance.patch(`user/${userId}`, userInfo);
 };

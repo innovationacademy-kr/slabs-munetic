@@ -1,17 +1,63 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useUser } from '../../../contexts/user';
 import Title from '../Common/Title';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { useState } from 'react';
+import Button from '../../Button';
+import * as Api from '../../../lib/api';
 
 export default function UserInfo() {
   const userInfo = useUser() as any;
+  const [type, setType] = useState(userInfo.type);
+  const [edit, setEdit] = useState(false);
 
+  const handleEdit = () => {
+    setEdit(!edit);
+  };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setType(event.target.value);
+  };
+
+  const typeUpdate = () => {
+    Api.updateUserInfo(userInfo.id, { type }).then(() => {
+      window.location.replace(`${userInfo.id}`);
+    });
+  };
   return (
     <>
       <Title> 유저 정보 </Title>
-      <TextField>
-        <p>이름</p>
-        <div>{userInfo.name}</div>
-      </TextField>
+      <TextFields>
+        <TextField>
+          <p>이름</p>
+          <div>{userInfo.name}</div>
+        </TextField>
+        <TextField_>
+          <p>유형</p>
+          <Select
+            value={type}
+            onChange={handleChange}
+            autoWidth
+            inputProps={{ readOnly: edit ? false : true }}
+            sx={{ '& div': { m: 0, pt: 0.7 } }}
+          >
+            <MenuItem value={'Student'}>Student</MenuItem>
+            <MenuItem value={'Tutor'}>Tutor</MenuItem>
+          </Select>
+          <CustomButton disabled={!!userInfo.deletedAt} onClick={handleEdit}>
+            {edit ? '취소' : '편집'}
+          </CustomButton>
+          {edit && (
+            <CustomButton
+              disabled={userInfo.type === type}
+              onClick={typeUpdate}
+            >
+              저장
+            </CustomButton>
+          )}
+        </TextField_>
+      </TextFields>
       <TextFields>
         <TextField>
           <p>생년월일</p>
@@ -52,6 +98,7 @@ const TextFields = styled.div`
 `;
 
 const TextField = styled.div`
+  margin: auto 0;
   flex: 1;
   padding-top: 1rem;
   padding-left: 1rem;
@@ -64,6 +111,7 @@ const TextField = styled.div`
     width: 7rem;
   }
   & div {
+    margin: auto 0;
     padding-bottom: 0.3rem;
     font-size: 1.3rem;
     min-width: 10rem;
@@ -77,6 +125,7 @@ const TextField_ = styled.div`
   display: flex;
   width: 100%;
   & p {
+    margin-top: 0.5rem;
     border-left: 0.1rem solid grey;
     padding-left: 3rem;
     font-size: 1.3rem;
@@ -89,4 +138,19 @@ const TextField_ = styled.div`
     padding-bottom: 0.3rem;
     font-size: 1.3rem;
   }
+`;
+
+const CustomButton = styled(Button)`
+  width: 5rem;
+  height: auto;
+  padding: 0rem;
+  margin: 0 0 0 1rem;
+  background-color: rgb(82, 111, 255);
+  ${props =>
+    props.disabled &&
+    css`
+      background-color: rgb(140, 140, 140);
+    `}
+  border-radius: 0.5rem;
+  line-height: 1;
 `;
