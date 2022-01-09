@@ -2,6 +2,8 @@ import { FindOptions } from 'sequelize/dist';
 import { Category, categoryAttributes } from '../models/category';
 import { Lesson, lessonAttributes } from '../models/lesson';
 import { User, userAttributes } from '../models/user';
+import ErrorResponse from '../modules/errorResponse';
+import * as Status from 'http-status';
 
 /**
  * findAndCountAll의 리턴 타입입니다.
@@ -299,4 +301,19 @@ export const findAllLessonsByUserId = async (
     raw: true,
   });
   return lessonData;
+};
+
+export const findLessonById = async (lessonId: number) => {
+  const lesson = await Lesson.findOne({
+    ...lessonQueryOptionsforAdmin,
+    where: { id: lessonId },
+    paranoid: false,
+    raw: true,
+  });
+  if (!lesson)
+    throw new ErrorResponse(
+      Status.BAD_REQUEST,
+      '유효하지 않은 레슨 아이디입니다.',
+    );
+  return lesson;
 };

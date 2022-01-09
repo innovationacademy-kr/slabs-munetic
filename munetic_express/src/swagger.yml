@@ -1024,6 +1024,77 @@ paths:
           schema:
             type: string
             example: Unauthorized
+  /admin/lesson/{id}:
+    get:
+      tags:
+        - Admin Lesson
+      summary: Get Lesson By Id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: number
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 레슨 게시물을 불러오는데 성공하였습니다.
+              data:
+                $ref: '#/definitions/AdminLesson'
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: 유효하지 않은 레슨 아이디입니다.
+    delete:
+      tags:
+        - Admin Lesson
+      summary: Delete Lesson By Id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: number
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 게시물이 정상적으로 삭제되었습니다.
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: 유효하지 않은 레슨 아이디입니다.
 
   /admin/lesson/user/{id}?:
     get:
@@ -1103,43 +1174,46 @@ definitions:
       rows:
         type: array
         items:
-          properties:
-            lesson_id:
-              type: number
-            tutor_id:
-              type: number
-            title:
-              type: string
-            price:
-              type: number
-            location:
-              type: string
-            minute_per_lesson:
-              type: number
-            content:
-              type: string
-            createdAt:
-              type: string
-            updatedAt:
-              type: string
-            deletedAt:
-              type: string
-            Category.name:
-              type: string
-            User.name:
-              type: string
-            User.nickname:
-              type: string
-            User.name_public:
-              type: number
-            User.phone_number:
-              type: string
-            User.birth:
-              type: string
-            User.gender:
-              type: string
-            User.image_url:
-              type: string
+          $ref: '#/definitions/AdminLesson'
+  AdminLesson:
+    type: object
+    properties:
+      lesson_id:
+        type: number
+      tutor_id:
+        type: number
+      title:
+        type: string
+      price:
+        type: number
+      location:
+        type: string
+      minute_per_lesson:
+        type: number
+      content:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      deletedAt:
+        type: string
+      Category.name:
+        type: string
+      User.name:
+        type: string
+      User.nickname:
+        type: string
+      User.name_public:
+        type: number
+      User.phone_number:
+        type: string
+      User.birth:
+        type: string
+      User.gender:
+        type: string
+      User.image_url:
+        type: string
 
   Login:
     type: object

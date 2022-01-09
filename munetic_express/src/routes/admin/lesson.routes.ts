@@ -7,6 +7,11 @@ export const router = Router();
 
 router.get('/', passport.authenticate('jwt-admin'), lesson.getAllLessons);
 router.get(
+  '/:id',
+  /*passport.authenticate('jwt-admin'),*/ lesson.getLessonById,
+);
+router.delete('/:id', passport.authenticate('jwt-admin'), lesson.deleteLesson);
+router.get(
   '/user/:id',
   passport.authenticate('jwt-admin'),
   lesson.getUserLessons,
