@@ -2,16 +2,18 @@ import styled, { css } from 'styled-components';
 import { useInfo } from '../../../contexts/info';
 import Button from '../../Button';
 import * as Api from '../../../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 export default function OverView() {
   const info = useInfo() as any;
+  const navigate = useNavigate();
 
   const deleteUserHandler = () => {
     if (window.confirm(`${info.login_id} 유저를 삭제하시겠습니까?`)) {
       Api.deleteUser(info.id)
         .then(() => {
           alert('삭제되었습니다.');
-          window.location.replace(`${info.id}`);
+          navigate(0);
         })
         .catch(err => alert(err.response.data));
     }

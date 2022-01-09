@@ -9,3 +9,8 @@ router.post('/signup', passport.authenticate('jwt-admin'), Auth.signup);
 router.post('/login', Auth.login);
 router.get('/logout', passport.authenticate('jwt-admin'), Auth.logout);
 router.get('/refresh', passport.authenticate('jwtRe-admin'), Auth.refresh);
+router.patch(
+  '/password',
+  passport.authenticate('jwt-admin'),
+  Auth.updatePassword,
+);

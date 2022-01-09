@@ -127,6 +127,7 @@ export interface NewProfileInfoType {
   phone_public?: boolean;
   image_url?: string | null;
   introduction?: string | null;
+  login_password?: string | null;
 }
 
 export const editUserById = async (

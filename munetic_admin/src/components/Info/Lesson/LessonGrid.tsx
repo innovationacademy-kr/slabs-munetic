@@ -7,16 +7,18 @@ import LessonInfo from './LessonInfo';
 import WriterInfo from './WriterInfo';
 import Button from '../../Button';
 import * as Api from '../../../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 export default function LessonGrid() {
   const info = useInfo() as any;
+  const navigate = useNavigate();
 
   const deleteLesson = () => {
     if (window.confirm(`이 게시물을 삭제하시겠습니까?`)) {
       Api.deleteLesson(info.id)
         .then(() => {
           alert('삭제되었습니다.');
-          window.location.replace(`${info.id}`);
+          navigate(0);
         })
         .catch(err => alert(err.response.data));
     }

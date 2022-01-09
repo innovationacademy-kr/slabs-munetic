@@ -737,6 +737,41 @@ paths:
             type: string
             example: 'Unauthorized'
 
+  /admin/auth/password:
+    patch:
+      tags:
+        - Admin Auth
+      summary: update password
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              login_password:
+                type: string
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '비밀번호가 변경되었습니다.'
+              data:
+                type: object
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: string
+            example: '유효하지 않은 유저 아이디입니다.'
+
   # admin user
   /admin/user/{id}:
     get:

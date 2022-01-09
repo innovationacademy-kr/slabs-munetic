@@ -21,7 +21,7 @@ export default function Login() {
         if (setLogin) setLogin(true);
       })
       .catch(err => {
-        if (err.respose) alert(err.response.data);
+        if (err.response) alert(err.response.data);
       });
   };
 

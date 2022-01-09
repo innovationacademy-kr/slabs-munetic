@@ -36,7 +36,7 @@ export function AddAdminUser() {
     Api.createUser({ email, login_password: password, name, type: auth })
       .then(() => {
         alert('계정이 성공적으로 생성되었습니다.');
-        window.location.replace('/admin/admin_users');
+        navigate(0);
       })
       .catch(err => alert(`${err.response}`));
   };
