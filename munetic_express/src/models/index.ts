@@ -4,6 +4,8 @@ import { Category } from './category';
 import { Lesson } from './lesson';
 import { User, Gender, Account } from './user';
 import * as UserService from '../service/user.service';
+import * as CategoryService from '../service/category.service';
+import { categoryLists } from '../data/categoryList';
 
 const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
@@ -70,4 +72,13 @@ export function createFirstOwnerAccount() {
   UserService.createUser(new User({ ...admin })).then(() =>
     console.log('👑 Admin:First Owner account created'),
   );
+}
+
+export function createCategories() {
+  categoryLists.map(category => {
+    CategoryService.createUser(new Category({ ...category })).catch(e =>
+      console.log(e),
+    );
+  });
+  console.log('🎼 App:CategoryLists created');
 }

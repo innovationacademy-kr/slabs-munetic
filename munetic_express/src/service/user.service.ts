@@ -1,4 +1,3 @@
-import { NextFunction } from 'express';
 import { Op } from 'sequelize';
 import { Account, User } from '../models/user';
 import * as Status from 'http-status';
