@@ -1,11 +1,10 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { useInfo } from '../../contexts/info';
 import { useLocation } from 'react-router-dom';
 import UserGrid from './User/UserGrid';
-import Button from '../Button';
 import LessonGrid from './Lesson/LessonGrid';
 
-export default function CustomGrid() {
+export default function InfoGrid() {
   const path = useLocation().pathname;
   const info = useInfo() as any;
 

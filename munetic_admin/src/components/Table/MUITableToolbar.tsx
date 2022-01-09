@@ -15,7 +15,6 @@ interface MUITableToolbarProps {
 export default function MUITableToolbar(props: MUITableToolbarProps) {
   const { numSelected } = props;
   const path = useLocation().pathname;
-
   const info = useInfo() as any;
 
   return (

@@ -2,11 +2,15 @@ import styled, { css } from 'styled-components';
 import { useInfo } from '../../../contexts/info';
 import Button from '../../Button';
 import Title from '../Common/Title';
+import { useNavigate } from 'react-router-dom';
 
 export default function WriterInfo() {
   const info = useInfo() as any;
+  const navigate = useNavigate();
 
-  const MoveToUserProfile = () => {};
+  const MoveToUserProfile = () => {
+    navigate(`/users/${info.tutor_id}`);
+  };
 
   return (
     <>

@@ -6,13 +6,27 @@ import LessonContent from './LessonContent';
 import LessonInfo from './LessonInfo';
 import WriterInfo from './WriterInfo';
 import Button from '../../Button';
+import * as Api from '../../../lib/api';
 
 export default function LessonGrid() {
   const info = useInfo() as any;
 
+  const deleteLesson = () => {
+    if (window.confirm(`이 게시물을 삭제하시겠습니까?`)) {
+      Api.deleteLesson(info.id)
+        .then(() => {
+          alert('삭제되었습니다.');
+          window.location.replace(`${info.id}`);
+        })
+        .catch(err => alert(err.response.data));
+    }
+  };
+
   return (
     <>
-      <CustomButton disabled={!!info.deletedAt}>게시물 삭제</CustomButton>
+      <CustomButton disabled={!!info.deletedAt} onClick={deleteLesson}>
+        게시물 삭제
+      </CustomButton>
       <Grid container spacing={2} sx={{ flexGrow: 1 }}>
         <Grid item xs={3} sx={{ mb: 3 }}>
           <Item>

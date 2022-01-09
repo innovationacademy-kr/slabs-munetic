@@ -1,4 +1,4 @@
-import CustomGrid from '../components/Grid/CustomGrid';
+import InfoGrid from '../components/Info/InfoGrid';
 import { useInfoUpdate } from '../contexts/info';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -15,5 +15,5 @@ export default function AdminUserInfoPage() {
     });
   }, []);
 
-  return <CustomGrid />;
+  return <InfoGrid />;
 }

@@ -1,4 +1,4 @@
-import CustomGrid from '../components/Grid/CustomGrid';
+import InfoGrid from '../components/Info/InfoGrid';
 import { useInfoUpdate } from '../contexts/info';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -9,11 +9,11 @@ export default function LessonInfoPage() {
   const setInfo = useInfoUpdate();
 
   useEffect(() => {
-    const userId = parseInt(path.slice(13));
-    Api.getUserInfo(userId).then(res => {
+    const lessonId = parseInt(path.slice(9));
+    Api.getLesson(lessonId).then(res => {
       if (setInfo) setInfo(res.data.data);
     });
   }, []);
 
-  return <CustomGrid />;
+  return <InfoGrid />;
 }

@@ -57,6 +57,14 @@ export const getAdminUserList = async (page: number) => {
 export const getUserInfo = async (userId: number) => {
   return await instance.get(`user/${userId}`);
 };
+
+export const updateUserInfo = async (
+  userId: number,
+  userInfo: editUserProps,
+) => {
+  return await instance.patch(`user/${userId}`, userInfo);
+};
+
 export const deleteUser = async (userId: number) => {
   return await instance.delete(`user/${userId}`);
 };
@@ -74,10 +82,9 @@ export const getUserLessons = async (
     `lesson/user/${userId}?offset=${offset}&limit=${limit}`,
   );
 };
-
-export const updateUserInfo = async (
-  userId: number,
-  userInfo: editUserProps,
-) => {
-  return await instance.patch(`user/${userId}`, userInfo);
+export const getLesson = async (lessonId: number) => {
+  return await instance.get(`lesson/${lessonId}`);
+};
+export const deleteLesson = async (lessonId: number) => {
+  return await instance.delete(`lesson/${lessonId}`);
 };
