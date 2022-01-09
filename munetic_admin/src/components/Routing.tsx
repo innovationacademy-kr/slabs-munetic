@@ -8,6 +8,7 @@ import AdminUserPage from '../pages/AdminUserPage';
 import AdminUserInfoPage from '../pages/AdminUserInfoPage';
 import InfoProvider from '../contexts/info';
 import UserInfoPage from '../pages/UserInfoPage';
+import PasswordChangePage from '../pages/PasswordChangePage';
 
 export default function Routing() {
   return (
@@ -21,6 +22,7 @@ export default function Routing() {
           <Route path="/admin_users/:id" element={<AdminUserInfoPage />} />
           <Route path="/lessons" element={<LessonListPage />} />
           <Route path="/lessons/:id" element={<LessonInfoPage />} />
+          <Route path="/auth/password" element={<PasswordChangePage />} />
         </Routes>
       </InfoProvider>
     </RoutesContainer>

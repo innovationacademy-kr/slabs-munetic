@@ -88,3 +88,10 @@ export const getLesson = async (lessonId: number) => {
 export const deleteLesson = async (lessonId: number) => {
   return await instance.delete(`lesson/${lessonId}`);
 };
+
+interface passwordProps {
+  login_password: string;
+}
+export const updatePassword = async (newPassword: passwordProps) => {
+  return await instance.patch('auth/password', newPassword);
+};
