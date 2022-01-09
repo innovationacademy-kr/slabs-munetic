@@ -5,36 +5,34 @@ import { useLocation } from 'react-router-dom';
 import UserTableCell from './User/UserTableCell';
 import AdminUserTableCell from './AdminUser/AdminUserTableCell';
 import LessonTableCell from './Lesson/LessonTableCell';
-import { useUserUpdate, useUser } from '../../contexts/user';
-import { Link } from 'react-router-dom';
+import { useInfo } from '../../contexts/info';
+import { useNavigate } from 'react-router-dom';
 
 export interface MUITableRowProps {
   numSelected: number;
   rowCount: number;
   isItemSelected: boolean;
-  labelId: string;
   row: any;
   handleClick: (event: React.MouseEvent<HTMLButtonElement>, id: number) => void;
 }
 
 export default function MUITableRow({
   isItemSelected,
-  labelId,
   row,
   handleClick,
 }: MUITableRowProps) {
   const path = useLocation().pathname;
+  const info = useInfo() as any;
+  const navigate = useNavigate();
 
-  const setUser = useUserUpdate();
-  const user = useUser() as any;
-
-  const modalHandler = () => {
-    if (setUser) setUser(row);
+  const moveInfoPage = () => {
+    if (path === '/users') navigate(`/users/${row.id}`);
+    if (path === '/admin_users') navigate(`/admin_users/${row.id}`);
+    if (path.slice(0, 7) === `/users/`) navigate(`/lessons/${row.id}`);
+    if (path === '/lessons') navigate(`/lessons/${row.id}`);
   };
   return (
     <TableRow
-      component={Link}
-      to={`${row.id}`}
       hover
       role="checkbox"
       aria-checked={isItemSelected}
@@ -46,31 +44,21 @@ export default function MUITableRow({
           fontSize: '1.25rem',
         },
       }}
-      onClick={modalHandler}
+      onClick={moveInfoPage}
     >
       <TableCell padding="checkbox">
         <Checkbox
           onClick={(event: any) => handleClick(event, row.id)}
           color="primary"
           checked={isItemSelected}
-          inputProps={{
-            'aria-labelledby': labelId,
-          }}
         />
       </TableCell>
-
-      <TableCell
-        component="th"
-        id={labelId}
-        align="left"
-        scope="row"
-        padding="none"
-      >
+      <TableCell component="th" align="left" scope="row" padding="none">
         {row.id}
       </TableCell>
       {path === '/users' && <UserTableCell row={row} />}
       {path === '/admin_users' && <AdminUserTableCell row={row} />}
-      {(path === '/lessons' || path === `/users/${user!.id}`) && (
+      {(path === '/lessons' || path === `/users/${info!.id}`) && (
         <LessonTableCell row={row} />
       )}
     </TableRow>

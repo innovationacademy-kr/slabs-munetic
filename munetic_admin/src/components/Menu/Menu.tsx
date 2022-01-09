@@ -50,7 +50,7 @@ export default function Menu() {
                 <SubMenuListContainer>
                   <ul>
                     {subMenuLists[i].map((subMenu, j) => (
-                      <SubMenuList>
+                      <SubMenuList key={j}>
                         <Link to={subMenuLinks[i][j]}>{subMenu}</Link>
                       </SubMenuList>
                     ))}

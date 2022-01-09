@@ -1,4 +1,4 @@
-import { AddAdminUser } from '../components/InputsContainers/AddAdminUser';
+import { AddAdminUser } from '../components/AdminUser/AddAdminUser';
 import MUITable from '../components/Table/MUITable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
