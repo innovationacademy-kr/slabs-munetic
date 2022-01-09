@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { UserDataType } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import Button from '../common/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   margin: 30px 0;
@@ -77,7 +77,7 @@ const Separater = styled.div`
 `;
 
 export default function ManageProfile() {
-  const userLogged = localStorage.getItem('user');
+  const navigate = useNavigate();
   const [userData, setUserData] = useState<UserDataType>();
 
   useEffect(() => {
@@ -87,11 +87,10 @@ export default function ManageProfile() {
         setUserData(userProfile.data.data);
       } catch (e) {
         console.log(e, '내 프로필을 불러오지 못했습니다.');
+        navigate('/auth/login');
       }
     }
-    if (userLogged) {
-      getMyProfile();
-    }
+    getMyProfile();
   }, []);
 
   return (
@@ -102,7 +101,7 @@ export default function ManageProfile() {
         <Container>
           {userData.type === 'Student' ? (
             <ChangeTypeButton>
-              <Link to="/auth/register">선생님 계정으로 변경</Link>
+              <Link to="/auth/register?tutor=tutor">선생님 계정으로 변경</Link>
             </ChangeTypeButton>
           ) : (
             ''
