@@ -1,14 +1,16 @@
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useUser } from '../../../contexts/user';
-import Title from '../Common/Title';
+import { useLocation } from 'react-router-dom';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
+import Title from '../Common/Title';
 import Button from '../../Button';
+import { useUser } from '../../../contexts/user';
 import * as Api from '../../../lib/api';
 
 export default function UserInfo() {
   const userInfo = useUser() as any;
+  const path = useLocation().pathname;
   const [type, setType] = useState(userInfo.type);
   const [edit, setEdit] = useState(false);
 
@@ -25,6 +27,8 @@ export default function UserInfo() {
       window.location.replace(`${userInfo.id}`);
     });
   };
+
+  console.log(type);
   return (
     <>
       <Title> 유저 정보 </Title>
@@ -35,16 +39,31 @@ export default function UserInfo() {
         </TextField>
         <TextField_>
           <p>유형</p>
-          <Select
-            value={type}
-            onChange={handleChange}
-            autoWidth
-            inputProps={{ readOnly: edit ? false : true }}
-            sx={{ '& div': { m: 0, pt: 0.7 } }}
-          >
-            <MenuItem value={'Student'}>Student</MenuItem>
-            <MenuItem value={'Tutor'}>Tutor</MenuItem>
-          </Select>
+
+          {path === `/users/${userInfo.id}` ? (
+            <Select
+              value={type}
+              onChange={handleChange}
+              autoWidth
+              inputProps={{ readOnly: edit ? false : true }}
+              sx={{ '& div': { m: 0, pt: 0.7 } }}
+            >
+              <MenuItem value={'Student'}>Student</MenuItem>
+              <MenuItem value={'Tutor'}>Tutor</MenuItem>
+            </Select>
+          ) : (
+            <Select
+              value={type}
+              onChange={handleChange}
+              autoWidth
+              inputProps={{ readOnly: edit ? false : true }}
+              sx={{ '& div': { m: 0, pt: 0.7 } }}
+            >
+              <MenuItem value={'Owner'}>Owner</MenuItem>
+              <MenuItem value={'Admin'}>Admin</MenuItem>
+            </Select>
+          )}
+
           <CustomButton disabled={!!userInfo.deletedAt} onClick={handleEdit}>
             {edit ? '취소' : '편집'}
           </CustomButton>
@@ -78,7 +97,7 @@ export default function UserInfo() {
       </TextField>
       <TextField>
         <p>자기 소개</p>
-        <div>{userInfo.introduction}</div>
+        <div>{userInfo.introduction || '없음'}</div>
       </TextField>
       <TextField>
         <p>생성일</p>

@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage';
 import LessonListPage from '../pages/LessonListPage';
 import UserListPage from '../pages/UserListPage';
 import AdminUserPage from '../pages/AdminUserPage';
-import LoginPage from '../pages/LoginPage';
+import AdminUserInfoPage from '../pages/AdminUserInfoPage';
 import UserProvider from '../contexts/user';
 import UserInfoPage from '../pages/UserInfoPage';
 
@@ -17,6 +17,7 @@ export default function Routing() {
           <Route path="/users" element={<UserListPage />} />
           <Route path="/users/:id" element={<UserInfoPage />} />
           <Route path="/admin_users" element={<AdminUserPage />} />
+          <Route path="/admin_users/:id" element={<AdminUserInfoPage />} />
           <Route path="/lessons" element={<LessonListPage />} />
         </Routes>
       </UserProvider>

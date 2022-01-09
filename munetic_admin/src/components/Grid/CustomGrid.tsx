@@ -11,6 +11,7 @@ export default function CustomGrid() {
   return (
     <GridContainer>
       {path === `/users/${userInfo!.id}` && <UserGrid />}
+      {path === `/admin_users/${userInfo!.id}` && <UserGrid />}
     </GridContainer>
   );
 }
