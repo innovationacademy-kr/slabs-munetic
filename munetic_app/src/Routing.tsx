@@ -22,7 +22,7 @@ export default function Routing() {
       <Route path="/lesson/write" element={<WriteClassPage />} />
       <Route path="/lesson/write/:id" element={<WriteClassPage />} />
       <Route path="/profile/:id" element={<ViewProfilePage />} />
-      <Route path="/profile/manage/:id" element={<ManageProfilePage />} />
+      <Route path="/profile/manage" element={<ManageProfilePage />} />
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />

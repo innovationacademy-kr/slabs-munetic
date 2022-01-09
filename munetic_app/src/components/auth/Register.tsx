@@ -14,7 +14,7 @@ const Container = styled.form`
   margin: 100px 30px 30px 30px;
   padding: 30px;
   border-radius: 10px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   .registerButton {
     margin-top: 20px;
   }
@@ -26,7 +26,7 @@ const Container = styled.form`
     .checkBtn {
       flex-shrink: 0;
       font-size: 13px;
-      color: ${palette.ivory};
+      color: ${palette.green};
       border: 0;
       border-radius: 5px;
       background-color: ${palette.grayBlue};

@@ -74,12 +74,13 @@ export default function Home() {
   const onClickProfileEdit = async () => {
     try {
       const newData = {
-        type: 'Student',
+        type: 'Tutor',
         nickname: 'kunkun',
         name_public: true,
-        phone_public: false,
-        image_url: '/img/test.png',
-        introduction: 'test',
+        phone_public: true,
+        image_url: '/img/testImg.png',
+        introduction:
+          'testafajsfjsadfhasjfhawfhaofhouasdhfuasdhfausfhasudfhasudfhasfhsaduofhasodufhasduofhasdfasdfjkashfj',
       };
       const res = await ProfileAPI.updateProfile(newData);
       console.log(res.data.data);

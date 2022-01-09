@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
 import palette from '../../style/palette';
@@ -7,6 +6,7 @@ const PaginationContainer = styled.div`
   .container {
     padding: 0;
     margin: 0;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
   }
@@ -44,17 +44,21 @@ const Pagination = ({ itemsPerPage, classCount, handlePageClick }: IProps) => {
 
   return (
     <PaginationContainer>
-      <ReactPaginate
-        breakLabel="..."
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={1}
-        pageCount={pageCount ? pageCount : 0}
-        nextLabel="다음 >"
-        previousLabel="< 이전"
-        containerClassName="container"
-        activeClassName="currentPage"
-        disabledLinkClassName="disabledLink"
-      />
+      {pageCount > 1 ? (
+        <ReactPaginate
+          breakLabel="..."
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={1}
+          pageCount={pageCount ? pageCount : 0}
+          nextLabel="다음 >"
+          previousLabel="< 이전"
+          containerClassName="container"
+          activeClassName="currentPage"
+          disabledLinkClassName="disabledLink"
+        />
+      ) : (
+        ''
+      )}
     </PaginationContainer>
   );
 };
