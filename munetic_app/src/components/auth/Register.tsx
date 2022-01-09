@@ -6,9 +6,10 @@ import { InputBox } from '../common/Input';
 import Select from '../common/Select';
 import * as AuthAPI from '../../lib/api/auth';
 import Contexts from '../../context/Contexts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { dayList, monthList, yearList } from '../../lib/staticData';
 import { Account } from '../../types/enums';
+import client from '../../lib/api/client';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -94,11 +95,14 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Register() {
+  const [getParams] = useSearchParams();
+  const tutorParam = getParams.get('tutor');
+
   const { state, actions } = useContext(Contexts);
   const [registerInfo, setRegisterInfo] = useState({
     login_id: '',
     login_password: '',
-    type: Account.Student,
+    type: tutorParam ? Account.Tutor : Account.Student,
     nickname: '',
     name: '',
     email: '',
@@ -216,6 +220,8 @@ export default function Register() {
     if (validateSignupForm()) {
       try {
         await AuthAPI.signup(registerInfo);
+        client.defaults.headers.common['Authorization'] = '';
+        localStorage.removeItem('user');
         navigate('/auth/login');
       } catch (e) {
         console.log(e, '회원가입 실패');

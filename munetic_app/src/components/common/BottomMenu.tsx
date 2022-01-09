@@ -27,7 +27,7 @@ export default function BottomMenu() {
   const onChangeMenu = (event: any, newValue: number) => {
     setValue(newValue);
     const paths = ['/', '/search', '/profile/manage', '/bookmark', '/setting'];
-    navigate(paths[newValue], { replace: true });
+    navigate(paths[newValue]);
   };
 
   useEffect(() => {

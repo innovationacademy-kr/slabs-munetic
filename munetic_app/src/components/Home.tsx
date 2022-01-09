@@ -51,6 +51,9 @@ export default function Home() {
   const onClickSignup = () => {
     navigate('/auth/register');
   };
+  const onClickSignupTutor = () => {
+    navigate('/auth/register?tutor=tutor');
+  };
 
   const onClickProfileView = async () => {
     try {
@@ -96,13 +99,20 @@ export default function Home() {
           <Button to="/lesson/category">레슨 찾기</Button>
         </div>
         <div className="homeRegisterButton">
-          <Button to="/lesson/manage">레슨 등록</Button>
+          {loggedUser ? (
+            <Button to="/lesson/manage">레슨 등록</Button>
+          ) : (
+            <Button to="/auth/register?tutor=tutor">
+              레슨 등록(선생님 계정 필요)
+            </Button>
+          )}
         </div>
       </div>
       <button onClick={loggedUser ? onClickLogout : onClickLogin}>
         {loggedUser ? '로그아웃' : '로그인'}
       </button>
-      <button onClick={onClickSignup}>회원가입</button>
+      <button onClick={onClickSignup}>학생 회원가입</button>
+      <button onClick={onClickSignupTutor}>튜터 회원가입</button>
       <button onClick={onClickProfileView}>내 프로필 조회</button>
       <button onClick={onClickProfileEdit}>내 프로필 수정</button>
       <button onClick={onClickProfileViewOthers}>다른 사람 프로필 조회</button>
