@@ -1,17 +1,17 @@
 import CustomGrid from '../components/Grid/CustomGrid';
-import { useUserUpdate } from '../contexts/user';
+import { useInfoUpdate } from '../contexts/info';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import * as Api from '../lib/api';
 
 export default function AdminUserInfoPage() {
   const path = useLocation().pathname;
-  const setUser = useUserUpdate();
+  const setInfo = useInfoUpdate();
 
   useEffect(() => {
     const userId = parseInt(path.slice(13));
     Api.getUserInfo(userId).then(res => {
-      if (setUser) setUser(res.data.data);
+      if (setInfo) setInfo(res.data.data);
     });
   }, []);
 

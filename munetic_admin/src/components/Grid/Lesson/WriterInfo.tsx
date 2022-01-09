@@ -1,30 +1,20 @@
 import styled, { css } from 'styled-components';
 import { useInfo } from '../../../contexts/info';
 import Button from '../../Button';
-import * as Api from '../../../lib/api';
+import Title from '../Common/Title';
 
-export default function OverView() {
+export default function WriterInfo() {
   const info = useInfo() as any;
 
-  const deleteUserHandler = () => {
-    if (window.confirm(`${info.login_id} 유저를 삭제하시겠습니까?`)) {
-      Api.deleteUser(info.id)
-        .then(() => {
-          alert('삭제되었습니다.');
-          window.location.replace(`${info.id}`);
-        })
-        .catch(err => alert(err.response.data));
-    }
-  };
+  const MoveToUserProfile = () => {};
 
   return (
     <>
-      <UserImage url={info.image_url} />
-      <UserNickname>{info.nickname}</UserNickname>
-      <UserId>{info.login_id}</UserId>
-      <CustomButton disabled={info.deletedAt} onClick={deleteUserHandler}>
-        회원 삭제
-      </CustomButton>
+      <Title>작성자</Title>
+      <UserImage url={info['User.image_url']} />
+      <UserNickname>{info['User.nickname']}</UserNickname>
+      <UserId>{info['User.login_id']}</UserId>
+      <CustomButton onClick={MoveToUserProfile}>유저 프로필 보기</CustomButton>
     </>
   );
 }
@@ -36,7 +26,7 @@ const UserImage = styled.div<{ url: string }>`
   background-position: center;
   width: 11rem;
   height: 11rem;
-  margin: 2rem auto 1.5rem auto;
+  margin: 1rem auto 1.5rem auto;
   overflow: hidden;
   border-radius: 50%;
 `;

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import UserTableCell from './User/UserTableCell';
 import AdminUserTableCell from './AdminUser/AdminUserTableCell';
 import LessonTableCell from './Lesson/LessonTableCell';
-import { useUserUpdate, useUser } from '../../contexts/user';
+import { useInfoUpdate, useInfo } from '../../contexts/info';
 import { Link } from 'react-router-dom';
 
 export interface MUITableRowProps {
@@ -25,11 +25,11 @@ export default function MUITableRow({
 }: MUITableRowProps) {
   const path = useLocation().pathname;
 
-  const setUser = useUserUpdate();
-  const user = useUser() as any;
+  const setInfo = useInfoUpdate();
+  const info = useInfo() as any;
 
   const modalHandler = () => {
-    if (setUser) setUser(row);
+    if (setInfo) setInfo(row);
   };
   return (
     <TableRow
@@ -70,7 +70,7 @@ export default function MUITableRow({
       </TableCell>
       {path === '/users' && <UserTableCell row={row} />}
       {path === '/admin_users' && <AdminUserTableCell row={row} />}
-      {(path === '/lessons' || path === `/users/${user!.id}`) && (
+      {(path === '/lessons' || path === `/users/${info!.id}`) && (
         <LessonTableCell row={row} />
       )}
     </TableRow>

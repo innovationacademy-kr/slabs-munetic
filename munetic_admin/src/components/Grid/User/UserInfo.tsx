@@ -5,13 +5,14 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Title from '../Common/Title';
 import Button from '../../Button';
-import { useUser } from '../../../contexts/user';
+import { useInfo } from '../../../contexts/info';
+import { TextFields, TextField, TextField_ } from '../Common/TextFields';
 import * as Api from '../../../lib/api';
 
 export default function UserInfo() {
-  const userInfo = useUser() as any;
+  const info = useInfo() as any;
   const path = useLocation().pathname;
-  const [type, setType] = useState(userInfo.type);
+  const [type, setType] = useState(info.type);
   const [edit, setEdit] = useState(false);
 
   const handleEdit = () => {
@@ -23,24 +24,23 @@ export default function UserInfo() {
   };
 
   const typeUpdate = () => {
-    Api.updateUserInfo(userInfo.id, { type }).then(() => {
-      window.location.replace(`${userInfo.id}`);
+    Api.updateUserInfo(info.id, { type }).then(() => {
+      window.location.replace(`${info.id}`);
     });
   };
 
-  console.log(type);
   return (
     <>
       <Title> 유저 정보 </Title>
       <TextFields>
         <TextField>
           <p>이름</p>
-          <div>{userInfo.name}</div>
+          <div>{info.name}</div>
         </TextField>
         <TextField_>
           <p>유형</p>
 
-          {path === `/users/${userInfo.id}` ? (
+          {path === `/users/${info.id}` ? (
             <Select
               value={type}
               onChange={handleChange}
@@ -64,14 +64,11 @@ export default function UserInfo() {
             </Select>
           )}
 
-          <CustomButton disabled={!!userInfo.deletedAt} onClick={handleEdit}>
+          <CustomButton disabled={!!info.deletedAt} onClick={handleEdit}>
             {edit ? '취소' : '편집'}
           </CustomButton>
           {edit && (
-            <CustomButton
-              disabled={userInfo.type === type}
-              onClick={typeUpdate}
-            >
+            <CustomButton disabled={info.type === type} onClick={typeUpdate}>
               저장
             </CustomButton>
           )}
@@ -80,83 +77,36 @@ export default function UserInfo() {
       <TextFields>
         <TextField>
           <p>생년월일</p>
-          <div>{userInfo.birth}</div>
+          <div>{info.birth}</div>
         </TextField>
         <TextField_>
           <p>성별</p>
-          <div>{userInfo.gender}</div>
+          <div>{info.gender}</div>
         </TextField_>
       </TextFields>
       <TextField>
         <p>이메일</p>
-        <div>{userInfo.email || '없음'}</div>
+        <div>{info.email || '없음'}</div>
       </TextField>
       <TextField>
         <p>휴대폰</p>
-        <div>{userInfo.phone_number || '없음'}</div>
+        <div>{info.phone_number || '없음'}</div>
       </TextField>
       <TextField>
         <p>자기 소개</p>
-        <div>{userInfo.introduction || '없음'}</div>
+        <div>{info.introduction || '없음'}</div>
       </TextField>
       <TextField>
         <p>생성일</p>
-        <div>{userInfo.createdAt}</div>
+        <div>{info.createdAt}</div>
       </TextField>
       <TextField>
         <p>삭제일</p>
-        <div>{userInfo.deletedAt || '없음'}</div>
+        <div>{info.deletedAt || '없음'}</div>
       </TextField>
     </>
   );
 }
-
-const TextFields = styled.div`
-  display: flex;
-  width: 100%;
-`;
-
-const TextField = styled.div`
-  margin: auto 0;
-  flex: 1;
-  padding-top: 1rem;
-  padding-left: 1rem;
-  display: flex;
-  width: 100%;
-  & p {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 0.7rem;
-    width: 7rem;
-  }
-  & div {
-    margin: auto 0;
-    padding-bottom: 0.3rem;
-    font-size: 1.3rem;
-    min-width: 10rem;
-    max-width: 30rem;
-  }
-`;
-
-const TextField_ = styled.div`
-  flex: 1;
-  padding-top: 1rem;
-  display: flex;
-  width: 100%;
-  & p {
-    border-left: 0.1rem solid grey;
-    padding-left: 3rem;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 0.7rem;
-    width: 5rem;
-  }
-
-  & div {
-    padding-bottom: 0.3rem;
-    font-size: 1.3rem;
-  }
-`;
 
 const CustomButton = styled(Button)`
   width: 5rem;
