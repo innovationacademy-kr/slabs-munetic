@@ -67,7 +67,7 @@ const LoginContainer = styled.div`
 
 const LoginCard = styled.div`
   width: 30rem;
-  height: 30vh;
+  height: 25rem;
   padding: 4rem 3.5rem 3.5rem 3.5rem;
   border-radius: 40px;
   background-color: #ecf0f3;

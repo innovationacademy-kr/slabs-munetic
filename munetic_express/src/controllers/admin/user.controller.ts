@@ -42,6 +42,21 @@ export const getAdminUserList: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      res.status(Status.BAD_REQUEST).send('유저 아이디가 없습니다.');
+    }
+    const userId = parseInt(req.params.id, 10);
+    const user = await UserService.findAllUserById(userId);
+    res
+      .status(Status.OK)
+      .json(new ResJSON('유저 프로필을 불러오는데 성공하였습니다.', user));
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const doubleCheck: RequestHandler = async (req, res, next) => {
   try {
     const userList = await UserService.searchAllUser(req.query);
@@ -54,6 +69,31 @@ export const doubleCheck: RequestHandler = async (req, res, next) => {
         Status.BAD_REQUEST,
         '이미 존재하는 유저 정보 입니다.',
       );
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteUserByAdmin: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const result = await UserService.deleteUser(userId);
+    if (result)
+      res
+        .status(Status.OK)
+        .json(new ResJSON('유저가 성공적으로 삭제되었습니다.', {}));
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const patchUserByAdmin: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const user = await UserService.editUserById(userId, req.body);
+    res
+      .status(Status.OK)
+      .json(new ResJSON('유저 프로필을 성공적으로 수정하였습니다.', user));
   } catch (err) {
     next(err);
   }

@@ -263,6 +263,7 @@ const lessonQueryOptionsforAdmin: FindOptions = {
         'gender',
         'image_url',
       ],
+      paranoid: false,
     },
   ],
 };

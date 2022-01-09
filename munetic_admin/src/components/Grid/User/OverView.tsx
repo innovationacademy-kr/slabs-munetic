@@ -1,15 +1,32 @@
 import styled, { css } from 'styled-components';
 import { useUser } from '../../../contexts/user';
 import Button from '../../Button';
+import { useNavigate } from 'react-router-dom';
+import * as Api from '../../../lib/api';
 
 export default function OverView() {
   const userInfo = useUser() as any;
+  const navigate = useNavigate();
+
+  const deleteUserHandler = () => {
+    if (window.confirm(`${userInfo.login_id} 유저를 삭제하시겠습니까?`)) {
+      Api.deleteUser(userInfo.id)
+        .then(() => {
+          alert('삭제되었습니다.');
+          window.location.replace(`${userInfo.id}`);
+        })
+        .catch(err => alert(err.response.data));
+    }
+  };
+
   return (
     <>
       <UserImage url={userInfo.image_url} />
       <UserNickname>{userInfo.nickname}</UserNickname>
       <UserId>{userInfo.login_id}</UserId>
-      <CustomButton disabled={userInfo.deletedAt}>회원 삭제</CustomButton>
+      <CustomButton disabled={userInfo.deletedAt} onClick={deleteUserHandler}>
+        회원 삭제
+      </CustomButton>
     </>
   );
 }

@@ -738,6 +738,118 @@ paths:
             example: 'Unauthorized'
 
   # admin user
+  /admin/user/{id}:
+    get:
+      tags:
+        - Admin User
+      summary: get specific user information by user account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+      responses:
+        '200':
+          description: 'request success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 유저 프로필을 불러오는데 성공하였습니다.
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: string
+            example: '유저 아이디가 없습니다. or 유효하지 않은 유저 아이디입니다.'
+
+    patch:
+      tags:
+        - Admin User
+      summary: update user information by user account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              type:
+                enum:
+                  - Student
+                  - Tutor
+      responses:
+        '200':
+          description: SUCCESS
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '유저 프로필을 성공적으로 수정하였습니다.'
+              data:
+                $ref: '#/definitions/User'
+        '400':
+          description: Unauthorized
+          schema:
+            type: string
+            example: '유효하지 않은 유저입니다.'
+
+    delete:
+      tags:
+        - Admin User
+      summary: soft delete user by admin account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '유저가 성공적으로 삭제되었습니다.'
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: '유효하지 않은 유저 아이디 입니다.'
+
   /admin/user/check:
     get:
       tags:

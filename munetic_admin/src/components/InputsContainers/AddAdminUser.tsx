@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { useState } from 'react';
 import { SelectChangeEvent } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import CustomInput from '../Inputs/CustomInput';
 import CustomPasswordInputs from '../Inputs/CustomPasswordInput';
@@ -8,11 +9,7 @@ import CustomSelect from '../Inputs/CustomSelect';
 import Button from '../Button';
 import * as Api from '../../lib/api';
 
-interface AdminUserProps {
-  rerender: () => void;
-}
-
-export function AddAdminUser({ rerender }: AdminUserProps) {
+export function AddAdminUser() {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [password, setPassword] = useState('1234');
@@ -20,6 +17,8 @@ export function AddAdminUser({ rerender }: AdminUserProps) {
   const [auth, setAuth] = useState('Admin');
   const [showPassword, setShowPassword] = useState(false);
   const [buttonText, setButtonText] = useState('중복');
+
+  const navigate = useNavigate();
 
   const checkEmail = () => {
     Api.doubleCheck(`email=${email}`)
@@ -37,7 +36,7 @@ export function AddAdminUser({ rerender }: AdminUserProps) {
     Api.createUser({ email, login_password: password, name, type: auth })
       .then(() => {
         alert('계정이 성공적으로 생성되었습니다.');
-        rerender();
+        window.location.replace('/admin/admin_users');
       })
       .catch(err => alert(`${err.response}`));
   };
