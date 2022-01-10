@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import * as UserAPI from '../controllers/user.controller';
+import * as storage from '../modules/imgCreateMiddleware.ts';
 
 export const path = '/user';
 export const router = Router();
@@ -11,6 +12,6 @@ router.get('/:id', UserAPI.getUserProfile);
 router.post(
   '/image',
   passport.authenticate('jwt'),
-  UserAPI.imgUpload,
+  storage.imgUpload,
   UserAPI.createProfileImg,
 );
