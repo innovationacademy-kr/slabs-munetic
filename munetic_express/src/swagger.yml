@@ -9,6 +9,8 @@ tags:
     description: App User Information
   - name: Lesson
     description: Lesson Information
+  - name: Category
+    description: Category Lists
   - name: Admin Auth
     description: Admin Authentication & Authorization
   - name: Admin User
@@ -608,6 +610,35 @@ paths:
               data:
                 type: object
                 example: {}
+  # Category 관련 API
+  /category:
+    get:
+      tags:
+        - Category
+      summary: Get Category Lists
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successfully got category Lists
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#/definitions/Category'
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
 
   # admin auth
   /admin/auth/login:
@@ -1389,3 +1420,11 @@ definitions:
       location: some location
       minute per lesson: 60
       content: some introduction
+
+  Category:
+    type: object
+    required:
+      - 'name'
+    properties:
+      name:
+        type: string
