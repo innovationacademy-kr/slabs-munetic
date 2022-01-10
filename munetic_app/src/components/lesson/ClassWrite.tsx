@@ -2,14 +2,15 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Contexts from '../../context/Contexts';
-import { categoryData } from '../../dummy/categoryData';
 import palette from '../../style/palette';
 import { LessonWriteData } from '../../types/lessonData';
 import Input, { InputBox } from '../common/Input';
 import Select from '../common/Select';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
+import * as CategoryAPI from '../../lib/api/category';
 import { UserDataType } from '../../types/userData';
+import { CategoryDataType } from '../../types/categoryData';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
@@ -61,6 +62,7 @@ export default function ClassWrite() {
   const navigate = useNavigate();
   const { state, actions } = useContext(Contexts);
   const [userData, setUserData] = useState<UserDataType>();
+  const [categoryData, setCategoryData] = useState<string[]>();
   const [classInfo, setClassInfo] = useState<LessonWriteData>({
     title: '',
     category: undefined,
@@ -158,6 +160,22 @@ export default function ClassWrite() {
     }
   }, [classId]);
 
+  useEffect(() => {
+    async function getCategory() {
+      try {
+        const res = await CategoryAPI.getMyProfile();
+        const categoryLists: string[] = [];
+        res.data.data.map((category: CategoryDataType) =>
+          categoryLists.push(category.name),
+        );
+        setCategoryData(categoryLists);
+      } catch (e) {
+        console.log(e, '카테고리를 불러오지 못했습니다.');
+      }
+    }
+    getCategory();
+  }, []);
+
   return (
     <Container>
       <StyledTitleInput
@@ -169,7 +187,7 @@ export default function ClassWrite() {
       />
       <Select
         title="카테고리"
-        options={categoryData.filter(category => category !== '전체')}
+        options={categoryData}
         value={category}
         name="category"
         disabledOptions={['카테고리']}

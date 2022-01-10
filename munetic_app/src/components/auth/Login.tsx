@@ -81,7 +81,7 @@ export default function Login() {
         } catch (e) {
           console.log(e, 'localStorage is not working');
         }
-        navigate(-1);
+        navigate('/');
       } catch (e) {
         setShowErrorMessage(true);
         console.log(e, '로그인 실패');

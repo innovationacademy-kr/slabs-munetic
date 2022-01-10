@@ -5,7 +5,7 @@ import { options } from './swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { createFirstOwnerAccount, Models } from './models';
+import { createCategories, createFirstOwnerAccount, Models } from './models';
 import errorHandler from './modules/errorHandler';
 import passport from 'passport';
 
@@ -44,6 +44,8 @@ Models()
 
     // admin Owner 계정 자동 생성
     createFirstOwnerAccount();
+    // app category 자동 생성
+    createCategories();
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 
