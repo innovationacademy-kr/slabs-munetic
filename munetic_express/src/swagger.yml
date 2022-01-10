@@ -319,6 +319,48 @@ paths:
               message:
                 type: string
                 example: 'Failed'
+  /user/image:
+    post:
+      tags:
+        - User
+      summary: create profile image
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+      responses:
+        '200':
+          description: Successfully created image
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                type: string
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
 
   #Lesson 관련 API
   /lesson/{id}:

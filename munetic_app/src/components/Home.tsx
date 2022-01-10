@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from './common/Button';
 import * as Auth from '../lib/api/auth';
-import * as ProfileAPI from '../lib/api/profile';
 import client from '../lib/api/client';
 
 const Container = styled.div`
@@ -55,43 +54,6 @@ export default function Home() {
     navigate('/auth/register?tutor=tutor');
   };
 
-  const onClickProfileView = async () => {
-    try {
-      const res = await ProfileAPI.getMyProfile();
-      console.log(res.data.data);
-    } catch (e) {
-      console.log(e, '내 프로필 보기 실패');
-    }
-  };
-
-  const onClickProfileViewOthers = async () => {
-    try {
-      const id = 3;
-      const res = await ProfileAPI.getProfileById(id);
-      console.log(res.data.data);
-    } catch (e) {
-      console.log(e, '다른 사람 프로필 보기 실패');
-    }
-  };
-
-  const onClickProfileEdit = async () => {
-    try {
-      const newData = {
-        type: 'Tutor',
-        nickname: 'kunkun',
-        name_public: true,
-        phone_public: true,
-        image_url: '/img/testImg.png',
-        introduction:
-          'testafajsfjsadfhasjfhawfhaofhouasdhfuasdhfausfhasudfhasudfhasfhsaduofhasodufhasduofhasdfasdfjkashfj',
-      };
-      const res = await ProfileAPI.updateProfile(newData);
-      console.log(res.data.data);
-    } catch (e) {
-      console.log(e, '내 프로필 수정 실패');
-    }
-  };
-
   return (
     <Container>
       <div className="homeButtonWrapper">
@@ -113,9 +75,6 @@ export default function Home() {
       </button>
       <button onClick={onClickSignup}>학생 회원가입</button>
       <button onClick={onClickSignupTutor}>튜터 회원가입</button>
-      <button onClick={onClickProfileView}>내 프로필 조회</button>
-      <button onClick={onClickProfileEdit}>내 프로필 수정</button>
-      <button onClick={onClickProfileViewOthers}>다른 사람 프로필 조회</button>
     </Container>
   );
 }

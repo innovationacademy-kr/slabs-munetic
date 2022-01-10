@@ -8,3 +8,9 @@ export const router = Router();
 router.get('/', passport.authenticate('jwt'), UserAPI.getMyProfile);
 router.patch('/', passport.authenticate('jwt'), UserAPI.editUserProfile);
 router.get('/:id', UserAPI.getUserProfile);
+router.post(
+  '/image',
+  passport.authenticate('jwt'),
+  UserAPI.imgUpload,
+  UserAPI.createProfileImg,
+);
