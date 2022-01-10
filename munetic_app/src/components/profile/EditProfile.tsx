@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserDataType } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
@@ -10,11 +10,15 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import ToggleBtn from '../common/ToggleBtn';
 import Button from '../common/Button';
 import Contexts from '../../context/Contexts';
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 
 const Container = styled.div`
   margin: 30px 10px 60px 10px;
   padding: 10px;
   background-color: ${palette.green};
+  .imgWrapper {
+    position: relative;
+  }
   .img {
     display: block;
     margin: 0 auto;
@@ -22,6 +26,16 @@ const Container = styled.div`
     height: 130px;
     align-items: center;
     border-radius: 50%;
+  }
+  .imgLabel {
+    position: absolute;
+    left: 62%;
+    top: 80%;
+    width: 30px;
+    text-align: center;
+    background-color: ${palette.ivory};
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 1px 1px, rgba(0, 0, 0, 0.23) 0px 1px 1px;
   }
   .sns {
     display: flex;
@@ -127,6 +141,8 @@ export default function EditProfile() {
 
   const { state, actions } = useContext(Contexts);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const onChangeToggleName = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: boolean,
@@ -179,6 +195,18 @@ export default function EditProfile() {
     }
   };
 
+  const onChangeProfileImg = async (e: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('img', e.target.files[0]);
+      const res = await ProfileAPI.createProfileImg(formData);
+      const newImageUrl = `/img/${res.data.data}`;
+      setImageValue(newImageUrl);
+    } catch (e) {
+      console.log(e, '프로필 사진 변경에 실패하였습니다.');
+    }
+  };
+
   useEffect(() => {
     async function getProfile() {
       try {
@@ -205,9 +233,10 @@ export default function EditProfile() {
               nickname: nicknameValue,
               name_public: namePublicValue,
               phone_public: phonePublicValue,
+              image_url: imageValue,
               introduction: introValue,
             };
-            ProfileAPI.updateProfile(newData);
+            await ProfileAPI.updateProfile(newData);
             actions.setWrite(false);
             navigate(`/profile/${userData?.id}`, { replace: true });
           } catch (e) {
@@ -226,7 +255,21 @@ export default function EditProfile() {
         'loading'
       ) : (
         <Container>
-          <img className="img" src={imageValue} alt="" />
+          <div className="imgWrapper">
+            <img className="img" src={imageValue} alt="" />
+            <label
+              className="imgLabel"
+              onClick={() => (inputRef.current ? inputRef.current.click() : '')}
+            >
+              <AddPhotoAlternateOutlinedIcon />
+            </label>
+            <input
+              type="file"
+              onChange={onChangeProfileImg}
+              ref={inputRef}
+              style={{ display: 'none' }}
+            />
+          </div>
           <NicknameWrapper editable={isEditNickname}>
             <div
               className="nicknameText"
