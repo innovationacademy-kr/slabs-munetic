@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as UserAPI from '../controllers/user.controller';
-import * as storage from '../modules/imgCreateMiddleware.ts';
+import * as storage from '../modules/imgCreateMiddleware';
 import { jwtAuth } from '../modules/jwt.local.strategy';
 
 export const path = '/user';
