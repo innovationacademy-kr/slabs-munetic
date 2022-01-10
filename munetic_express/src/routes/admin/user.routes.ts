@@ -1,25 +1,13 @@
 import { Router } from 'express';
-import passport from 'passport';
 import * as UserApi from '../../controllers/admin/user.controller';
+import { jwtAdminAuth } from '../../modules/jwt.admin.strategy';
 
 export const path = '/user';
 export const router = Router();
 
-router.get('/app', passport.authenticate('jwt-admin'), UserApi.getAppUserList);
-router.get(
-  '/admin',
-  passport.authenticate('jwt-admin'),
-  UserApi.getAdminUserList,
-);
-router.get('/check', passport.authenticate('jwt-admin'), UserApi.doubleCheck);
-router.get('/:id', passport.authenticate('jwt-admin'), UserApi.getUserInfo);
-router.patch(
-  '/:id',
-  passport.authenticate('jwt-admin'),
-  UserApi.patchUserByAdmin,
-);
-router.delete(
-  '/:id',
-  passport.authenticate('jwt-admin'),
-  UserApi.deleteUserByAdmin,
-);
+router.get('/app', jwtAdminAuth(), UserApi.getAppUserList);
+router.get('/admin', jwtAdminAuth(), UserApi.getAdminUserList);
+router.get('/check', jwtAdminAuth(), UserApi.doubleCheck);
+router.get('/:id', jwtAdminAuth(), UserApi.getUserInfo);
+router.patch('/:id', jwtAdminAuth(), UserApi.patchUserByAdmin);
+router.delete('/:id', jwtAdminAuth(), UserApi.deleteUserByAdmin);

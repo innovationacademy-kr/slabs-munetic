@@ -22,11 +22,11 @@ import {
 
 passport.use('local', LocalStrategy());
 passport.use('jwt', JwtAccessStrategy());
-passport.use('jwtRe', JwtRefreshStrategy());
+passport.use('jwtRefresh', JwtRefreshStrategy());
 
 passport.use('admin', AdminStrategy());
 passport.use('jwt-admin', JwtAdminAccessStrategy());
-passport.use('jwtRe-admin', JwtAdminRefreshStrategy());
+passport.use('jwtRefresh-admin', JwtAdminRefreshStrategy());
 
 router.use(auth.path, auth.router);
 router.use(user.path, user.router);
