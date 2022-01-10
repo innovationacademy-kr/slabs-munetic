@@ -4,7 +4,7 @@
   "scripts": {
     "test": "npx vite",
     "dev": "tsc && npx vite build && vite serve",
-    "serve": "tsc && npx vite build && serve dist -l 4242"
+    "serve": "tsc && npx vite build && serve dist -s -l 4242"
   },
   "dependencies": {
     "@emotion/react": "^11.7.1",
