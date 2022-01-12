@@ -18,7 +18,7 @@ interface PasswordInput {
   placeholder?: string;
 }
 
-export default function CustomPasswordInputs({
+export default function CustomPasswordInput({
   width,
   fontSize,
   showPassword,

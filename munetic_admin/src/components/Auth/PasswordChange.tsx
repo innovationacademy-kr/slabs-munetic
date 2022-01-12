@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { useState } from 'react';
 import Button from '../Button';
-import CustomPasswordInputs from '../Inputs/CustomPasswordInput';
+import CustomPasswordInput from '../Inputs/CustomPasswordInput';
 import * as Api from '../../lib/api';
 import { useLoginUpdate } from '../../contexts/login';
 
@@ -47,7 +47,7 @@ export default function PasswordChange() {
         <>
           <Fields>
             <p>현재 비밀번호를 입력해주세요.</p>
-            <CustomPasswordInputs
+            <CustomPasswordInput
               width="27rem"
               fontSize="1.5rem"
               showPassword={showPassword}
@@ -64,7 +64,7 @@ export default function PasswordChange() {
         <>
           <Fields>
             <p>새 비밀번호를 입력해주세요.</p>
-            <CustomPasswordInputs
+            <CustomPasswordInput
               width="27rem"
               fontSize="1.5rem"
               showPassword={showPassword}

@@ -21,5 +21,4 @@ const InfoContainer = styled.div`
   position: relative;
   background-color: #ecf0f3;
   border-radius: 0.5rem;
-  overflow: scroll;
 `;

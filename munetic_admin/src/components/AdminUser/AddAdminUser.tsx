@@ -4,7 +4,7 @@ import { SelectChangeEvent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import CustomInput from '../Inputs/CustomInput';
-import CustomPasswordInputs from '../Inputs/CustomPasswordInput';
+import CustomPasswordInput from '../Inputs/CustomPasswordInput';
 import CustomSelect from '../Inputs/CustomSelect';
 import Button from '../Button';
 import * as Api from '../../lib/api';
@@ -61,7 +61,7 @@ export function AddAdminUser() {
           {buttonText}
         </EmailButton>
         <Line />
-        <CustomPasswordInputs
+        <CustomPasswordInput
           width="15rem"
           fontSize="1.5rem"
           showPassword={showPassword}
