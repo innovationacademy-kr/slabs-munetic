@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import { Admin } from './admin';
 import { Category } from './category';
 import { Lesson } from './lesson';
 import { User, Gender, Account } from './user';
@@ -38,7 +37,6 @@ export function Models() {
   Category.initModel(sequelize);
   User.initModel(sequelize);
   Lesson.initModel(sequelize);
-  Admin.initModel(sequelize);
 
   Category.hasMany(Lesson);
   Lesson.belongsTo(Category, {
