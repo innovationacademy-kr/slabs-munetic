@@ -28,7 +28,7 @@ app.use('/api', router);
  */
 const specs = swaggerJSDoc(options);
 app.use(
-  '/swagger',
+  '/api/swagger',
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true }),
 );
