@@ -1,5 +1,5 @@
 import { findAllLessonsByUserId } from './../../service/lesson.service';
-import { ResJSON } from './../../types';
+import { ResJSON } from './../../modules/types';
 import { RequestHandler } from 'express';
 import * as Status from 'http-status';
 import * as LessonService from '../../service/lesson.service';
