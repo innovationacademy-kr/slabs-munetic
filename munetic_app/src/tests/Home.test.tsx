@@ -9,7 +9,7 @@ describe('Home test', () => {
         <Home />
       </MemoryRouter>,
     );
-    getByText('레슨 찾기');
-    getByText('레슨 등록');
+    getByText('로그인');
+    getByText('회원가입');
   });
 });
