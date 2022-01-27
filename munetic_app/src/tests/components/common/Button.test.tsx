@@ -11,7 +11,7 @@ describe('Button test', () => {
         <Button to={to}>{children}</Button>
       </MemoryRouter>,
     );
-    const link = getByText('레슨 찾기').closest('a');
-    expect(link).toHaveAttribute('href', '/lesson/category');
+    const link = getByText('레슨 찾기');
+    expect(link).toHaveTextContent(children);;
   });
 });
