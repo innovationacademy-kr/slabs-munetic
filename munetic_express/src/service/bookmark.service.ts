@@ -19,7 +19,17 @@ export const searchAllBookmarks = async (
     where: {
       user_id,
     },
-    include: Lesson,
+    include: [
+      {
+        model: Lesson,
+        attributes: {
+          exclude: ['id', 'createdAt', 'deletedAt'],
+        },
+      }
+    ],
+    attributes: {
+      exclude: ['user_id', 'createdAt', 'deletedAt'],
+    },
   });
   if (!searchBookmarks)
     throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');

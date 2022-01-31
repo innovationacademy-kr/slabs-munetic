@@ -80,7 +80,7 @@ export const putBookmark: RequestHandler = async (req, res, next) => {
         '북마크 데이터를 저장하는데 성공하였습니다.',
         newBokmark,
       );
-      res.status(Status.OK).json(result);
+      res.status(Status.CREATED).json(result);
     } else {
       next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
     }
@@ -100,14 +100,13 @@ export const putBookmark: RequestHandler = async (req, res, next) => {
 export const delBookmark: RequestHandler = async (req, res, next) => {
   try {
       if (req.user) {
-        let result: ResJSON;
-        BookmarkService.removeBookmark(
+        const del: boolean = await BookmarkService.removeBookmark(
           req.user.id,
           parseInt(req.params.lesson_id, 10),
         );
-        result = new ResJSON(
-          '북마크 데이터를 삭제하는데 성공하였습니다.',
-          {},
+        let result: ResJSON = new ResJSON(
+          del ? '북마크 데이터를 삭제하는데 성공하였습니다.' : '이미 삭제했거나 추가한 이력이 없는 북마크입니다.',
+          del,
         );
         res.status(Status.OK).json(result);
       } else {
