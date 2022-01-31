@@ -1,0 +1,251 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Admin User
+    description: All User Information
+paths:
+  # admin user
+  /admin/user/{id}:
+    get:
+      tags:
+        - Admin User
+      summary: get specific user information by user account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+      responses:
+        '200':
+          description: 'request success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 유저 프로필을 불러오는데 성공하였습니다.
+              data:
+                $ref: '#definitions/User'
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: string
+            example: '유저 아이디가 없습니다. or 유효하지 않은 유저 아이디입니다.'
+
+    patch:
+      tags:
+        - Admin User
+      summary: update user information by user account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              type:
+                enum:
+                  - Student
+                  - Tutor
+      responses:
+        '200':
+          description: SUCCESS
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '유저 프로필을 성공적으로 수정하였습니다.'
+              data:
+                $ref: '#definitions/User'
+        '400':
+          description: Unauthorized
+          schema:
+            type: string
+            example: '유효하지 않은 유저입니다.'
+
+    delete:
+      tags:
+        - Admin User
+      summary: soft delete user by admin account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: path
+          required: true
+          type: string
+          name: id
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '유저가 성공적으로 삭제되었습니다.'
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: '유효하지 않은 유저 아이디 입니다.'
+
+  /admin/user/check:
+    get:
+      tags:
+        - Admin User
+      summary: Double check the user info already exists
+      description: 더블 체크할 요소를 쿼리로 전달합니다.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: query
+          type: string
+          name: login_id
+        - in: query
+          type: string
+          name: email
+        - in: query
+          type: string
+          name: nickname
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '사용할 수 있는 유저 정보 입니다.'
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: '이미 존재하는 유저 정보 입니다.'
+
+  /admin/user/app?page=:
+    get:
+      tags:
+        - Admin User
+      summary: Get All app user profile
+      description: only owner account can access the request
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: admin user accessToken
+        - in: query
+          type: number
+          name: page
+          required: true
+          description: page number for pagination
+      responses:
+        '200':
+          description: Succesfully got All admin profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  rows:
+                    type: array
+                    items:
+                      $ref: '#definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+            example: 'UNATHORIZED or 권한이 없습니다. 관리자에게 문의하세요.'
+
+  /admin/user/admin?page=:
+    get:
+      tags:
+        - Admin User
+      summary: Get All admin user profile
+      description: only owner account can access the request
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: admin user accessToken
+        - in: query
+          type: number
+          name: page
+          required: true
+          description: page number for pagination
+      responses:
+        '200':
+          description: Succesfully got All admin profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  rows:
+                    type: array
+                    items:
+                      $ref: '#definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: string
+            example: 'UNATHORIZED or 권한이 없습니다. 관리자에게 문의하세요.'

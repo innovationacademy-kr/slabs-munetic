@@ -1,0 +1,165 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: User
+    description: App User Information
+paths:
+  # USER 관련 API
+  /user:
+    get:
+      tags:
+        - User
+      summary: Get My profile
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+      responses:
+        '200':
+          description: Succesfully got My profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+    patch:
+      tags:
+        - User
+      summary: Edit my profile
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+        - name: body
+          in: body
+          description: Edit contents
+          schema:
+            type: object
+            properties:
+              type:
+                enum: ['Student', 'Tutor']
+              nickname:
+                type: string
+              name_public:
+                type: boolean
+              phone_public:
+                type: boolean
+              image_url:
+                type: string
+              introduction:
+                type: string
+      responses:
+        '200':
+          description: SUCCESS
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user profile by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'id'
+          type: number
+          in: path
+          required: true
+          description: user ID
+      responses:
+        '200':
+          description: Succesfully got User profile
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#definitions/User'
+        '400':
+          description: Invalid ID
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+  /user/image:
+    post:
+      tags:
+        - User
+      summary: create profile image
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          type: string
+          name: accessToken
+          required: true
+          description: user accessToken
+      responses:
+        '200':
+          description: Successfully created image
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                type: string
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'

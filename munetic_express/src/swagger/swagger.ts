@@ -8,5 +8,5 @@ export const options = {
     host: 'munetic.dev.42cadet.kr',
     basePath: '/api',
   },
-  apis: ['./src/swagger.yml'],
+  apis: ['./src/swagger/apis/*.yml', './src/swagger/definitions.yml'],
 };

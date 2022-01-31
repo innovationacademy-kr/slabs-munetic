@@ -1,0 +1,170 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Admin Auth
+    description: Admin Authentication & Authorization
+paths:
+  # admin auth
+  /admin/auth/login:
+    post:
+      tags:
+        - Admin Auth
+      summary: Admin Login
+      description: 응답 body에는 accessToken을 cookie에는 refreshToken을 전달합니다.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#definitions/Login'
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: string
+          headers:
+            cookie:
+              description: JWT refreshToken
+              type: string
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 입력하신 id에 해당하는 계정이 없습니다.
+
+  /admin/auth/logout:
+    get:
+      tags:
+        - Admin Auth
+      summary: Admin Logout
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        '200':
+          description: logout success
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'logout complete'
+              data:
+                type: object
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: Unauthorized
+
+  /admin/auth/signup:
+    post:
+      tags:
+        - Admin Auth
+      summary: Add new admin user
+      description: owner 권한을 가진 유저만 이 api를 통해 새 어드민 유저를 추가할 수 있습니다.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#definitions/Admin Login'
+      responses:
+        '200':
+          description: logout success
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'logout complete'
+              data:
+                type: object
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: Unauthorized
+
+  /admin/auth/refresh:
+    get:
+      tags:
+        - Admin Auth
+      summary: Refresh accessToken
+      parameters:
+        - in: header
+          type: string
+          name: refreshToken(cookie)
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: string
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 'Unauthorized'
+
+  /admin/auth/password:
+    patch:
+      tags:
+        - Admin Auth
+      summary: update password
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              login_password:
+                type: string
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '비밀번호가 변경되었습니다.'
+              data:
+                type: object
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: string
+            example: '유효하지 않은 유저 아이디입니다.'

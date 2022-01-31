@@ -1,0 +1,37 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Category
+    description: Category Lists
+paths:
+  # Category 관련 API
+  /category:
+    get:
+      tags:
+        - Category
+      summary: Get Category Lists
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successfully got category Lists
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Success'
+              data:
+                $ref: '#definitions/Category'
+        '400':
+          description: 'Bad Request'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Failed'
