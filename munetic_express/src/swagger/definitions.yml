@@ -217,3 +217,55 @@ definitions:
     properties:
       name:
         type: string
+
+  Bookmark:
+    type: object
+    required:
+      - 'id'
+      - 'user_id'
+      - 'lesson_id'
+      - 'updatedAt'
+      - 'createdAt'
+    properties:
+      id:
+        description: 'Bookmark ID'
+        type: number
+        format: int32
+      user_id:
+        description: 'User ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      createdAt:
+        description: 'The time when the Column was created'
+        type: string
+
+  BookmarkWithLesson:
+    type: object
+    required:
+      - 'id'
+      - 'lesson_id'
+      - 'updatedAt'
+      - 'Lesson'
+    properties:
+      id:
+        description: 'Bookmark ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      Lesson:
+        # TODO: 레슨 타입에 대한 명확한 정의 필요 joopark
+        description: 'Lesson Object'
+        type: object

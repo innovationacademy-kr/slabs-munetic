@@ -1,0 +1,149 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Bookmark
+    description: '북마크 조회, 추가, 삭제'
+paths:
+  /bookmark/:
+    get:
+      tags:
+        - Bookmark
+      summary: '로그인한 유저의 모든 북마크 조회'
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '유저가 북마크 한 모든 레슨'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '북마크 데이터를 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/BookmarkWithLesson'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+  /bookmark/{lesson_id}:
+    put:
+      tags:
+        - Bookmark
+      summary: '해당 레슨을 북마크함'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'lesson_id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '201':
+          description: 레슨 북마크에 성공하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: '북마크 데이터를 저장하는데 성공하였습니다.'
+              data:
+                $ref: '#definitions/Bookmark'
+        '400':
+          description: 레슨 ID가 존재하지 않을 때
+          schema:
+            type: string
+            example: '유효하지 않은 유저 id 또는 레슨 id 입니다.'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+    get:
+      tags:
+        - Bookmark
+      summary: '해당 레슨이 북마크 되었는지 확인'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'lesson_id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 북마크 조회에 성공하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: '북마크 존재 여부를 확인하는데 성공하였습니다.'
+              data:
+                type: boolean
+                example: true
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+    delete:
+      tags:
+        - Bookmark
+      summary: '해당 레슨 북마크에서 삭제'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'lesson_id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 북마크를 삭제하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                description: '북마크 삭제 여부에 대한 메시지'
+                type: string
+                example: '북마크 존재 여부를 확인하는데 성공하였습니다.'
+              data:
+                description: '북마크 삭제 여부'
+                type: boolean
+                example: true
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
