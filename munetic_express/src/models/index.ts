@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { Category } from './category';
 import { Lesson } from './lesson';
+import { Bookmark } from './bookmark';
 import { User, Gender, Account } from './user';
 import * as UserService from '../service/user.service';
 
@@ -35,20 +36,43 @@ export function Models() {
   Category.initModel(sequelize);
   User.initModel(sequelize);
   Lesson.initModel(sequelize);
+  Bookmark.initModel(sequelize);
 
-  Category.hasMany(Lesson);
+  Category.hasMany(Lesson, {
+    foreignKey: {
+      name: 'category_id',
+      allowNull: false,
+    },
+  });
   Lesson.belongsTo(Category, {
     foreignKey: {
       name: 'category_id',
       allowNull: false,
     },
   });
-  User.hasMany(Lesson);
+  User.hasMany(Lesson, {
+    foreignKey: {
+      name: 'tutor_id',
+      allowNull: false,
+    },
+  });
   Lesson.belongsTo(User, {
     foreignKey: {
       name: 'tutor_id',
       allowNull: false,
     },
+  });
+  User.hasMany(Bookmark, {
+    foreignKey: 'user_id',
+  });
+  Bookmark.belongsTo(User, {
+    foreignKey: 'user_id',
+  });
+  Lesson.hasOne(Bookmark, {
+    foreignKey: 'lesson_id',
+  });
+  Bookmark.belongsTo(Lesson, {
+    foreignKey: 'lesson_id',
   });
   return sequelize;
 }
