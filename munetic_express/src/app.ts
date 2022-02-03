@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { options } from './swagger';
+import { options } from './swagger/swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
@@ -36,6 +36,7 @@ app.use(
 /**
  * MariaDB 테이블 연결
  */
+const init: boolean = false;
 Models()
   .sync({ force: true })
   .then(() => {

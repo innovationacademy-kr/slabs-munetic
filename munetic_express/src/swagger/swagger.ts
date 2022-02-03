@@ -1,3 +1,5 @@
+import { development } from '../config/config';
+
 export const options = {
   definition: {
     swagger: '2.0',
@@ -5,8 +7,8 @@ export const options = {
       title: 'MUNETIC API',
       version: '1.0.0',
     },
-    host: 'munetic.dev.42cadet.kr',
+    host: development.domain,
     basePath: '/api',
   },
-  apis: ['./src/swagger.yml'],
+  apis: ['./src/swagger/apis/*.yml', './src/swagger/definitions.yml'],
 };
