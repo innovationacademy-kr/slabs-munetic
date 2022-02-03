@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { Category } from './category';
 import { Lesson } from './lesson';
 import { Bookmark } from './bookmark';
+import { Comment } from './comment';
 import { User, Gender, Account } from './user';
 import * as UserService from '../service/user.service';
 
@@ -37,6 +38,7 @@ export function Models() {
   User.initModel(sequelize);
   Lesson.initModel(sequelize);
   Bookmark.initModel(sequelize);
+  Comment.initModel(sequelize);
 
   Category.hasMany(Lesson, {
     foreignKey: {
@@ -72,6 +74,18 @@ export function Models() {
     foreignKey: 'lesson_id',
   });
   Bookmark.belongsTo(Lesson, {
+    foreignKey: 'lesson_id',
+  });
+  User.hasMany(Comment, {
+    foreignKey: 'user_id',
+  });
+  Comment.belongsTo(User, {
+    foreignKey: 'user_id',
+  });
+  Lesson.hasMany(Comment, {
+    foreignKey: 'lesson_id',
+  });
+  Comment.belongsTo(Lesson, {
     foreignKey: 'lesson_id',
   });
   return sequelize;
