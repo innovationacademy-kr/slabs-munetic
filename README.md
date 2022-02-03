@@ -6,7 +6,7 @@ Munetic, 음악레슨 매칭앱의 MVP(Minimum Viable Product)를 3 명 씩으�
 이 repository는 github actions를 통한 배포에 최적화되어있습니다. 이외의 서버에서 실행시키는 방법은 다음과 같습니다.
 1. .env_template 파일을 통해 .env를 설정해줍니다. `SERVER_HOST=localhost`가 아닌 경우 자동으로 https가 설정됩니다.
 2. munetic_admin, munetic_app, munetic_express 내에서 `npm i`를 실행하여 package-lock.json파일을 생성합니다.
-3. `docker-compose up`를 통해 실행시킵니다.
+3. `docker-compose -f docker-compose.yaml -f network-main.yaml up`를 통해 실행시킵니다.
 
 ## Browser Support
 이 프로젝트는 크롬과 사파리 환경에서. 테스트되었습니다.

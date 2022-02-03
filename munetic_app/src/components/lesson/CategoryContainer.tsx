@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { categoryData } from '../../dummy/categoryData';
 import palette from '../../style/palette';
+import { CategoryDataType } from '../../types/categoryData';
 import Button from '../common/Button';
+import * as CategoryAPI from '../../lib/api/category';
 
 const CategoryPageContainer = styled.div`
   margin: 30px;
@@ -10,7 +12,7 @@ const CategoryPageContainer = styled.div`
   border-radius: 5px;
   .categoryTitle {
     margin: 15px 0px 10px 0px;
-    color: ${palette.ivory};
+    color: ${palette.green};
     font-size: 20px;
     font-weight: bold;
   }
@@ -32,7 +34,7 @@ const CategoryPageContainer = styled.div`
 const StyledButton = styled(Button)`
   width: 28%;
   border-radius: 7px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   margin: 5px 5px;
   padding: 0;
   .buttonText {
@@ -44,6 +46,20 @@ const StyledButton = styled(Button)`
 `;
 
 export default function CategoryContainer() {
+  const [categoryData, setCategoryData] = useState<CategoryDataType[]>();
+
+  useEffect(() => {
+    async function getCategory() {
+      try {
+        const res = await CategoryAPI.getMyProfile();
+        setCategoryData(res.data.data);
+      } catch (e) {
+        console.log(e, '카테고리를 불러오지 못했습니다.');
+      }
+    }
+    getCategory();
+  }, []);
+
   return (
     <CategoryPageContainer>
       <div className="categoryWrapper">
@@ -51,8 +67,11 @@ export default function CategoryContainer() {
         {categoryData && (
           <div className="categoryIconWrapper">
             {categoryData.map((category, i) => (
-              <StyledButton to={`/lesson/classes?category=${category}`} key={i}>
-                {category}
+              <StyledButton
+                to={`/lesson/classes?category=${category.name}`}
+                key={i}
+              >
+                {category.name}
               </StyledButton>
             ))}
           </div>

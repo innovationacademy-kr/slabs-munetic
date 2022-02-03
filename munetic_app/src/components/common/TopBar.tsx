@@ -24,7 +24,7 @@ const TopBarContainer = styled.div`
     cursor: pointer;
   }
   .topBarIcon {
-    color: ${palette.ivory};
+    color: ${palette.green};
   }
   .topBarIconText {
     width: 15px;
@@ -33,7 +33,7 @@ const TopBarContainer = styled.div`
     top: -3px;
     left: 10px;
     background-color: ${palette.red};
-    color: ${palette.ivory};
+    color: ${palette.green};
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@ const TopBarContainer = styled.div`
   .logo {
     font-weight: bold;
     font-size: 26px;
-    color: ${palette.ivory};
+    color: ${palette.green};
     cursor: pointer;
     line-height: 53px;
   }
@@ -60,12 +60,12 @@ const TopBarContainer = styled.div`
     text-align: right;
   }
   .topBarRightText {
-    color: ${palette.ivory};
+    color: ${palette.green};
     font-size: 15px;
     font-weight: bold;
   }
   .topBarLeftText {
-    color: ${palette.ivory};
+    color: ${palette.green};
     font-size: 15px;
     font-weight: bold;
   }
@@ -92,7 +92,7 @@ export default function TopBar() {
     rightText = '';
   }
   const onClickWrite = (rightText: string) => {
-    if (rightText === '등록' || rightText === '수정') {
+    if (rightText === '등록' || rightText === '수정' || rightText === '저장') {
       actions.setWrite(true);
     }
   };

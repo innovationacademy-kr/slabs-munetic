@@ -1,11 +1,11 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { options } from './swagger';
+import { options } from './swagger/swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { createFirstOwnerAccount, Models } from './models';
+import { createCategories, createFirstOwnerAccount, Models } from './models';
 import errorHandler from './modules/errorHandler';
 import passport from 'passport';
 
@@ -28,7 +28,7 @@ app.use('/api', router);
  */
 const specs = swaggerJSDoc(options);
 app.use(
-  '/swagger',
+  '/api/swagger',
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true }),
 );
@@ -36,6 +36,7 @@ app.use(
 /**
  * MariaDB 테이블 연결
  */
+const init: boolean = false;
 Models()
   .sync({ force: true })
   .then(() => {
@@ -44,6 +45,8 @@ Models()
 
     // admin Owner 계정 자동 생성
     createFirstOwnerAccount();
+    // app category 자동 생성
+    createCategories();
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
 

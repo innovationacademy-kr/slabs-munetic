@@ -28,7 +28,7 @@ const ClassItemContainer = styled(Link)`
   .classItemTitle {
     margin: 5px 0px;
     padding: 1px 0px;
-    color: ${palette.ivory};
+    color: ${palette.green};
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -61,7 +61,7 @@ interface StyledButtonProps {
 }
 
 const StyledButton = styled(Button)<StyledButtonProps>`
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   font-size: 9px;
   width: 40px;
   height: 40px;
@@ -158,15 +158,11 @@ export default function ClassList() {
                 return <ClassItem lesson={lesson} key={lesson.lesson_id} />;
               }
             }))}
-      {classCount > 0 ? (
-        <Pagination
-          itemsPerPage={itemsPerPage}
-          classCount={classCount}
-          handlePageClick={e => handlePageClick(e)}
-        />
-      ) : (
-        ''
-      )}
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        classCount={classCount}
+        handlePageClick={e => handlePageClick(e)}
+      />
     </ClassListContainer>
   );
 }

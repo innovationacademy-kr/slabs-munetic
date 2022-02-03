@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -12,7 +12,7 @@ import { Gender } from '../../types/enums';
 
 const ClassContainer = styled.div`
   margin: 10px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
 `;
 
 const ClassProfileWrapper = styled.div`
@@ -34,7 +34,6 @@ const ClassProfileWrapper = styled.div`
     text-align: center;
     font-size: large;
     font-weight: bold;
-    color: ${palette.darkBlue};
   }
   .sns {
     display: flex;
@@ -148,8 +147,15 @@ export default function Class() {
     },
   });
 
-  const { image_url, tutor_name, birth, phone_number, gender, editable } =
-    classInfo;
+  const {
+    image_url,
+    tutor_id,
+    tutor_name,
+    birth,
+    phone_number,
+    gender,
+    editable,
+  } = classInfo;
   const { price, location, minute_per_lesson, content } = editable;
 
   const basicInfos = {
@@ -179,7 +185,9 @@ export default function Class() {
       <ClassProfileWrapper>
         <div className="imgAndNickname">
           <img className="profileImg" src={image_url} alt="" />
-          <span className="nickname">{tutor_name}</span>
+          <div className="nickname">
+            <Link to={`/profile/${tutor_id}`}>{tutor_name}</Link>
+          </div>
         </div>
         <div className="sns">
           <div className="snsTop">

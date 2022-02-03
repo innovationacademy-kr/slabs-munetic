@@ -1,3 +1,4 @@
+import '@types/jest';
 import * as Status from 'http-status';
 import * as httpMocks from 'node-mocks-http';
 import ErrorResponse from '../../modules/errorResponse';

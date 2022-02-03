@@ -54,3 +54,20 @@ export const editUserProfile: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+
+export const createProfileImg: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+      let result: ResJSON;
+      result = new ResJSON(
+        '프로필 사진 교체를 성공하였습니다.',
+        req.file?.filename,
+      );
+      res.status(Status.OK).json(result);
+    } else {
+      next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
+    }
+  } catch (err) {
+    next(err);
+  }
+};

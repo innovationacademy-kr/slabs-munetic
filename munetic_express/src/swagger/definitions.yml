@@ -1,0 +1,271 @@
+definitions:
+  LessonCounts:
+    type: object
+    required:
+      - count
+      - rows
+    properties:
+      count:
+        type: integer
+      rows:
+        type: array
+        items:
+          $ref: '#definitions/Lesson'
+    example:
+      count: 5
+      rows:
+        - $ref: '#definitions/Lesson/example'
+        - $ref: '#definitions/Lesson/example'
+        - $ref: '#definitions/Lesson/example'
+
+  AdminLessons:
+    type: object
+    required:
+      - count
+      - rows
+    properties:
+      count:
+        type: integer
+      rows:
+        type: array
+        items:
+          $ref: '#definitions/AdminLesson'
+  AdminLesson:
+    type: object
+    properties:
+      lesson_id:
+        type: number
+      tutor_id:
+        type: number
+      title:
+        type: string
+      price:
+        type: number
+      location:
+        type: string
+      minute_per_lesson:
+        type: number
+      content:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      deletedAt:
+        type: string
+      Category.name:
+        type: string
+      User.name:
+        type: string
+      User.nickname:
+        type: string
+      User.name_public:
+        type: number
+      User.phone_number:
+        type: string
+      User.birth:
+        type: string
+      User.gender:
+        type: string
+      User.image_url:
+        type: string
+
+  Login:
+    type: object
+    required:
+      - 'login_id'
+      - 'login_password'
+    properties:
+      login_id:
+        type: string
+      login_password:
+        type: string
+
+  Admin Login:
+    type: object
+    required:
+      - 'email'
+      - 'login_password'
+      - 'name'
+      - 'type'
+    properties:
+      email:
+        type: string
+      login_password:
+        type: string
+      name:
+        type: string
+      type:
+        enum:
+          - Admin
+          - Owner
+  User:
+    type: object
+    required:
+      - 'login_id'
+      - 'login_password'
+      - 'type'
+      - 'name'
+      - 'birth'
+      - 'gender'
+      - 'nickname'
+    properties:
+      login_id:
+        type: string
+      login_password:
+        type: string
+      type:
+        enum:
+          - 'student'
+          - 'tutor'
+      name:
+        type: string
+      name_public:
+        type: boolean
+        example: false
+      birth:
+        type: string
+      gender:
+        type: string
+        enum:
+          - Male
+          - Female
+          - Other
+      nickname:
+        type: string
+      email:
+        type: string
+      phone_number:
+        type: string
+      phone_public:
+        type: boolean
+        example: false
+      image_url:
+        type: string
+      introduction:
+        type: string
+
+  Lesson:
+    type: object
+    required:
+      - lesson_id
+      - tutor_id
+      - gender
+      - age
+    properties:
+      lesson_id:
+        description: 'the id of the lesson ad'
+        type: number
+        format: int32
+      tutor_id:
+        description: 'the id of the tutor'
+        type: number
+        format: int32
+      tutor_name:
+        description: 'name or nickname of the tutor'
+        type: string
+      profile_pic:
+        description: 'url of a tutor profile picture'
+        type: string
+      editable:
+        $ref: '#definitions/LessonEditable'
+    example:
+      summary: 'an example of a lesson'
+      description: 'the description!'
+      lesson_id: 14
+      tutor_id: 3
+      tutor_name: 'santa claus'
+      gender: female
+      age: 33
+      profile_pic: 'http://munetic.42cadet.kr/img/42'
+      editable:
+        $ref: '#definitions/LessonEditable/example'
+  LessonEditable:
+    type: object
+    properties:
+      category:
+        description: 'the category of the lesson'
+        type: string
+      title:
+        description: 'name of the lesson ad'
+        type: string
+      price:
+        description: 'price per one lesson, based on KRW'
+        type: number
+        format: int32
+      location:
+        description: available location of the tutor'
+        type: string
+      minute_per_lesson:
+        type: number
+        format: int32
+      content:
+        description: 'introduction of the lesson by the tutor'
+        type: string
+    example:
+      category: classic piano
+      title: some title
+      price: 120000
+      location: some location
+      minute per lesson: 60
+      content: some introduction
+
+  Category:
+    type: object
+    required:
+      - 'name'
+    properties:
+      name:
+        type: string
+
+  Bookmark:
+    type: object
+    required:
+      - 'id'
+      - 'user_id'
+      - 'lesson_id'
+      - 'updatedAt'
+      - 'createdAt'
+    properties:
+      id:
+        description: 'Bookmark ID'
+        type: number
+        format: int32
+      user_id:
+        description: 'User ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      createdAt:
+        description: 'The time when the Column was created'
+        type: string
+
+  BookmarkWithLesson:
+    type: object
+    required:
+      - 'id'
+      - 'lesson_id'
+      - 'updatedAt'
+      - 'Lesson'
+    properties:
+      id:
+        description: 'Bookmark ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      Lesson:
+        # TODO: 레슨 타입에 대한 명확한 정의 필요 joopark
+        description: 'Lesson Object'
+        type: object

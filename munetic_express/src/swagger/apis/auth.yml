@@ -1,0 +1,195 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Auth
+    description: Authentication & Authorization
+paths:
+  # AUTH 관련 API
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: 응답 body에는 accessToken을 cookie에는 refreshToken을 전달합니다.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#definitions/Login'
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: string
+          headers:
+            cookie:
+              description: JWT refreshToken
+              type: string
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 입력하신 id에 해당하는 계정이 없습니다. or 잘못된 비밀번호 입니다.
+
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logout
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+      responses:
+        '200':
+          description: logout success
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'logout complete'
+              data:
+                type: object
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: Unauthorized
+
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Signup User
+      description: 'Model에서 required 요소만 req.body에 담아 전달합니다. email과 phone_number는 둘 중 하나는 반드시 포함되어야 합니다.'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              login_id:
+                type: string
+              login_password:
+                type: string
+              type:
+                type: string
+                enum:
+                  - Student
+                  - Tutor
+              birth:
+                type: string
+              gender:
+                type: string
+                enum:
+                  - Male
+                  - Female
+                  - Other
+              name:
+                type: string
+              nickname:
+                type: string
+              email:
+                type: string
+              phone_number:
+                type: string
+
+      responses:
+        '201':
+          description: Created User
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                $ref: '#definitions/User'
+        '500':
+          description: Internal Server Error
+          schema:
+            type: string
+            example: '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+
+  /auth/signup/user:
+    get:
+      tags:
+        - Auth
+      summary: Check if userInfo is valid
+      description: '중복 체크 하고 싶은 요소를 쿼리로 전달합니다. login_id와 email을 동시에 query로 전달할 수 없습니다.'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          type: string
+          name: login_id
+        - in: query
+          type: string
+          name: email
+        - in: query
+          type: string
+          name: nickname
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '사용할 수 있는 유저 정보 입니다.'
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: '이미 존재하는 유저 정보 입니다.'
+
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      summary: Refresh accessToken
+      parameters:
+        - in: header
+          type: string
+          name: refreshToken(cookie)
+      responses:
+        '200':
+          description: 'Login success'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'request success'
+              data:
+                type: string
+        '401':
+          description: 'Unauthorized'
+          schema:
+            type: string
+            example: 'Unauthorized'

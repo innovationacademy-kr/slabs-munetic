@@ -50,6 +50,7 @@ export const JwtAccessStrategy = () =>
 export const JwtRefreshStrategy = () =>
   new Strategy(refreshOpts, JwtStrategyCallback);
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
+export const jwtAuth = () => passport.authenticate('jwt', { session: false });
+
+export const jwtReAuth = () =>
+  passport.authenticate('jwtRefresh', { session: false });

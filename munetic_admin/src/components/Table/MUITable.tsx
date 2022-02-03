@@ -68,13 +68,11 @@ export default function MUITable({
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = rowsPerPage - rows.length;
 
   return (
@@ -82,31 +80,24 @@ export default function MUITable({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <MUITableToolbar numSelected={selected.length} />
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="medium"
-          >
+          <Table sx={{ minWidth: 750 }} size="medium">
             <MUITableHead
               numSelected={selected.length}
               rowCount={rows.length}
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
-              {rows.map((row: any, index: any) => {
+              {rows.map((row: any) => {
                 const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
                 return (
-                  <>
-                    <MUITableRow
-                      numSelected={selected.length}
-                      rowCount={rows.length}
-                      isItemSelected={isItemSelected}
-                      labelId={labelId}
-                      row={row}
-                      handleClick={handleClick}
-                    />
-                  </>
+                  <MUITableRow
+                    numSelected={selected.length}
+                    rowCount={rows.length}
+                    isItemSelected={isItemSelected}
+                    row={row}
+                    key={row.id}
+                    handleClick={handleClick}
+                  />
                 );
               })}
               {emptyRows > 0 && (

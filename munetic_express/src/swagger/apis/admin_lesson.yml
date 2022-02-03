@@ -1,0 +1,169 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Admin Lesson
+    description: Admin Lessons
+paths:
+  # admin lesson
+  /admin/lesson?:
+    get:
+      tags:
+        - Admin Lesson
+      summary: Get All Lessons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          required: true
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 응답에 성공하였습니다.
+              data:
+                $ref: '#definitions/AdminLessons'
+        '401':
+          description: Unathorized
+          schema:
+            type: string
+            example: Unauthorized
+  /admin/lesson/{id}:
+    get:
+      tags:
+        - Admin Lesson
+      summary: Get Lesson By Id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: number
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 레슨 게시물을 불러오는데 성공하였습니다.
+              data:
+                $ref: '#definitions/AdminLesson'
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: 유효하지 않은 레슨 아이디입니다.
+    delete:
+      tags:
+        - Admin Lesson
+      summary: Delete Lesson By Id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: number
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 게시물이 정상적으로 삭제되었습니다.
+              data:
+                type: object
+        '400':
+          description: Bad_Request
+          schema:
+            type: string
+            example: 유효하지 않은 레슨 아이디입니다.
+
+  /admin/lesson/user/{id}?:
+    get:
+      tags:
+        - Admin Lesson
+      summary: Get All User Lessons
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          type: string
+          required: true
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          required: true
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: request success
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: 응답에 성공하였습니다.
+              data:
+                $ref: '#definitions/AdminLessons'
+        '401':
+          description: Unathorized
+          schema:
+            type: string
+            example: Unauthorized

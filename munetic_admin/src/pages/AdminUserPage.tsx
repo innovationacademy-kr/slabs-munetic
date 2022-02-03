@@ -1,4 +1,4 @@
-import { AddAdminUser } from '../components/InputsContainers/AddAdminUser';
+import { AddAdminUser } from '../components/AdminUser/AddAdminUser';
 import MUITable from '../components/Table/MUITable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -32,13 +32,6 @@ export default function AdminUserPage() {
     setPage(0);
   };
 
-  /**
-   * 데이터에 변동이 생겼을 시 다시 렌더링하는 이벤트
-   */
-  const handleReRender = () => {
-    setCount(count + 1);
-  };
-
   useEffect(() => {
     Api.getAdminUserList(page)
       .then(({ data }: any) => {
@@ -49,11 +42,11 @@ export default function AdminUserPage() {
         if (err.response) alert(err.response.data);
         navigate('/');
       });
-  }, [page, count]);
+  }, []);
 
   return (
     <>
-      <AddAdminUser rerender={handleReRender} />
+      <AddAdminUser />
       <MUITable
         page={page}
         count={count}

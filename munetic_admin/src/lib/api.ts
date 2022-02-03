@@ -18,6 +18,14 @@ interface createUserProps {
   type: string;
 }
 
+interface editUserProps {
+  type?: string;
+  password?: string;
+  nickname?: string;
+  name?: string;
+  birth?: string;
+}
+
 export const login = async (loginInfo: LoginProps) => {
   return await instance.post('auth/login', loginInfo);
 };
@@ -46,6 +54,21 @@ export const getAdminUserList = async (page: number) => {
   return await instance.get(`user/admin?page=${page + 1}`);
 };
 
+export const getUserInfo = async (userId: number) => {
+  return await instance.get(`user/${userId}`);
+};
+
+export const updateUserInfo = async (
+  userId: number,
+  userInfo: editUserProps,
+) => {
+  return await instance.patch(`user/${userId}`, userInfo);
+};
+
+export const deleteUser = async (userId: number) => {
+  return await instance.delete(`user/${userId}`);
+};
+
 export const getAllLessons = async (offset: number, limit: number) => {
   return await instance.get(`lesson?offset=${offset}&limit=${limit}`);
 };
@@ -58,4 +81,17 @@ export const getUserLessons = async (
   return await instance.get(
     `lesson/user/${userId}?offset=${offset}&limit=${limit}`,
   );
+};
+export const getLesson = async (lessonId: number) => {
+  return await instance.get(`lesson/${lessonId}`);
+};
+export const deleteLesson = async (lessonId: number) => {
+  return await instance.delete(`lesson/${lessonId}`);
+};
+
+interface passwordProps {
+  login_password: string;
+}
+export const updatePassword = async (newPassword: passwordProps) => {
+  return await instance.patch('auth/password', newPassword);
 };

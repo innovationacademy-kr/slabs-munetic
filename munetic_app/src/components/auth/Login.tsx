@@ -12,7 +12,7 @@ const Container = styled.form`
   margin: 250px 30px 30px 30px;
   padding: 30px;
   border-radius: 10px;
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   .loginErrorMessage {
     text-align: center;
     font-size: 12px;

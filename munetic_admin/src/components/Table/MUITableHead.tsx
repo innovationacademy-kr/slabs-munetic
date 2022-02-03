@@ -10,7 +10,7 @@ import {
   adminUserHeadCells,
 } from './AdminUser/adminUserHeadCells';
 import { LessonHeadCell, lessonHeadCells } from './Lesson/LessonHeadCells';
-import { useUser } from '../../contexts/user';
+import { useInfo } from '../../contexts/info';
 
 export interface MUITableProps {
   numSelected: number;
@@ -24,7 +24,7 @@ export default function MUITableHead({
   onSelectAllClick,
 }: MUITableProps) {
   const path = useLocation().pathname;
-  const user = useUser() as any;
+  const info = useInfo() as any;
 
   let headCells:
     | readonly UserHeadCell[]
@@ -34,7 +34,7 @@ export default function MUITableHead({
 
   if (path === '/users') headCells = userHeadCells;
   if (path === '/admin_users') headCells = adminUserHeadCells;
-  if (path === '/lessons' || path === `/users/${user!.id}`)
+  if (path === '/lessons' || path === `/users/${info!.id}`)
     headCells = lessonHeadCells;
 
   return (

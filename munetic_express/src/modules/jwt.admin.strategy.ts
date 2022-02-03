@@ -26,6 +26,8 @@ export const JwtAdminAccessStrategy = () =>
 export const JwtAdminRefreshStrategy = () =>
   new Strategy(refreshOpts, JwtAdminStrategyCallback);
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
+export const jwtAdminAuth = () =>
+  passport.authenticate('jwt-admin', { session: false });
+
+export const jwtReAdminAuth = () =>
+  passport.authenticate('jwtRefresh-admin', { session: false });

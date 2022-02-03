@@ -6,7 +6,7 @@
     "build": "tsc && npx vite build",
     "test": "vite-jest",
     "dev": "tsc && npx vite build && vite serve",
-    "serve": "tsc && npx vite build && serve dist -l 2424"
+    "serve": "tsc && npx vite build && serve dist -s -l 2424"
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",

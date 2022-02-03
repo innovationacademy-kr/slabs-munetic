@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import MuiBottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -9,17 +9,35 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled } from '@mui/material';
 import palette from '../../style/palette';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BottomNavigationAction = styled(MuiBottomNavigationAction)(`
   &.Mui-selected {
     color: ${palette.darkBlue};
   }
-  background-color: ${palette.ivory};
+  background-color: ${palette.green};
   color: ${palette.grayBlue};
 `);
 
 export default function BottomMenu() {
+  const currentPath = useLocation().pathname;
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
+
+  const onChangeMenu = (event: any, newValue: number) => {
+    setValue(newValue);
+    const paths = ['/', '/search', '/profile/manage', '/bookmark', '/setting'];
+    navigate(paths[newValue]);
+  };
+
+  useEffect(() => {
+    if (currentPath.includes('/profile/')) {
+      setValue(2);
+    } //나머지 메뉴들 생기면 추가로 만들어줘야함
+    else {
+      setValue(0);
+    }
+  }, [currentPath]);
 
   return (
     <Box
@@ -28,9 +46,7 @@ export default function BottomMenu() {
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
+        onChange={(event, newValue) => onChangeMenu(event, newValue)}
       >
         <BottomNavigationAction label="홈" icon={<HomeIcon />} />
         <BottomNavigationAction label="검색" icon={<SearchIcon />} />

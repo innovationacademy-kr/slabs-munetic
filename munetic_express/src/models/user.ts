@@ -136,6 +136,7 @@ export class User
         },
         image_url: {
           allowNull: true,
+          defaultValue: '/img/basicProfileImg.png',
           type: DataTypes.STRING(256),
         },
         introduction: {

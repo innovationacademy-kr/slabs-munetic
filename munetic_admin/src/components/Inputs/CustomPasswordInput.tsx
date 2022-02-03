@@ -15,15 +15,17 @@ interface PasswordInput {
   clickEvent: () => void;
   value: string;
   onChangeEvent: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
 }
 
-export default function CustomPasswordInputs({
+export default function CustomPasswordInput({
   width,
   fontSize,
   showPassword,
   clickEvent,
   value,
   onChangeEvent,
+  placeholder,
 }: PasswordInput) {
   return (
     <FormControl sx={{ m: 1, width }} variant="standard">
@@ -31,6 +33,7 @@ export default function CustomPasswordInputs({
         Password
       </InputLabel>
       <Input
+        placeholder={placeholder}
         sx={{ fontSize }}
         id="password"
         type={showPassword ? 'text' : 'password'}

@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useLoginUpdate } from '../../contexts/login';
 import { instance } from '../../lib/api';
 import * as Api from '../../lib/api';
-import { ClassNames } from '@emotion/react';
 
 export default function Menu() {
   const setLogin = useLoginUpdate();
@@ -25,7 +24,7 @@ export default function Menu() {
         localStorage.removeItem('user');
         if (setLogin) setLogin(false);
       })
-      .catch(err => console.log(err.response));
+      .catch(err => alert(err.response.data));
   }
 
   function stringAvatar(name: string) {
@@ -50,7 +49,7 @@ export default function Menu() {
                 <SubMenuListContainer>
                   <ul>
                     {subMenuLists[i].map((subMenu, j) => (
-                      <SubMenuList>
+                      <SubMenuList key={j}>
                         <Link to={subMenuLinks[i][j]}>{subMenu}</Link>
                       </SubMenuList>
                     ))}
@@ -65,7 +64,12 @@ export default function Menu() {
           {isSeen && (
             <Dropbox>
               <ul>
-                <DropboxContent onClick={logoutHandler}>logout</DropboxContent>
+                <DropboxContent onClick={logoutHandler}>
+                  로그아웃
+                </DropboxContent>
+                <Link to="/auth/password">
+                  <DropboxContent>비밀번호 변경</DropboxContent>
+                </Link>
               </ul>
             </Dropbox>
           )}
@@ -194,5 +198,9 @@ const DropboxContent = styled.li`
   font-size: 1.3rem;
   color: white;
   padding: 1rem;
+  margin: 0.2rem;
   text-align: center;
+  &:not(:last-child) {
+    border-bottom: 0.1rem solid white;
+  }
 `;
