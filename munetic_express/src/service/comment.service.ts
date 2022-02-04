@@ -23,7 +23,17 @@ export const searchAllCommentsByUserId = async (
   });
   if (!searchUserID)
     throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');
-  const searchAllComments = await searchUserID.getComments();
+  const searchAllComments = await searchUserID.getComments({
+    attributes: {
+      exclude: ['user_id', 'createdAt', 'deletedAt'],
+    },
+    include: [
+      {
+        model: Lesson,
+        attributes: ["id", "category_id", "title"],
+      }
+    ],
+  });
   return searchAllComments;
 };
 
@@ -40,7 +50,16 @@ export const searchAllCommentsByLessonId = async (
   const searchAllComments = await Comment.findAll({
     where: {
       lesson_id,
-    }
+    },
+    attributes: {
+      exclude: ['user_id', 'createdAt', 'deletedAt'],
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["type", "login_id", "nickname", "image_url"],
+      }
+    ],
   })
   return searchAllComments;
 };

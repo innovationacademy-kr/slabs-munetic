@@ -45,7 +45,6 @@ export const getCommentsByLessonId: RequestHandler = async (req, res, next) => {
   try {
     let lesson_id: number = parseInt(req.params.lesson_id, 10); 
     if (Number.isNaN(lesson_id)) {
-      console.log("레슨 ID엔 숫자만 올 수 있습니다.");
       next(new ErrorResponse(Status.BAD_REQUEST, '레슨 ID엔 숫자만 올 수 있습니다.'));
     } else if (!req.user) {
       next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
