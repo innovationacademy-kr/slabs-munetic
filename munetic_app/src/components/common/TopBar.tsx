@@ -114,7 +114,7 @@ export default function TopBar() {
         </div>
         <div className="topBarCenter">
           <Link to="/">
-            <span className="logo">MUNETIC</span>
+            <span className="logo">MUNETIC!</span>
           </Link>
         </div>
         <div className="topBarRight">
