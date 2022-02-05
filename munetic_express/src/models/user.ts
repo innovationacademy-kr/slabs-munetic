@@ -1,4 +1,5 @@
-import { Model, Optional, Sequelize, DataTypes } from 'sequelize';
+import { Model, Optional, Sequelize, DataTypes, HasManyGetAssociationsMixin } from 'sequelize';
+import { Comment } from '../models/comment';
 
 export enum Account {
   Student = 'Student',
@@ -74,6 +75,8 @@ export class User
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
+
+  declare getComments: HasManyGetAssociationsMixin<Comment>;
 
   static initModel(sequelize: Sequelize): typeof User {
     return User.init(

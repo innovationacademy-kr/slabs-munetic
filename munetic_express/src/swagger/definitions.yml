@@ -269,3 +269,74 @@ definitions:
         # TODO: 레슨 타입에 대한 명확한 정의 필요 joopark
         description: 'Lesson Object'
         type: object
+
+  Comment:
+    type: object
+    properties:
+      id:
+        description: 'Comment ID'
+        type: number
+        format: int32
+      user_id:
+        description: 'User ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      content:
+        description: 'comment'
+        type: string
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      createdAt:
+        description: 'The time when the Column was created'
+        type: string
+
+  CommentByUser:
+    type: object
+    properties:
+      id:
+        description: 'Comment ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      content:
+        description: 'comment'
+        type: string
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      Lesson:
+        description: 'lesson of comment'
+        type: object
+
+  CommentByLesson:
+    type: object
+    required:
+      - 'id'
+      - 'content'
+      - 'updatedAt'
+    properties:
+      id:
+        description: 'Comment ID'
+        type: number
+        format: int32
+      lesson_id:
+        description: 'Lesson ID'
+        type: number
+        format: int32
+      content:
+        description: '댓글 내용'
+        type: string
+      updatedAt:
+        description: 'The time when the Column was updated'
+        type: string
+      User:
+        description: 'user who wrote comment'
+        type: object
