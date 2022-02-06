@@ -16,7 +16,7 @@ export const getLessonsAll: RequestHandler = async (req, res, next) => {
         let result: ResJSON;
         const data = await SearchService.searchLessonsAll()
         result = new ResJSON(
-            '데이터를 가져오는데 성공하였습니다.',
+            '데이터를 불러오는데 성공하였습니다.',
             data,
         )
         res.status(Status.OK).json(result);
