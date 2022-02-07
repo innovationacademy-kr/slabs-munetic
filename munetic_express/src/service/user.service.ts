@@ -168,3 +168,14 @@ export const findAllUserById = async (id: number) => {
   }
   return user;
 };
+
+export const findTutorIdByName = async (tutor_name: string) => {
+  const data = await User.findOne({
+      where: {
+          name: tutor_name
+      },
+      attributes: ['id']
+  })
+  if (data === null) return {id: 0};
+  return data;
+}
