@@ -5,7 +5,7 @@ export default function WriteClassPage() {
   return (
     <>
       <ClassWrite />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

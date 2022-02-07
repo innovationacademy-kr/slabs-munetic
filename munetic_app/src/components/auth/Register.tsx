@@ -89,6 +89,7 @@ const StyledButton = styled(Button)`
   height: 40px;
   border-radius: 5px;
   font-size: 18px;
+  cursor: pointer;
   ::before {
     padding-top: 0%;
   }
