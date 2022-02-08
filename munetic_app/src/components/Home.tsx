@@ -98,45 +98,43 @@ export default function Home() {
 
   return (
     <>
-    {loggedUser ? 
-    (
-      <>
-      <Container>
-        <div className="homeButtonWrapper">
-          <div className="homeFindButton">
-            <Button to="/lesson/category">레슨 찾기</Button>
-          </div>
-          <div className="homeRegisterButton">
-            {loggedUser ? (
-              <Button to="/lesson/manage">레슨 등록</Button>
-            ) : (
-              <Button to="/auth/register?tutor=tutor">
-                레슨 등록(선생님 계정 필요)
-              </Button>
-            )}
-          </div>
-        </div>
-        <button onClick={onClickLogout}>로그아웃</button>
-        <button onClick={onClickSignupTutor}>튜터 회원가입</button>
-      </Container>
-      <BottomMenu />
-      </>
-    ) : (
-      <InitialPageContainer>
-        <InitialPageCard>
-          <div>
-            <Logo>
-              <span>MUNETIC</span>
-            </Logo>
-            <Buttons>
-              <CustomButton onClick={onClickLogin}>로그인</CustomButton>
-              <CustomButton onClick={onClickSignup}>회원가입</CustomButton>
-            </Buttons>
-          </div>
-        </InitialPageCard>
-      </InitialPageContainer>
-    )
-    }
+      {loggedUser ? (
+        <>
+          <Container>
+            <div className="homeButtonWrapper">
+              <div className="homeFindButton">
+                <Button to="/lesson/category">레슨 찾기</Button>
+              </div>
+              <div className="homeRegisterButton">
+                {loggedUser ? (
+                  <Button to="/lesson/manage">레슨 등록</Button>
+                ) : (
+                  <Button to="/auth/register?tutor=tutor">
+                    레슨 등록(선생님 계정 필요)
+                  </Button>
+                )}
+              </div>
+            </div>
+            <button onClick={onClickLogout}>로그아웃</button>
+            <button onClick={onClickSignupTutor}>튜터 회원가입</button>
+          </Container>
+          {/* <BottomMenu /> */}
+        </>
+      ) : (
+        <InitialPageContainer>
+          <InitialPageCard>
+            <div>
+              <Logo>
+                <span>MUNETIC</span>
+              </Logo>
+              <Buttons>
+                <CustomButton onClick={onClickLogin}>로그인</CustomButton>
+                <CustomButton onClick={onClickSignup}>회원가입</CustomButton>
+              </Buttons>
+            </div>
+          </InitialPageCard>
+        </InitialPageContainer>
+      )}
     </>
   );
 }

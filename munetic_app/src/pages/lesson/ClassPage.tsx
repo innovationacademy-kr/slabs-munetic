@@ -5,7 +5,7 @@ export default function ClassPage() {
   return (
     <>
       <Class />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }
