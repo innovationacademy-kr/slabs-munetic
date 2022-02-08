@@ -4,5 +4,5 @@ export default {
   lightBlue: '#a8dadc',
   green: '#f1faee',
   ivory: '#fbfefb',
-  red: '#e63946',
+  red: '#d22227',
 };

@@ -12,6 +12,7 @@ import { LessonData } from '../../types/lessonData';
 import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
 import Comment from './Comment';
+import CommentTop from './CommentTop';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -195,6 +196,31 @@ export default function Class() {
     '수업 시간': minute_per_lesson,
   };
 
+  const getComment = async () => {
+    try {
+      const lesson_id: number = Number(classId);
+      const res = await CommentAPI.getCommentByLesson(lesson_id);
+      const comments_arr = convertComment(res.data.data);
+      setComments(comments_arr);
+    } catch (e) {
+      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+    }
+  }
+
+  const sortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      b.stars - a.stars
+    ));
+    setComments(new_comments);
+  }
+
+  const sortByTime = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.commentListId - b.commentListId
+    ));
+    setComments(new_comments);
+  }
+
   useEffect(() => {
     async function getLessonById(id: string) {
       try {
@@ -204,18 +230,9 @@ export default function Class() {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
       }
     }
-    async function getComment(lesson_id: number) {
-      try {
-        const res = await CommentAPI.getCommentByLesson(lesson_id);
-        const comments_arr = convertComment(res.data.data);
-        setComments(comments_arr);
-      } catch (e) {
-        console.log(e, 'id로 레슨을 불러오지 못했습니다.');
-      }
-    }
     if (classId) {
       getLessonById(classId);
-      getComment(Number(classId));
+      getComment();
     }
   }, [classId]);
 
@@ -252,6 +269,7 @@ export default function Class() {
           <div className="contentText">{content}</div>
         </div>
       </ClassContent>
+      <CommentTop commentCount={comments.length} refrash={getComment} sortByTime={sortByTime} sortByStar={sortByStar} />
       <Comment comments_arr={comments} />
     </ClassContainer>
   );
