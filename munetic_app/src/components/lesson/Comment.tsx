@@ -84,6 +84,19 @@ const Date = styled.span`
 `;
 
 /**
+ * 댓글의 수정 여부를 나타내는 (span 태그) 컴포넌트입니다.
+ * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
+ * 
+ * @author joohongpark
+ */
+const Modified = styled.span`
+  padding: 5px 12px;
+  font-size: 9px;
+  font-style: italic;
+  color: ${palette.darkBlue};
+`;
+
+/**
  * 댓글의 수정 및 삭제 버튼을 감싸는 (div 태그) 컴포넌트입니다.
  * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
  * 
@@ -117,7 +130,10 @@ const Stars = styled.div`
 export default function Comment({comments_arr} : CommentPropsType) {
   const comments = comments_arr.map((comment: CommentDataType) =>
     <ListComment key={comment.commentListId}>
-      <Nickname>{comment.nickname}</Nickname>
+      <Nickname>
+        {comment.nickname}
+        {comment.modified && <Modified>(댓글 수정됨)</Modified>}
+      </Nickname>
       <Text>{comment.text}</Text>
       <Date>{comment.date}</Date>
       {

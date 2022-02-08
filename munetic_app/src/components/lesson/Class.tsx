@@ -110,16 +110,16 @@ const ClassContent = styled.div`
  */
 function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType> {
   // FIXME: 추후에 브라우저 로컬저장소 ID에 double quote 들어가는거 제거해야 함.
-  // FIXME: 다음 커밋에 백엔드단에 별, 댓글 생성 날짜 가져오는거 추가해야 함.
   const login_id: string | undefined = localStorage.getItem('user')?.replace(/["]+/g, '');
   return (arr.map((comment: any) => 
     ({
       commentListId: comment.id,
       nickname: comment.User.nickname,
       text: comment.content,
-      date: "02.07",
-      stars: 2,
+      date: (comment.updatedAt !== null) ? comment.updatedAt : comment.createdAt,
+      stars: comment.stars,
       accessible: (comment.User.login_id === login_id),
+      modified: (comment.updatedAt !== null),
     })
   ));
 };

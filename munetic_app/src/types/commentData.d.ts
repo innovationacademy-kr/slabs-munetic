@@ -10,6 +10,7 @@ export interface CommentDataType {
   date: string;
   stars: number;
   accessible: boolean;
+  modified: boolean;
 }
 
 /**
