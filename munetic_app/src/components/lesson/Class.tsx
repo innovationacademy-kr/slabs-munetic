@@ -9,6 +9,7 @@ import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
 import { LessonData } from '../../types/lessonData';
 import { Gender } from '../../types/enums';
+import Comment from './Comment';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -96,6 +97,42 @@ const ClassContent = styled.div`
     font-size: 16px;
   }
 `;
+
+/**
+ * 목업용 데이터 (서버 연동 후 삭제 예정)
+ * 
+ * @author joohongpark
+ */
+const comments_arr_ex = [
+  {
+    commentListId: 1,
+    nickname: "주팍",
+    text: "와 이강의 대박인데요? 짱이다",
+    date: "02.07",
+    stars: 1
+  },
+  {
+    commentListId: 2,
+    nickname: "joopark",
+    text: "ㄴ 그러니깐요 진짜 백점짜리 강의인거같아요",
+    date: "02.07",
+    stars: 2
+  },
+  {
+    commentListId: 3,
+    nickname: "푸주",
+    text: "ㄴ ㄹㅇㅋㅋ",
+    date: "02.07",
+    stars: 3
+  },
+  {
+    commentListId: 4,
+    nickname: "마라탕",
+    text: "ㄴㄴ ㄹㅇㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
+    date: "02.07",
+    stars: 5
+  },
+];
 
 interface InfosType {
   나이: string;
@@ -213,6 +250,7 @@ export default function Class() {
           <div className="contentText">{content}</div>
         </div>
       </ClassContent>
+      <Comment comments_arr={comments_arr_ex} />
     </ClassContainer>
   );
 }
