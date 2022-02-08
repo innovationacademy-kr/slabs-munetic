@@ -7,6 +7,7 @@
  export interface FunctionPropsType {
   refrash: () => void;
   sortByTime: () => void;
-  sortByStar: () => void;
+  incSortByStar: () => void;
+  decSortByStar: () => void;
   commentCount: number;
 }

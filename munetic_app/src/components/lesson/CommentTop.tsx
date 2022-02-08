@@ -75,7 +75,7 @@ const RightBox = styled.div`
  * @returns 리액트 앨리먼트 
  * @author joohongpark
  */
-export default function CommentTop({refrash, sortByTime, sortByStar, commentCount}: FunctionPropsType) {
+export default function CommentTop({refrash, sortByTime, incSortByStar, decSortByStar, commentCount}: FunctionPropsType) {
   return (
   <ContentBox>
     <LeftBox>
@@ -83,9 +83,10 @@ export default function CommentTop({refrash, sortByTime, sortByStar, commentCoun
       <CommentCount>{commentCount}</CommentCount>
     </LeftBox>
     <RightBox>
-      <TextBox><button className="del" onClick={refrash}>새로고침</button></TextBox>
-      <TextBox><button className="del" onClick={sortByTime}>등록순</button></TextBox>
-      <TextBox><button className="del" onClick={sortByStar}>별점순</button></TextBox>
+      <TextBox><button onClick={refrash}>새로고침</button></TextBox>
+      <TextBox><button onClick={sortByTime}>등록순</button></TextBox>
+      <TextBox><button onClick={incSortByStar}>별점 높은순</button></TextBox>
+      <TextBox><button onClick={decSortByStar}>별점 낮은순</button></TextBox>
     </RightBox>
   </ContentBox>
   );

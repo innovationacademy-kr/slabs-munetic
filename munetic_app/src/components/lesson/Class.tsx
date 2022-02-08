@@ -214,6 +214,13 @@ export default function Class() {
     setComments(new_comments);
   }
 
+  const decSortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.stars - b.stars
+    ));
+    setComments(new_comments);
+  }
+
   const sortByTime = () => {
     const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
       a.commentListId - b.commentListId
@@ -269,7 +276,12 @@ export default function Class() {
           <div className="contentText">{content}</div>
         </div>
       </ClassContent>
-      <CommentTop commentCount={comments.length} refrash={getComment} sortByTime={sortByTime} sortByStar={sortByStar} />
+      <CommentTop
+        commentCount={comments.length}
+        refrash={getComment}
+        sortByTime={sortByTime}
+        incSortByStar={sortByStar}
+        decSortByStar={decSortByStar} />
       <Comment comments_arr={comments} />
     </ClassContainer>
   );
