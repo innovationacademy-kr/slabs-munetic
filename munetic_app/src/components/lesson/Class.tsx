@@ -7,8 +7,12 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
+import * as CommentAPI from '../../lib/api/comment';
 import { LessonData } from '../../types/lessonData';
+import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
+import Comment from './Comment';
+import CommentTop from './CommentTop';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -97,6 +101,31 @@ const ClassContent = styled.div`
   }
 `;
 
+/**
+ * 서버에서 전달받은 댓글 객체를 클라이언트가 읽을 수 있는 객체로 변환하는 함수입니다.
+ * 개발 중 변경 사항이 많을듯 하여 파라미터는 any 타입의 배열로 받습니다.
+ * 
+ * @param ReadonlyArray<any> 
+ * @returns ReadonlyArray<CommentDataType>
+ * @author joohongpark
+ */
+function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType> {
+  // FIXME: 추후에 브라우저 로컬저장소 ID에 double quote 들어가는거 제거해야 함.
+  const login_id: string | undefined = localStorage.getItem('user')?.replace(/["]+/g, '');
+  return (arr.map((comment: any) => 
+    ({
+      commentListId: comment.id,
+      nickname: comment.User.nickname,
+      text: comment.content,
+      date: (comment.updatedAt !== null) ? comment.updatedAt : comment.createdAt,
+      stars: comment.stars,
+      accessible: (comment.User.login_id === login_id),
+      modified: (comment.updatedAt !== null),
+    })
+  ));
+};
+
+
 interface InfosType {
   나이: string;
   '지역/장소': string;
@@ -129,6 +158,7 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
 
 export default function Class() {
   const classId = useParams().id;
+  const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
   const [classInfo, setClassInfo] = useState<LessonData>({
     lesson_id: 0,
     tutor_id: 0,
@@ -166,6 +196,38 @@ export default function Class() {
     '수업 시간': minute_per_lesson,
   };
 
+  const getComment = async () => {
+    try {
+      const lesson_id: number = Number(classId);
+      const res = await CommentAPI.getCommentByLesson(lesson_id);
+      const comments_arr = convertComment(res.data.data);
+      setComments(comments_arr);
+    } catch (e) {
+      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+    }
+  }
+
+  const sortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      b.stars - a.stars
+    ));
+    setComments(new_comments);
+  }
+
+  const decSortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.stars - b.stars
+    ));
+    setComments(new_comments);
+  }
+
+  const sortByTime = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.commentListId - b.commentListId
+    ));
+    setComments(new_comments);
+  }
+
   useEffect(() => {
     async function getLessonById(id: string) {
       try {
@@ -177,6 +239,7 @@ export default function Class() {
     }
     if (classId) {
       getLessonById(classId);
+      getComment();
     }
   }, [classId]);
 
@@ -213,6 +276,13 @@ export default function Class() {
           <div className="contentText">{content}</div>
         </div>
       </ClassContent>
+      <CommentTop
+        commentCount={comments.length}
+        refrash={getComment}
+        sortByTime={sortByTime}
+        incSortByStar={sortByStar}
+        decSortByStar={decSortByStar} />
+      <Comment comments_arr={comments} />
     </ClassContainer>
   );
 }

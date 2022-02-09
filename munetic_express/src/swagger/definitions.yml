@@ -309,6 +309,9 @@ definitions:
       content:
         description: 'comment'
         type: string
+      stars:
+        description: '별 개수'
+        type: integer
       updatedAt:
         description: 'The time when the Column was updated'
         type: string
@@ -334,6 +337,9 @@ definitions:
       content:
         description: '댓글 내용'
         type: string
+      stars:
+        description: '별 개수'
+        type: integer
       updatedAt:
         description: 'The time when the Column was updated'
         type: string

@@ -10,6 +10,7 @@ export interface commentAttributes {
   user_id: number;
   lesson_id: number;
   content: string;
+  stars: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -37,6 +38,7 @@ export class Comment
   public user_id!: number;
   public lesson_id!: number;
   public content!: string;
+  public stars!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -61,6 +63,10 @@ export class Comment
         content: {
           allowNull: false,
           type: DataTypes.STRING(8192),
+        },
+        stars: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
         },
         createdAt: {
           field: 'createdAt',

@@ -74,15 +74,22 @@ export const getCommentsByLessonId: RequestHandler = async (req, res, next) => {
  */
 export const putComment: RequestHandler = async (req, res, next) => {
   try {
-    if (!req.body.comment) {
+    let lesson_id: number = parseInt(req.params.lesson_id, 10);
+    let stars: number = parseInt(req.body.stars, 10);
+    if (Number.isNaN(lesson_id) || Number.isNaN(stars)) {
+      next(new ErrorResponse(Status.BAD_REQUEST, '레슨 ID 혹은 별 개수엔 숫자만 올 수 있습니다.'));
+    } else if (stars < 0 || stars > 5) {
+      next(new ErrorResponse(Status.BAD_REQUEST, '별 개수는 1부터 5까지 입력 가능합니다.'));
+    } else if (!req.body.comment) {
       next(new ErrorResponse(Status.BAD_REQUEST, '댓글 내용을 적어주세요'));
     } else if (!req.user) {
       next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
     } else {
       let comment = await CommentService.addComment(
         req.user.id,
-        parseInt(req.params.lesson_id, 10),
+        lesson_id,
         req.body.comment,
+        stars,
       );
       let result: ResJSON = new ResJSON(
         '레슨에 댓글을 저장하는데 성공하였습니다.',
@@ -106,8 +113,11 @@ export const putComment: RequestHandler = async (req, res, next) => {
 export const updateComment: RequestHandler = async (req, res, next) => {
   try {
     let comment_id: number = parseInt(req.params.comment_id, 10);
-    if (Number.isNaN(comment_id)) {
-      next(new ErrorResponse(Status.BAD_REQUEST, '댓글 ID엔 숫자만 올 수 있습니다.'));
+    let stars: number = parseInt(req.body.stars, 10);
+    if (Number.isNaN(comment_id) || Number.isNaN(stars)) {
+      next(new ErrorResponse(Status.BAD_REQUEST, '댓글 ID 혹은 별 개수엔 숫자만 올 수 있습니다.'));
+    } else if (stars < 0 || stars > 5) {
+      next(new ErrorResponse(Status.BAD_REQUEST, '별 개수는 1부터 5까지 입력 가능합니다.'));
     } else if (!req.body.comment) {
       next(new ErrorResponse(Status.BAD_REQUEST, '댓글 내용을 적어주세요'));
     } else if (!req.user) {
@@ -116,6 +126,7 @@ export const updateComment: RequestHandler = async (req, res, next) => {
       let updated = await CommentService.updateComment(
         comment_id,
         req.body.comment,
+        stars,
       );
       let result: ResJSON = new ResJSON(
         updated ? '레슨에 댓글을 업데이트하는데 성공하였습니다.' : '존재하지 않는 댓글입니다.',

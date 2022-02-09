@@ -52,7 +52,7 @@ export const searchAllCommentsByLessonId = async (
       lesson_id,
     },
     attributes: {
-      exclude: ['user_id', 'createdAt', 'deletedAt'],
+      exclude: ['user_id', 'deletedAt'],
     },
     include: [
       {
@@ -70,6 +70,7 @@ export const searchAllCommentsByLessonId = async (
  * @param user_id user ID
  * @param lesson_id lesson ID
  * @param comment comment
+ * @param stars stars
  * @returns Promise<Comment>
  * @throws ErrorResponse if it fails to register to comment.
  * @author joohongpark
@@ -78,11 +79,13 @@ export const addComment = async (
   user_id: number,
   lesson_id: number,
   comment: string,
+  stars: number,
 ): Promise< Comment > => {
   const newComment: Comment = Comment.build({
     user_id,
     lesson_id,
     content: comment,
+    stars,
   });
   const rtn = newComment.save().catch(() => {
     throw new ErrorResponse(Status.BAD_REQUEST, '댓글 등록에 실패하였습니다.');
@@ -95,16 +98,19 @@ export const addComment = async (
  * 
  * @param comment_id comment ID
  * @param comment comment
+ * @param stars stars
  * @returns Promise< boolean >
  * @author joohongpark
  */
 export const updateComment = async (
   comment_id: number,
   comment: string,
+  stars: number,
 ): Promise< boolean > => {
   const rtn = await Comment.update(
     {
       content: comment,
+      stars,
     },
     {
       where: {
