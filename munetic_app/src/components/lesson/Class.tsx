@@ -13,6 +13,7 @@ import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
 import Comment from './Comment';
 import CommentTop from './CommentTop';
+import CommentWrite from './CommentWrite';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -103,7 +104,7 @@ const ClassContent = styled.div`
 
 /**
  * 서버에서 전달받은 댓글 객체를 클라이언트가 읽을 수 있는 객체로 변환하는 함수입니다.
- * 개발 중 변경 사항이 많을듯 하여 파라미터는 any 타입의 배열로 받습니다.
+ * 개발 중 변경 사항이 많을듯 하여 파라미터는 임시로 any 타입의 배열로 받습니다.
  * 
  * @param ReadonlyArray<any> 
  * @returns ReadonlyArray<CommentDataType>
@@ -117,10 +118,10 @@ function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType>
       commentListId: comment.id,
       nickname: comment.User.nickname,
       text: comment.content,
-      date: (comment.updatedAt !== null) ? comment.updatedAt : comment.createdAt,
+      date: (comment.updatedAt !== comment.createdAt) ? comment.updatedAt : comment.createdAt,
       stars: comment.stars,
       accessible: (comment.User.login_id === login_id),
-      modified: (comment.updatedAt !== null),
+      modified: (comment.updatedAt !== comment.createdAt),
     })
   ));
 };
@@ -228,6 +229,45 @@ export default function Class() {
     setComments(new_comments);
   }
 
+  const addComment = async (stars: number | null, comment: string) => {
+    if (!comment) {
+      alert('댓글 내용을 입력하세요');
+      return ;
+    }
+    const star: number = (stars === null) ? 1 : stars;
+    try {
+      await CommentAPI.addComment(Number(classId), comment, star);
+      getComment();
+    } catch (e) {
+      alert('댓글 추가에 실패하였습니다.');
+      console.log(e, '댓글 추가에 실패하였습니다.');
+    }
+  }
+
+  const modComment = async (commentId:number, stars: number, comment: string) => {
+    if (!comment) {
+      alert('댓글 내용을 입력하세요');
+      return ;
+    }
+    try {
+      await CommentAPI.modComment(commentId, comment, stars);
+      getComment();
+    } catch (e) {
+      alert('댓글 수정에 실패하였습니다.');
+      console.log(e, '댓글 수정에 실패하였습니다.');
+    }
+  }
+
+  const delComment = async (commentId:number) => {
+    try {
+      await CommentAPI.delComment(commentId);
+      getComment();
+    } catch (e) {
+      alert('댓글 삭제에 실패하였습니다.');
+      console.log(e, '댓글 삭제에 실패하였습니다.');
+    }
+  }
+
   useEffect(() => {
     async function getLessonById(id: string) {
       try {
@@ -282,7 +322,10 @@ export default function Class() {
         sortByTime={sortByTime}
         incSortByStar={sortByStar}
         decSortByStar={decSortByStar} />
-      <Comment comments_arr={comments} />
+      <Comment comments_arr={comments} edit={modComment} del={delComment} />
+      <CommentWrite initStars={5} initComment={""} submit={addComment} />
+      <ClassContent>
+      </ClassContent>
     </ClassContainer>
   );
 }

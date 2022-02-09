@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import styled from 'styled-components';
+import { Rating } from '@mui/material';
 import palette from '../../style/palette';
-import { CommentDataType, CommentPropsType } from '../../types/commentData';
+import { CommentDataType, OneCommentPropsType, CommentPropsType } from '../../types/commentData';
+import CommentWrite from './CommentWrite';
 
 /**
  * 댓글이 없을 경우 렌더링되는 컴포넌트입니다.
@@ -26,7 +29,6 @@ const UnorderListComments = styled.ul`
   font-weight: bold;
   color: ${palette.darkBlue};
   border-bottom: 1px solid ${palette.darkBlue};
-  margin-bottom: 60px !important; /* FIXME: 하단바에 댓글이 가려저 임시로 넣었는데 근본적인 해결이 필요할 듯 합니다. */
 `;
 
 /**
@@ -122,32 +124,80 @@ const Stars = styled.div`
 `;
 
 /**
- * 댓글 컴포넌트입니다. 프로퍼티로 댓글의 배열을 넣어야 합니다. 댓글이 없을 경우 빈 배열을 넣어야 합니다.
+ * 하나의 댓글을 구성하는 컴포넌트입니다. 리스트로 구성되므로 key를 설정합니다.
  * 
- * @param props.comments_arr 댓글 배열
+ * @param props.comment CommentDataType 하나의 댓글에 들어갈 정보 객체
+ * @param props.edit 삭제 버튼을 누를 때 실행되는 콜백함수
+ * @param props.del 삭제 버튼을 누를 때 실행되는 콜백함수
  * @returns 리액트 앨리먼트
  */
-export default function Comment({comments_arr} : CommentPropsType) {
-  const comments = comments_arr.map((comment: CommentDataType) =>
+function OneComment({comment, edit, del} : OneCommentPropsType) {
+  const [editable, setEditable] = useState<boolean>(true);
+
+  const commentDel = async () => {
+    del(comment.commentListId);
+  }
+
+  const commentMod = async (newStars: number | null, newComment: string) => {
+    const star: number = (newStars === null) ? 1 : newStars;
+    if (newStars !== comment.stars || newComment !== comment.text) {
+      edit(comment.commentListId, star, newComment);
+    }
+    setEditable(!editable);
+  }
+
+  return (
     <ListComment key={comment.commentListId}>
       <Nickname>
         {comment.nickname}
         {comment.modified && <Modified>(댓글 수정됨)</Modified>}
       </Nickname>
-      <Text>{comment.text}</Text>
-      <Date>{comment.date}</Date>
       {
-        comment.accessible && 
-          <Buttons>
-            <button className="del">수정</button>
-            <button className="mod">삭제</button>
-          </Buttons>
+        editable ?
+        (
+          <>
+          <Text>{comment.text}</Text>
+          <Date>{comment.date}</Date>
+          {
+            comment.accessible && 
+              <Buttons>
+                <button onClick={() => setEditable(!editable)}>수정</button>
+                <button onClick={commentDel}>삭제</button>
+              </Buttons>
+          }
+          <Stars>
+            <Rating
+              size="small"
+              value={comment.stars}
+              readOnly />
+          </Stars>
+          </>
+        ) : (
+          <>
+            <Buttons>
+              <button onClick={() => setEditable(!editable)}>취소</button>
+            </Buttons>
+            <CommentWrite initStars={comment.stars} initComment={comment.text} submit={commentMod} />
+          </>
+        )
       }
-      <Stars>
-      {'⭑'.repeat(comment.stars)}
-      </Stars>
     </ListComment>
-  )
+  );
+}
+
+/**
+ * 댓글 컴포넌트입니다. 프로퍼티로 댓글의 배열을 넣어야 합니다. 댓글이 없을 경우 빈 배열을 넣어야 합니다.
+ * 
+ * @param props.comments_arr 댓글 배열
+ * @param props.edit 삭제 버튼을 누를 때 실행되는 콜백함수
+ * @param props.del 삭제 버튼을 누를 때 실행되는 콜백함수
+ * @returns 리액트 앨리먼트
+ */
+export default function Comment({comments_arr, edit, del} : CommentPropsType) {
+  const comments = comments_arr.map((comment: CommentDataType) => 
+    <OneComment comment={comment} edit={edit} del={del} />
+  );
+
   return (comments.length ? 
     (
       <UnorderListComments>{comments}</UnorderListComments>

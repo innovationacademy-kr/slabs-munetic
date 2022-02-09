@@ -14,10 +14,23 @@ export interface CommentDataType {
 }
 
 /**
+ * 하나의 댓글을 구성하는 컴포넌트의 프로퍼티를 지정합니다.
+ * 
+ * @author joohongpark
+ */
+export interface OneCommentPropsType {
+  comment: CommentDataType;
+  edit: (commentId:number, stars: number, comment: string) => void;
+  del: (commentId:number) => void;
+}
+
+/**
  * 프로퍼티로 받아야 하는 댓글 배열의 타입을 지정합니다.
  * 
  * @author joohongpark
  */
 export interface CommentPropsType {
   comments_arr: ReadonlyArray<CommentDataType>;
+  edit: (commentId:number, stars: number, comment: string) => void;
+  del: (commentId:number) => void;
 }
