@@ -6,5 +6,5 @@ export const router = Router();
 
 router.get('/', SearchAPI.getLessonsAll);
 router.get('/instrument/:category_name', SearchAPI.getLessonsByCategory);
-router.get('/title/:title_name', SearchAPI.getLessonsByTitle);
-router.get('/tutor/:tutor_name', SearchAPI.getLessonsByTutor);
+router.get('/title', SearchAPI.getLessonsByTitle);
+router.get('/tutor', SearchAPI.getLessonsByTutor);

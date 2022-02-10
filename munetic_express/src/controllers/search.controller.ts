@@ -57,7 +57,10 @@ export const getLessonsByCategory: RequestHandler = async (req, res, next) => {
 export const getLessonsByTitle: RequestHandler = async (req, res, next) => {
     try {
         let result: ResJSON;
-        const data = await SearchService.searchLessonsByTitle(req.params.title_name);
+
+        const category_name = req.query.category as string;
+        const title_name = req.query.title as string;
+        const data = await SearchService.searchLessonsByTitle(category_name, title_name);
         result = new ResJSON (
             '데이터를 불러오는데 성공하였습니다.',
             data
@@ -78,7 +81,10 @@ export const getLessonsByTitle: RequestHandler = async (req, res, next) => {
 export const getLessonsByTutor: RequestHandler = async (req, res, next) => {
     try {
         let result: ResJSON;
-        const data = await SearchService.searchLessonsByTutor(req.params.tutor_name);
+
+        const category_name = req.query.category as string;
+        const tutor_name = req.query.tutor as string;
+        const data = await SearchService.searchLessonsByTutor(category_name, tutor_name);
         result = new ResJSON (
             '데이터를 불러오는데 성공하였습니다.',
             data,

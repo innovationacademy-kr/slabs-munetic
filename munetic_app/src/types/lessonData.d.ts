@@ -26,3 +26,15 @@ export interface LessonWriteData {
   minute_per_lesson: number;
   content: string;
 }
+
+export interface LessonBlockData {
+  lesson_id: number;
+  tutor_id: number;
+  tutor_name: string;
+  image_url: string;
+  category: string;
+  title: string | null;
+  price: number | null;
+  location: string | null;
+  minute_per_lesson: number | null;
+}
