@@ -11,9 +11,8 @@ import { InputBox } from './common/Input';
 
 import * as SearchAPI from '../lib/api/search';
 import {ClassItemContainer} from './lesson/ClassList';
-import {lessonAttributes} from '../../../munetic_express/src/models/lesson'
 import { LessonBlockData } from '../types/lessonData';
-import * as UserService from '../../../munetic_express/src/service/user.service';
+
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
