@@ -18,7 +18,10 @@ export const searchAllLessonLikes = async (
 ): Promise< LessonLike[] > => {
   const searchLessonLikes = await LessonLike.findAll({
     where: {
-      user_id,
+      [Op.and]: [
+        { user_id },
+        { lesson_like: true },
+      ]
     },
     include: [
       {
@@ -50,7 +53,10 @@ export const getLikedPeoples = async (
 ): Promise< LessonLike[] > => {
   const searchLessonLikes = await LessonLike.findAll({
     where: {
-      lesson_id,
+      [Op.and]: [
+        { lesson_id },
+        { lesson_like: true },
+      ]
     },
     include: [
       {
