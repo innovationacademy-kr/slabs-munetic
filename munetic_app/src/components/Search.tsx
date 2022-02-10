@@ -10,9 +10,8 @@ import Select from './common/Select';
 import { InputBox } from './common/Input';
 
 import * as SearchAPI from '../lib/api/search';
-import {ClassItemContainer} from './lesson/ClassList';
+import { ClassItemContainer } from './lesson/ClassList';
 import { LessonBlockData } from '../types/lessonData';
-
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -62,11 +61,10 @@ const ClassListContainer = styled.div`
 `;
 
 interface IProp {
-  data: LessonBlockData
+  data: LessonBlockData;
 }
 
-const ClassItems = ({data}: IProp) => {
-  
+const ClassItems = ({ data }: IProp) => {
   return (
     <ClassItemContainer to={`/lesson/class/${data.lesson_id}`}>
       <div className="classItemDescription">
@@ -74,12 +72,11 @@ const ClassItems = ({data}: IProp) => {
         <span className="classItemTitle">{data.title}</span>
       </div>
     </ClassItemContainer>
-  )
-}
+  );
+};
 
-function convertResponse (arr: any): LessonBlockData[] {
-
-  return (arr.map((lesson: any) =>  ({
+function convertResponse(arr: any): LessonBlockData[] {
+  return arr.map((lesson: any) => ({
     lesson_id: lesson.id,
     tutor_id: lesson.tutor_id,
     tutor_name: lesson.User.name,
@@ -89,18 +86,17 @@ function convertResponse (arr: any): LessonBlockData[] {
     price: lesson.price,
     location: lesson.location,
     minute_per_lesson: lesson.minute_per_lesson,
-  })));
+  }));
 }
 
 export default function Search() {
   const { actions } = useContext(Contexts);
-  const [searchInput, setSearchInput] = useState<string | undefined>();
+  const [searchInput, setSearchInput] = useState<string | undefined>('');
   const [searchInstrument, setSearchInstrument] = useState<string | undefined>(
     '악기 전체',
   );
   const [searchValue, setSearchValue] = useState<string | undefined>('글 제목');
   const [searchResult, setSearchResult] = useState<LessonBlockData[]>();
-
 
   const onChangeSearch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value, name } = e.target;
@@ -115,7 +111,7 @@ export default function Search() {
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-  ) =>  setSearchInput(e.target.value);
+  ) => setSearchInput(e.target.value);
 
   const validateSearchForm = () => {
     if (!searchInput) {
@@ -130,14 +126,20 @@ export default function Search() {
     if (validateSearchForm()) {
       try {
         //검색 결과 받기
-        if (searchValue === "글 제목") {
-          const res = await SearchAPI.searchLessonsByTitle(searchInstrument, searchInput);
+        if (searchValue === '글 제목') {
+          const res = await SearchAPI.searchLessonsByTitle(
+            searchInstrument,
+            searchInput,
+          );
           setSearchResult(convertResponse(res.data.data));
-        } else{
-          const res = await SearchAPI.searchLessonsByTutor(searchInstrument, searchInput);
+        } else {
+          const res = await SearchAPI.searchLessonsByTutor(
+            searchInstrument,
+            searchInput,
+          );
           setSearchResult(convertResponse(res.data.data));
         }
-        
+
         //검색 결과 파싱
 
         //setSearchResult(true)
@@ -157,9 +159,16 @@ export default function Search() {
     <>
       <Container onSubmit={onSubmit}>
         <Select
-          options={['악기 전체', '기타', '드럼', '피아노', '하프', '첼로', '바이올린']}
+          options={[
+            '악기 전체',
+            '기타',
+            '드럼',
+            '피아노',
+            '하프',
+            '첼로',
+            '바이올린',
+          ]}
           value={searchInstrument}
-          defaultValue="전체"
           name="instrument"
           isValid={!!searchInstrument}
           onChange={onChangeSearch}
@@ -183,12 +192,10 @@ export default function Search() {
       </Container>
 
       <ClassListContainer>
-        {searchResult && 
-          (
-            searchResult.map(data => 
-              <ClassItems data={data} key={data.lesson_id}/>)
-          )
-        }
+        {searchResult &&
+          searchResult.map(data => (
+            <ClassItems data={data} key={data.lesson_id} />
+          ))}
       </ClassListContainer>
     </>
   );
