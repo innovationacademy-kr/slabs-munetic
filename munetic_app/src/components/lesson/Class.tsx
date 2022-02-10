@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
@@ -14,6 +12,8 @@ import { Gender } from '../../types/enums';
 import Comment from '../comment/Comment';
 import CommentTop from '../comment/CommentTop';
 import CommentWrite from '../comment/CommentWrite';
+import LikeButton from '../buttons/LikeButton';
+import BookmarkButton from '../buttons/BookmarkButton';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -45,6 +45,9 @@ const ClassProfileWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     margin: 10px;
+  }
+  .snsTop {
+    color: ${palette.red};
   }
 `;
 
@@ -294,8 +297,8 @@ export default function Class() {
         </div>
         <div className="sns">
           <div className="snsTop">
-            <FavoriteBorderIcon />
-            <BookmarkBorderIcon />
+            <LikeButton lesson_id={Number(classId)} />
+            <BookmarkButton />
           </div>
           <div className="snsBottom">
             <InstagramIcon />
