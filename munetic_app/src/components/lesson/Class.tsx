@@ -11,9 +11,9 @@ import * as CommentAPI from '../../lib/api/comment';
 import { LessonData } from '../../types/lessonData';
 import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
-import Comment from './Comment';
-import CommentTop from './CommentTop';
-import CommentWrite from './CommentWrite';
+import Comment from '../comment/Comment';
+import CommentTop from '../comment/CommentTop';
+import CommentWrite from '../comment/CommentWrite';
 
 const ClassContainer = styled.div`
   margin: 10px;

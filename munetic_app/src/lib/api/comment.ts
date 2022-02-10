@@ -12,6 +12,17 @@ export const getCommentByLesson = async (lesson_id: number) => {
 }
 
 /**
+ * 유저에 대한 댓글들을 받아옵니다.
+ * 
+ * @param user_id 유저 로그인 ID
+ * @returns Axios response
+ * @author joohongpark
+ */
+export const getCommentByUser = async (user_id: string) => {
+  return await client.get(`/comment/user/${user_id}`)
+}
+
+/**
  * 강의에 대해 댓글을 추가합니다.
  * 
  * @param lesson_id 강의 ID

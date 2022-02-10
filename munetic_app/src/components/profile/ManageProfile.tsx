@@ -56,12 +56,12 @@ const StyledButton = styled(Button)`
 const StyledEditButton = styled(Button)`
   background-color: white;
   font-size: 16px;
-  width: 70px;
+  width: 100px;
   height: 35px;
   border-radius: 5px;
   margin-left: 5px;
   .buttonText {
-    margin: 0;
+    width: 100px;
     color: ${palette.darkBlue};
   }
 `;
@@ -116,6 +116,9 @@ export default function ManageProfile() {
             <div className="sns">
               <StyledEditButton to={`/profile/edit/${userData.id}`}>
                 수정
+              </StyledEditButton>
+              <StyledEditButton to={`/profile/comment/${userData.login_id}`}>
+                작성한 댓글
               </StyledEditButton>
               <div className="snsBottom">
                 <InstagramIcon />
