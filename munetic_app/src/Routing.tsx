@@ -11,6 +11,8 @@ import ManageProfilePage from './pages/profile/ManageProfilePage';
 import EditProfilePage from './pages/profile/EditProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ViewCommentPage from './pages/comment/ViewCommentPage';
+import ViewMyLikesPage from './pages/profile/ViewMyLikesPage';
 
 export default function Routing() {
   return (
@@ -24,6 +26,8 @@ export default function Routing() {
       <Route path="/lesson/write" element={<WriteClassPage />} />
       <Route path="/lesson/write/:id" element={<WriteClassPage />} />
       <Route path="/profile/:id" element={<ViewProfilePage />} />
+      <Route path="/profile/comment/:id" element={<ViewCommentPage />} />
+      <Route path="/profile/likes/" element={<ViewMyLikesPage />} />
       <Route path="/profile/manage" element={<ManageProfilePage />} />
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
       <Route path="/auth/login" element={<LoginPage />} />

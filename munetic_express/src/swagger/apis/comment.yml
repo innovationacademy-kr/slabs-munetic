@@ -96,16 +96,19 @@ paths:
           type: integer
           format: int32
           required: true
-        - name: comment
+        - name: 'comment, stars'
           in: body
-          description: 'new Comment'
+          description: 'new Comment and stars'
           schema:
             type: object
             required:
               - 'comment'
+              - 'stars'
             properties:
               comment:
                 type: string
+              stars:
+                type: integer
       responses:
         '200':
           description: 댓글 추가에 성공하였을 때
@@ -147,16 +150,19 @@ paths:
           type: integer
           format: int32
           required: true
-        - name: comment
+        - name: 'comment, stars'
           in: body
-          description: 'new Comment'
+          description: 'new Comment and stars'
           schema:
             type: object
             required:
               - 'comment'
+              - 'stars'
             properties:
               comment:
                 type: string
+              stars:
+                type: integer
       responses:
         '200':
           description: 댓글 업데이트에 성공하거나 존재하지 않는 댓글일 때

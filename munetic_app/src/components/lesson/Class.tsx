@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
+import * as CommentAPI from '../../lib/api/comment';
 import { LessonData } from '../../types/lessonData';
+import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
+import Comment from '../comment/Comment';
+import CommentTop from '../comment/CommentTop';
+import CommentWrite from '../comment/CommentWrite';
+import LikeButton from '../buttons/LikeButton';
+import BookmarkButton from '../buttons/BookmarkButton';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -40,6 +45,9 @@ const ClassProfileWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     margin: 10px;
+  }
+  .snsTop {
+    color: ${palette.red};
   }
 `;
 
@@ -97,6 +105,31 @@ const ClassContent = styled.div`
   }
 `;
 
+/**
+ * 서버에서 전달받은 댓글 객체를 클라이언트가 읽을 수 있는 객체로 변환하는 함수입니다.
+ * 개발 중 변경 사항이 많을듯 하여 파라미터는 임시로 any 타입의 배열로 받습니다.
+ * 
+ * @param ReadonlyArray<any> 
+ * @returns ReadonlyArray<CommentDataType>
+ * @author joohongpark
+ */
+function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType> {
+  // FIXME: 추후에 브라우저 로컬저장소 ID에 double quote 들어가는거 제거해야 함.
+  const login_id: string | undefined = localStorage.getItem('user')?.replace(/["]+/g, '');
+  return (arr.map((comment: any) => 
+    ({
+      commentListId: comment.id,
+      nickname: comment.User.nickname,
+      text: comment.content,
+      date: (comment.updatedAt !== comment.createdAt) ? comment.updatedAt : comment.createdAt,
+      stars: comment.stars,
+      accessible: (comment.User.login_id === login_id),
+      modified: (comment.updatedAt !== comment.createdAt),
+    })
+  ));
+};
+
+
 interface InfosType {
   나이: string;
   '지역/장소': string;
@@ -129,6 +162,7 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
 
 export default function Class() {
   const classId = useParams().id;
+  const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
   const [classInfo, setClassInfo] = useState<LessonData>({
     lesson_id: 0,
     tutor_id: 0,
@@ -166,6 +200,77 @@ export default function Class() {
     '수업 시간': minute_per_lesson,
   };
 
+  const getComment = async () => {
+    try {
+      const lesson_id: number = Number(classId);
+      const res = await CommentAPI.getCommentByLesson(lesson_id);
+      const comments_arr = convertComment(res.data.data);
+      setComments(comments_arr);
+    } catch (e) {
+      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+    }
+  }
+
+  const sortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      b.stars - a.stars
+    ));
+    setComments(new_comments);
+  }
+
+  const decSortByStar = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.stars - b.stars
+    ));
+    setComments(new_comments);
+  }
+
+  const sortByTime = () => {
+    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
+      a.commentListId - b.commentListId
+    ));
+    setComments(new_comments);
+  }
+
+  const addComment = async (stars: number | null, comment: string) => {
+    if (!comment) {
+      alert('댓글 내용을 입력하세요');
+      return ;
+    }
+    const star: number = (stars === null) ? 1 : stars;
+    try {
+      await CommentAPI.addComment(Number(classId), comment, star);
+      getComment();
+    } catch (e) {
+      alert('댓글 추가에 실패하였습니다.');
+      console.log(e, '댓글 추가에 실패하였습니다.');
+    }
+  }
+
+  const modComment = async (commentId:number, stars: number, comment: string) => {
+    if (!comment) {
+      alert('댓글 내용을 입력하세요');
+      return ;
+    }
+    try {
+      await CommentAPI.modComment(commentId, comment, stars);
+      getComment();
+    } catch (e) {
+      alert('댓글 수정에 실패하였습니다.');
+      console.log(e, '댓글 수정에 실패하였습니다.');
+    }
+  }
+
+  const delComment = async (commentId:number) => {
+    try {
+      await CommentAPI.delComment(commentId);
+      getComment();
+    } catch (e) {
+      alert('댓글 삭제에 실패하였습니다.');
+      console.log(e, '댓글 삭제에 실패하였습니다.');
+    }
+  }
+
   useEffect(() => {
     async function getLessonById(id: string) {
       try {
@@ -177,6 +282,7 @@ export default function Class() {
     }
     if (classId) {
       getLessonById(classId);
+      getComment();
     }
   }, [classId]);
 
@@ -191,8 +297,8 @@ export default function Class() {
         </div>
         <div className="sns">
           <div className="snsTop">
-            <FavoriteBorderIcon />
-            <BookmarkBorderIcon />
+            <LikeButton lesson_id={Number(classId)} />
+            <BookmarkButton />
           </div>
           <div className="snsBottom">
             <InstagramIcon />
@@ -212,6 +318,16 @@ export default function Class() {
         <div className="contentBox">
           <div className="contentText">{content}</div>
         </div>
+      </ClassContent>
+      <CommentTop
+        commentCount={comments.length}
+        refrash={getComment}
+        sortByTime={sortByTime}
+        incSortByStar={sortByStar}
+        decSortByStar={decSortByStar} />
+      <Comment comments_arr={comments} edit={modComment} del={delComment} />
+      <CommentWrite initStars={5} initComment={""} submit={addComment} />
+      <ClassContent>
       </ClassContent>
     </ClassContainer>
   );
