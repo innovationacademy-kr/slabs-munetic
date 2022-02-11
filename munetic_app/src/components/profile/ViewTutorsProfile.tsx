@@ -64,7 +64,7 @@ export default function ViewTutorsProfile() {
           }}
         >
         {favTutors.map((tutor) => (
-          <ImageListItem>
+          <ImageListItem key={tutor.tutor_id}>
             <Badge
               overlap="circular"
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

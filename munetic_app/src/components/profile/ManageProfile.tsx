@@ -121,13 +121,13 @@ export default function ManageProfile() {
             </div>
             <div className="sns">
               <StyledEditButton to={`/profile/edit/${userData.id}`}>
-                수정
+                프로필 수정
               </StyledEditButton>
               <StyledEditButton to={`/profile/comment/${userData.login_id}`}>
                 작성한 댓글
               </StyledEditButton>
-              <StyledEditButton onClick={onClickLogout}>
-                로그아웃
+              <StyledEditButton to={`/profile/likes`}>
+                관심있는 강의
               </StyledEditButton>
             </div>
           </ProfileWrapper>
