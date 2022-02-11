@@ -5,7 +5,7 @@ export default function ViewProfilePage() {
   return (
     <>
       <ViewProfile />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

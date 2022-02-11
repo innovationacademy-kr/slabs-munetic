@@ -5,7 +5,7 @@ export default function ClassListPage() {
   return (
     <>
       <ClassList />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

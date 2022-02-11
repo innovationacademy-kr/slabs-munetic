@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router';
 import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
 import CategoryPage from './pages/lesson/CategoryPage';
 import ClassPage from './pages/lesson/ClassPage';
 import ClassListPage from './pages/lesson/ClassListPage';
@@ -20,6 +21,7 @@ export default function Routing() {
       <Route path="/lesson/classes" element={<ClassListPage />} />
       <Route path="/lesson/class/:id" element={<ClassPage />} />
       <Route path="/lesson/manage" element={<ManageClassPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/lesson/write" element={<WriteClassPage />} />
       <Route path="/lesson/write/:id" element={<WriteClassPage />} />
       <Route path="/profile/:id" element={<ViewProfilePage />} />

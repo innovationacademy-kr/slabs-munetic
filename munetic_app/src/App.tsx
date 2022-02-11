@@ -1,6 +1,7 @@
 import TopBar from './components/common/TopBar';
 import Routing from './Routing';
 import GlobalStyle from './style/GlobalStyle';
+import BottomMenu from './components/common/BottomMenu';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <GlobalStyle />
       <TopBar />
       <Routing />
+      <BottomMenu />
     </div>
   );
 }

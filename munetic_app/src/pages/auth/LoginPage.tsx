@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <>
       <Login />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

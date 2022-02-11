@@ -12,7 +12,7 @@ export const findAllCategory = async () => {
   return categories;
 };
 
-export const findCategoryIdByName = async (category_name: string) => {
+export const findCategoryIdByName = async (category_name: string): Promise<{id: number}> => {
   const data = await Category.findOne({
       where: {
           name: category_name

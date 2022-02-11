@@ -5,7 +5,7 @@ export default function EditProfilePage() {
   return (
     <>
       <EditProfile />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

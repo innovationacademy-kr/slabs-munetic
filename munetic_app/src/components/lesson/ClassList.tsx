@@ -12,7 +12,7 @@ const ClassListContainer = styled.div`
   margin-bottom: 66px;
 `;
 
-const ClassItemContainer = styled(Link)`
+export const ClassItemContainer = styled(Link)`
   background-color: ${palette.grayBlue};
   display: flex;
   align-items: center;
@@ -60,7 +60,7 @@ interface StyledButtonProps {
   to?: string;
 }
 
-const StyledButton = styled(Button)<StyledButtonProps>`
+export const StyledButton = styled(Button)<StyledButtonProps>`
   background-color: ${palette.green};
   font-size: 9px;
   width: 40px;
