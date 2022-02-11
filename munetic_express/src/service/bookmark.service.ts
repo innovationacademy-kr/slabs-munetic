@@ -49,6 +49,10 @@ export const createBookmark = async (
   user_id: number,
   lesson_id: number,
 ): Promise< Bookmark > => {
+  const isExists = await searchBookmark(user_id, lesson_id);
+  if (isExists) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '이미 북마크한 레슨입니다.');
+  }
   const newBookmark: Bookmark = Bookmark.build({
     user_id,
     lesson_id,
@@ -104,6 +108,6 @@ export const removeBookmark = async (
     }
   });
   if (!checkExistence) return false;
-  await checkExistence.destroy();
+  await checkExistence.destroy({force: true});
   return true;
 };

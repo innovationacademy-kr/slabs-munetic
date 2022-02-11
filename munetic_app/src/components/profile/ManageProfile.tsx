@@ -7,6 +7,7 @@ import { UserDataType } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import Button from '../common/Button';
 import { Link, useNavigate } from 'react-router-dom';
+import logout from '../../lib/auth/logout';
 
 const Container = styled.div`
   margin: 30px 0;
@@ -39,7 +40,7 @@ const ProfileWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 10px;
+    margin: 15px;
   }
 `;
 
@@ -56,12 +57,12 @@ const StyledButton = styled(Button)`
 const StyledEditButton = styled(Button)`
   background-color: white;
   font-size: 16px;
-  width: 70px;
+  width: 100px;
   height: 35px;
   border-radius: 5px;
   margin-left: 5px;
   .buttonText {
-    margin: 0;
+    width: 100px;
     color: ${palette.darkBlue};
   }
 `;
@@ -93,6 +94,11 @@ export default function ManageProfile() {
     getMyProfile();
   }, []);
 
+  const onClickLogout = async () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <div>
       {!userData ? (
@@ -117,10 +123,12 @@ export default function ManageProfile() {
               <StyledEditButton to={`/profile/edit/${userData.id}`}>
                 수정
               </StyledEditButton>
-              <div className="snsBottom">
-                <InstagramIcon />
-                <YouTubeIcon />
-              </div>
+              <StyledEditButton to={`/profile/comment/${userData.login_id}`}>
+                작성한 댓글
+              </StyledEditButton>
+              <StyledEditButton onClick={onClickLogout}>
+                로그아웃
+              </StyledEditButton>
             </div>
           </ProfileWrapper>
           <Separater />
