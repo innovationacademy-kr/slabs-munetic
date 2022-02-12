@@ -13,6 +13,12 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ViewCommentPage from './pages/comment/ViewCommentPage';
 import ViewMyLikesPage from './pages/profile/ViewMyLikesPage';
+import SettingPage from './pages/SettingPage';
+import HelpPage from './pages/setting/HelpPage';
+import ContactPage from './pages/setting/ContactPage';
+import AboutusPage from './pages/setting/AboutusPage';
+import PolicyPage from './pages/setting/PolicyPage';
+import LicensePage from './pages/setting/LicensePage';
 import ViewMyBookmarksPage from './pages/bookmarks/ViewMyBookmarksPage';
 
 export default function Routing() {
