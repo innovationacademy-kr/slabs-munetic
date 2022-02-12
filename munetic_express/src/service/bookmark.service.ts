@@ -17,7 +17,10 @@ export const searchAllBookmarks = async (
 ): Promise< Bookmark[] > => {
   const searchBookmarks = await Bookmark.findAll({
     where: {
-      user_id,
+      [Op.and]: [
+        { user_id },
+        { lesson_bookmark: true },
+      ]
     },
     include: [
       {
@@ -45,26 +48,36 @@ export const searchAllBookmarks = async (
  * @throws ErrorResponse if the user ID or lesson ID is not exists.
  * @author joohongpark
  */
-export const createBookmark = async (
+export const setBookmark = async (
   user_id: number,
   lesson_id: number,
-): Promise< Bookmark > => {
-  const isExists = await searchBookmark(user_id, lesson_id);
-  if (isExists) {
-    throw new ErrorResponse(Status.BAD_REQUEST, '이미 북마크한 레슨입니다.');
+  lesson_bookmark: boolean,
+): Promise< boolean > => {
+  let rtn: boolean = false;
+  try {
+    const newBookmark: [Bookmark, boolean] = await Bookmark.findOrCreate({
+      where: {
+        [Op.and]: [
+          { user_id },
+          { lesson_id },
+        ]
+      },
+      defaults: {
+        user_id,
+        lesson_id,
+        lesson_bookmark,
+      },
+    });
+    const check = await newBookmark[0].update({ lesson_bookmark });
+    rtn = check !== null;
+  } catch (e) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 강의 id입니다.');
   }
-  const newBookmark: Bookmark = Bookmark.build({
-    user_id,
-    lesson_id,
-  });
-  const rtn = newBookmark.save().catch(() => {
-    throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id 또는 레슨 id 입니다.');
-  });
   return rtn;
 };
 
 /**
- * user에 대한 특정 북마크 검색
+ * user가 강의에 북마크 눌렀는지 여부 확인
  * 
  * @param user_id user ID
  * @param lesson_id lesson ID
@@ -80,34 +93,10 @@ export const searchBookmark = async (
       [Op.and]: [
         { user_id },
         { lesson_id },
+        { lesson_bookmark: true },
       ]
     },
   });
   if (!checkExistence) return false;
-  return true;
-};
-
-/**
- * user에 대한 특정 북마크 삭제
- * 
- * @param user_id user ID
- * @param lesson_id lesson ID
- * @returns Promise<boolean>
- * @author joohongpark
- */
-export const removeBookmark = async (
-  user_id: number,
-  lesson_id: number,
-): Promise< boolean > => {
-  const checkExistence = await Bookmark.findOne({
-    where: {
-      [Op.and]: [
-        { user_id },
-        { lesson_id },
-      ]
-    }
-  });
-  if (!checkExistence) return false;
-  await checkExistence.destroy({force: true});
   return true;
 };

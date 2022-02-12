@@ -48,13 +48,20 @@ async function ToggleLessonLike(lesson_id: number, liked: boolean): Promise<bool
 }
 
 /**
+ * LikeButton 프로퍼티 인터페이스
+ */
+export interface LikeButtonIProps {
+  lesson_id: number
+}
+
+/**
  * 좋아요 버튼 컴포넌트입니다. 서버와의 비동기 통신으로 강의에 대한 좋아요 여부 및 좋아요 상태를 업데이트 합니다.
  * 
  * @param props.lesson_id 강의 ID
  * @returns 리액트 앨리먼트
  * @author joohongpark
  */
-export default function LikeButton({lesson_id} : {lesson_id: number}) {
+export default function LikeButton({lesson_id} : LikeButtonIProps) {
   const [like, setLike] = useState<boolean>(false);
 
   useEffect(() => {

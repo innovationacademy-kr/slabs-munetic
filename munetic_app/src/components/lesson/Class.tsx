@@ -298,7 +298,7 @@ export default function Class() {
         <div className="sns">
           <div className="snsTop">
             <LikeButton lesson_id={Number(classId)} />
-            <BookmarkButton />
+            <BookmarkButton lesson_id={Number(classId)} />
           </div>
           <div className="snsBottom">
             <InstagramIcon />

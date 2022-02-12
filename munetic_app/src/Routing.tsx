@@ -13,6 +13,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ViewCommentPage from './pages/comment/ViewCommentPage';
 import ViewMyLikesPage from './pages/profile/ViewMyLikesPage';
+import ViewMyBookmarksPage from './pages/bookmarks/ViewMyBookmarksPage';
 
 export default function Routing() {
   return (
@@ -30,6 +31,7 @@ export default function Routing() {
       <Route path="/profile/likes/" element={<ViewMyLikesPage />} />
       <Route path="/profile/manage" element={<ManageProfilePage />} />
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
+      <Route path="/bookmark/" element={<ViewMyBookmarksPage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
     </Routes>
