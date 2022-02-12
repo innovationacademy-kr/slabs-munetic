@@ -34,6 +34,12 @@ export default function Routing() {
       <Route path="/bookmark/" element={<ViewMyBookmarksPage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/setting" element={<SettingPage />} />
+      <Route path="/setting/help" element={<HelpPage />} />
+      <Route path="/setting/contact" element={<ContactPage />} />
+      <Route path="/setting/aboutus" element={<AboutusPage />} />
+      <Route path="/setting/policy" element={<PolicyPage />} />
+      <Route path="/setting/license" element={<LicensePage />} />
     </Routes>
   );
 }
