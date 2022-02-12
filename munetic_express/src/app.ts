@@ -36,19 +36,22 @@ app.use(
 /**
  * MariaDB 테이블 연결
  */
-const init: boolean = false;
+const init: boolean = true; // express가 재시작 될 때 데이터베이스 초기화를 할 지의 여부
 Models()
-  .sync({ force: true })
+  .sync({ force: init })
   .then(() => {
     app.emit('dbconnected');
     console.log('👍 Modeling Successed');
 
-    // admin Owner 계정 자동 생성
-    createFirstOwnerAccount();
-    // app category 자동 생성
-    createCategories();
+    if (init) {
+      // admin Owner 계정 자동 생성
+      createFirstOwnerAccount();
+      // app category 자동 생성
+      createCategories();
+    }
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
+ 
 
 /**
  * 에러 핸들링

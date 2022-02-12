@@ -5,6 +5,7 @@ export interface bookmarkAttributes {
   id: number;
   user_id: number;
   lesson_id: number;
+  lesson_bookmark: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -21,6 +22,7 @@ export class Bookmark
   public id!: number;
   public user_id!: number;
   public lesson_id!: number;
+  public lesson_bookmark!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -43,6 +45,10 @@ export class Bookmark
         lesson_id: {
           allowNull: false,
           type: DataTypes.INTEGER,
+        },
+        lesson_bookmark: {
+          allowNull: false,
+          type: DataTypes.BOOLEAN,
         },
         createdAt: {
           field: 'createdAt',
