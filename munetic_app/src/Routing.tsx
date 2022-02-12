@@ -13,6 +13,12 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ViewCommentPage from './pages/comment/ViewCommentPage';
 import ViewMyLikesPage from './pages/profile/ViewMyLikesPage';
+import SettingPage from './pages/SettingPage';
+import HelpPage from './pages/setting/HelpPage';
+import ContactPage from './pages/setting/ContactPage';
+import AboutusPage from './pages/setting/AboutusPage';
+import PolicyPage from './pages/setting/PolicyPage';
+import LicensePage from './pages/setting/LicensePage';
 
 export default function Routing() {
   return (
@@ -32,6 +38,12 @@ export default function Routing() {
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/setting" element={<SettingPage />} />
+      <Route path="/setting/help" element={<HelpPage />} />
+      <Route path="/setting/contact" element={<ContactPage />} />
+      <Route path="/setting/aboutus" element={<AboutusPage />} />
+      <Route path="/setting/policy" element={<PolicyPage />} />
+      <Route path="/setting/license" element={<LicensePage />} />
     </Routes>
   );
 }
