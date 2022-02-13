@@ -97,7 +97,7 @@ export const Title = styled.div`
 `;
 
 /**
- * 버을 감싸는 컴포넌트입니다.
+ * 버튼을 감싸는 컴포넌트입니다.
  * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
  * 
  * @author joohongpark
@@ -110,10 +110,10 @@ export const Buttons = styled.div`
 `;
 
 /**
- * 버튼을 감싸는 컴포넌트입니다.
+ * 버튼 컴포넌트입니다.
  * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
  * 
- * @param haveLeft boolean 컴포넌트의 왼쪽에 무엇인가 존재할 때에만 왼쪽에 줄을 그음
+ * @param deleteBtn boolean 삭제 버튼일 때 텍스트 컬러를 붉은색으로 바꿈
  * @param to 버튼이 링크일 때 넘어가야 할 링크
  * @author kunlee
  * @version 1
@@ -172,7 +172,7 @@ export function LessonItem({lesson_id, category, title, image_url, editable, del
         </LessonItemDescriptionContainer>
         <Buttons>
           {editable && <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>}
-          {(editable && del) && <StyledButton 
+          {del && <StyledButton 
               onClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
