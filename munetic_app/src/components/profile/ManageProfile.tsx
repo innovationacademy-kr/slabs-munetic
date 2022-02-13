@@ -8,6 +8,7 @@ import * as ProfileAPI from '../../lib/api/profile';
 import Button from '../common/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import logout from '../../lib/auth/logout';
+import ViewAllCommentByUser from '../comment/ViewAllCommentByUser';
 
 const Container = styled.div`
   margin: 30px 0;
@@ -41,6 +42,7 @@ const ProfileWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     margin: 15px;
+    padding: 20px 0px;
   }
 `;
 
@@ -99,6 +101,17 @@ export default function ManageProfile() {
     navigate('/');
   };
 
+  const Label = styled.div`
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 1.3rem;
+    line-height: 2.2rem;
+    font-weight: 400;
+    margin-left: 10px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  `;
+
   return (
     <div>
       {!userData ? (
@@ -123,9 +136,6 @@ export default function ManageProfile() {
               <StyledEditButton to={`/profile/edit/${userData.id}`}>
                 프로필 수정
               </StyledEditButton>
-              <StyledEditButton to={`/profile/comment/${userData.login_id}`}>
-                작성한 댓글
-              </StyledEditButton>
               <StyledEditButton to={`/profile/likes`}>
                 관심있는 강의
               </StyledEditButton>
@@ -144,6 +154,8 @@ export default function ManageProfile() {
           ) : (
             ''
           )}
+          <Label>작성한 댓글</Label>
+          <ViewAllCommentByUser userId={userData.login_id as string} />
         </Container>
       )}
     </div>
