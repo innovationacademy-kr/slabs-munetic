@@ -1,41 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ClassItemContainer } from '../../components/lesson/ClassList';
+import { LessonItem, LessonItemIProps } from '../lesson/lessonlist/LessonItem';
 import * as LikeAPI from '../../lib/api/like';
 import * as CatrgoryAPI from '../../lib/api/category';
 import { CategoryDataType } from '../../types/categoryData';
 
-/**
- * LessonList 컴포넌트의 프로퍼티 정의
- */
-export interface LessonListIProps {
-  lesson_id: number;
-  category: string;
-  title: string;
-}
-
-/**
- * 레슨 목록 중 하나의 요소
- * 
- * 
- * @param lesson_id 레슨 id 
- * @param category 카테고리명
- * @param title 레슨 제목
- * @returns 리액트 앨리먼트
- * @author joohongpark
- */
-export function LessonList({lesson_id, category, title}: LessonListIProps) {
-  return (
-    <ClassItemContainer to={`/lesson/class/${lesson_id}`}>
-      <div className="classItemDescription">
-        <span className="classItemCategory">{category}</span>
-        <span className="classItemTitle">{title}</span>
-      </div>
-    </ClassItemContainer>
-  );
-}
-
 export default function MyLikesPage() {
-  const [lessons, setLessons] = useState<ReadonlyArray<LessonListIProps>>([])
+  const [lessons, setLessons] = useState<ReadonlyArray<LessonItemIProps>>([])
 
   useEffect(() => {
     async function getMyProfile() {
@@ -63,7 +33,7 @@ export default function MyLikesPage() {
     <>
       {
         lessons.map((lessons) =>
-          <LessonList
+          <LessonItem
             lesson_id={lessons.lesson_id}
             category={lessons.category}
             title={lessons.title}

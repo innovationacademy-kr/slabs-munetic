@@ -9,7 +9,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { LessonData } from '../../types/lessonData';
 import Pagination from '../common/Pagination';
-import { ClassItem } from '../lesson/ClassList';
+import { LessonItem } from '../lesson/lessonlist/LessonItem';
 
 const Container = styled.div`
   margin: 30px 10px 60px 10px;
@@ -100,7 +100,13 @@ const UserClassList = ({ userId }: UserClassListProps) => {
       <div className="classList">
         {classes &&
           classes.map(lesson => (
-            <ClassItem lesson={lesson} key={lesson.lesson_id} />
+            <LessonItem
+              lesson_id={lesson.lesson_id}
+              category={lesson.editable.category}
+              title={lesson.editable.title}
+              key={lesson.lesson_id}
+              image_url={lesson.image_url}
+              />
           ))}
       </div>
       <Pagination

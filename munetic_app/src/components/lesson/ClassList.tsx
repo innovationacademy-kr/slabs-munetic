@@ -6,53 +6,11 @@ import Button from '../common/Button';
 import { useEffect, useState } from 'react';
 import * as LessonAPI from '../../lib/api/lesson';
 import Pagination from '../common/Pagination';
+import { LessonItem } from './lessonlist/LessonItem';
 
 const ClassListContainer = styled.div`
   margin: 30px;
   margin-bottom: 66px;
-`;
-
-export const ClassItemContainer = styled(Link)`
-  background-color: ${palette.grayBlue};
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  .classItemDescription {
-    flex: 1;
-    width: 60%;
-    margin: 10px 10px 10px 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  .classItemTitle {
-    margin: 5px 0px;
-    padding: 1px 0px;
-    color: ${palette.green};
-    display: inline-block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-size: 17px;
-    font-weight: bold;
-  }
-  .classItemCategory {
-    font-size: 12px;
-    font-weight: normal;
-    color: #f1faee96;
-  }
-  .classItemImg {
-    width: 60px;
-    height: 60px;
-    margin: 5px;
-    align-items: right;
-    border-radius: 50%;
-  }
-  .buttons {
-    margin: 5px;
-    display: flex;
-    margin-left: auto;
-  }
 `;
 
 interface StyledButtonProps {
@@ -79,43 +37,6 @@ export const StyledButton = styled(Button)<StyledButtonProps>`
       }
     `}
 `;
-
-interface IProps {
-  lesson: LessonData;
-  mode?: string;
-  onClickDelete?: (id: number) => void;
-}
-
-export const ClassItem = ({ lesson, mode, onClickDelete }: IProps) => {
-  const { lesson_id, image_url } = lesson;
-  const { title, category } = lesson.editable;
-
-  return (
-    <ClassItemContainer to={`/lesson/class/${lesson_id}`}>
-      <div className="classItemDescription">
-        <span className="classItemCategory">카테고리 : {category}</span>
-        <span className="classItemTitle">{title}</span>
-      </div>
-      {mode === 'manage' && onClickDelete ? (
-        <div className="buttons">
-          <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>
-          <StyledButton
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              onClickDelete(lesson_id);
-            }}
-            deleteBtn
-          >
-            삭제
-          </StyledButton>
-        </div>
-      ) : (
-        <img className="classItemImg" src={image_url} alt="" />
-      )}
-    </ClassItemContainer>
-  );
-};
 
 export default function ClassList() {
   const [getParams, setParams] = useSearchParams();
@@ -149,15 +70,30 @@ export default function ClassList() {
   return (
     <ClassListContainer>
       {classes &&
-        (categoryParam === '전체'
+        (
+          categoryParam === '전체'
           ? classes.map(lesson => (
-              <ClassItem lesson={lesson} key={lesson.lesson_id} />
+              <LessonItem
+                lesson_id={lesson.lesson_id}
+                category={lesson.editable.category}
+                title={lesson.editable.title}
+                key={lesson.lesson_id}
+                image_url={lesson.image_url}
+                />
             ))
           : classes.map(lesson => {
               if (lesson.editable.category === categoryParam) {
-                return <ClassItem lesson={lesson} key={lesson.lesson_id} />;
+                <LessonItem
+                  lesson_id={lesson.lesson_id}
+                  category={lesson.editable.category}
+                  title={lesson.editable.title}
+                  key={lesson.lesson_id}
+                  image_url={lesson.image_url}
+                  />
               }
-            }))}
+            })
+            )
+      }
       <Pagination
         itemsPerPage={itemsPerPage}
         classCount={classCount}
