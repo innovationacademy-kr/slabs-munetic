@@ -10,7 +10,7 @@ import Select from './common/Select';
 import { InputBox } from './common/Input';
 
 import * as SearchAPI from '../lib/api/search';
-import { ClassItemContainer } from './lesson/ClassList';
+import { LessonItem, LessonItemIProps } from './lesson/lessonlist/LessonItem';
 import { LessonBlockData } from '../types/lessonData';
 
 const Container = styled.form`
@@ -60,32 +60,11 @@ const ClassListContainer = styled.div`
   margin-bottom: 66px;
 `;
 
-interface IProp {
-  data: LessonBlockData;
-}
-
-const ClassItems = ({ data }: IProp) => {
-  return (
-    <ClassItemContainer to={`/lesson/class/${data.lesson_id}`}>
-      <div className="classItemDescription">
-        <span className="classItemCategory">{data.category}</span>
-        <span className="classItemTitle">{data.title}</span>
-      </div>
-    </ClassItemContainer>
-  );
-};
-
-function convertResponse(arr: any): LessonBlockData[] {
+function convertResponse(arr: any): ReadonlyArray<LessonItemIProps> {
   return arr.map((lesson: any) => ({
     lesson_id: lesson.id,
-    tutor_id: lesson.tutor_id,
-    tutor_name: lesson.User.name,
-    image_url: lesson.User.image_url,
     category: lesson.Category.name,
     title: lesson.title,
-    price: lesson.price,
-    location: lesson.location,
-    minute_per_lesson: lesson.minute_per_lesson,
   }));
 }
 
@@ -96,7 +75,7 @@ export default function Search() {
     '악기 전체',
   );
   const [searchValue, setSearchValue] = useState<string | undefined>('글 제목');
-  const [searchResult, setSearchResult] = useState<LessonBlockData[]>();
+  const [searchResult, setSearchResult] = useState<ReadonlyArray<LessonItemIProps>>([]);
 
   const onChangeSearch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value, name } = e.target;
@@ -194,7 +173,11 @@ export default function Search() {
       <ClassListContainer>
         {searchResult &&
           searchResult.map(data => (
-            <ClassItems data={data} key={data.lesson_id} />
+            <LessonItem 
+              lesson_id={data.lesson_id}
+              category={data.category}
+              title={data.title}
+              key={data.lesson_id} />
           ))}
       </ClassListContainer>
     </>

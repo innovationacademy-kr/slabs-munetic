@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '../../style/palette';
 import Button from '../common/Button';
-import { ClassItem } from './ClassList';
+import { LessonItem } from './lessonlist/LessonItem';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
 import { UserDataType } from '../../types/userData';
@@ -108,12 +108,15 @@ export default function ClassManage() {
         <div className="classList">
           {myClasses &&
             myClasses.map(lesson => (
-              <ClassItem
-                lesson={lesson}
-                mode="manage"
-                onClickDelete={() => onClickDelete(lesson.lesson_id)}
+              <LessonItem
+                lesson_id={lesson.lesson_id}
+                category={lesson.editable.category}
+                title={lesson.editable.title}
                 key={lesson.lesson_id}
-              />
+                image_url={lesson.image_url}
+                del={onClickDelete}
+                editable
+                />
             ))}
         </div>
       </ClassListWrapper>
