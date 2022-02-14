@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { LessonItem, LessonItemIProps } from '../lesson/lessonlist/LessonItem';
 import * as BookmarkAPI from '../../lib/api/bookmark';
-import * as CatrgoryAPI from '../../lib/api/category';
-import { CategoryDataType } from '../../types/categoryData';
+import { ICategoryTable } from '../../types/categoryData';
+import getCategoriesByMap from '../../lib/getCategoriesByMap';
 import Button from '../common/Button';
 import palette from '../../style/palette';
 
@@ -64,12 +64,8 @@ export default function MyBookmarkLessons() {
 
   async function getBookmarks() {
     try {
-      const categoriesMap = new Map<number, string>();
-      const categoriesRes = await CatrgoryAPI.getMyProfile();
+      const categoriesMap = await getCategoriesByMap();
       const bookmarksRes = await BookmarkAPI.getLessonBookmarks();
-      categoriesRes.data.data.forEach((e: CategoryDataType) => {
-        categoriesMap.set(e.id, e.name);
-      });
       const categories = bookmarksRes.data.data.map((c: any) => ({
         lesson_id: c.lesson_id,
         category: categoriesMap.get(c.Lesson.category_id),

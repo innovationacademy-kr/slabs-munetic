@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import palette from '../../style/palette';
-import { LessonData } from '../../types/lessonData';
+import { ILessonData } from '../../types/lessonData';
 import Button from '../common/Button';
 import { useEffect, useState } from 'react';
 import * as LessonAPI from '../../lib/api/lesson';
@@ -40,8 +40,8 @@ export const StyledButton = styled(Button)<StyledButtonProps>`
 
 export default function ClassList() {
   const [getParams, setParams] = useSearchParams();
-  const [classes, setClasses] = useState<LessonData[]>();
-  const [classCount, setClassCount] = useState(0);
+  const [classes, setClasses] = useState<ReadonlyArray<ILessonData>>([]);
+  const [classCount, setClassCount] = useState<number>(0);
   const categoryParam = getParams.get('category');
   const itemsPerPage = 5;
 
@@ -59,8 +59,9 @@ export default function ClassList() {
     async function getLessons(limit: number, offset: number) {
       try {
         const res = await LessonAPI.getLessons(limit, offset);
-        setClasses(res.data.data.rows);
-        setClassCount(res.data.data.count);
+        setClasses(res.data.data);
+        setClassCount(res.data.data.length);
+        classes.filter((lesson) => (categoryParam === "전체" || lesson.Category.name === categoryParam)).map(lesson => console.log(lesson));
       } catch (e) {
         console.log(e, '레슨 전체 목록을 불러오지 못했습니다.');
       }
@@ -69,30 +70,19 @@ export default function ClassList() {
   }, []);
   return (
     <ClassListContainer>
-      {classes &&
+    {
+      classes &&
         (
-          categoryParam === '전체'
-          ? classes.map(lesson => (
-              <LessonItem
-                lesson_id={lesson.lesson_id}
-                category={lesson.editable.category}
-                title={lesson.editable.title}
-                key={lesson.lesson_id}
-                image_url={lesson.image_url}
-                />
-            ))
-          : classes.map(lesson => {
-              if (lesson.editable.category === categoryParam) {
-                <LessonItem
-                  lesson_id={lesson.lesson_id}
-                  category={lesson.editable.category}
-                  title={lesson.editable.title}
-                  key={lesson.lesson_id}
-                  image_url={lesson.image_url}
-                  />
-              }
-            })
-            )
+          classes.filter((lesson) => (categoryParam === "전체" || lesson.Category.name === categoryParam)).map(lesson => (
+            <LessonItem
+              lesson_id={lesson.id}
+              category={lesson.Category.name || ""}
+              title={lesson.title || ""}
+              key={lesson.id}
+              image_url={lesson.User.image_url}
+              />
+          ))
+        )
       }
       <Pagination
         itemsPerPage={itemsPerPage}

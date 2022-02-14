@@ -3,7 +3,7 @@ import palette from '../../style/palette';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { useEffect, useState } from 'react';
-import { UserDataType } from '../../types/userData';
+import { IUserTable } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import Button from '../common/Button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -81,7 +81,7 @@ const Separater = styled.div`
 
 export default function ManageProfile() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState<UserDataType>();
+  const [userData, setUserData] = useState<IUserTable>();
 
   useEffect(() => {
     async function getMyProfile() {

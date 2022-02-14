@@ -11,7 +11,6 @@ import { InputBox } from './common/Input';
 
 import * as SearchAPI from '../lib/api/search';
 import { LessonItem, LessonItemIProps } from './lesson/lessonlist/LessonItem';
-import { LessonBlockData } from '../types/lessonData';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;

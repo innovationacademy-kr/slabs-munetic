@@ -1,4 +1,3 @@
-import { findAllLessonsByUserId } from './../../service/lesson.service';
 import { ResJSON } from './../../modules/types';
 import { RequestHandler } from 'express';
 import * as Status from 'http-status';
@@ -9,7 +8,7 @@ export const getAllLessons: RequestHandler = async (req, res, next) => {
   try {
     const offset = parseInt(req.query.offset as string, 10);
     const limit = parseInt(req.query.limit as string, 10);
-    const lessons = (await LessonService.findAllLessons(offset, limit)) as any;
+    const lessons = (await LessonService.findLessons(offset, limit, true)) as any;
     res
       .status(Status.OK)
       .json(
@@ -25,10 +24,11 @@ export const getUserLessons: RequestHandler = async (req, res, next) => {
     const offset = parseInt(req.query.offset as string, 10);
     const limit = parseInt(req.query.limit as string, 10);
     const userId = parseInt(req.params.id as string, 10);
-    const lessons = (await LessonService.findAllLessonsByUserId(
+    const lessons = (await LessonService.findLessonsByUserId(
       userId,
       offset,
       limit,
+      true,
     )) as any;
     res
       .status(Status.OK)
@@ -43,7 +43,7 @@ export const getUserLessons: RequestHandler = async (req, res, next) => {
 export const getLessonById: RequestHandler = async (req, res, next) => {
   try {
     const lessonId = parseInt(req.params.id, 10);
-    const lesson = await LessonService.findLessonById(lessonId);
+    const lesson = await LessonService.findLessonById(lessonId, true);
     res
       .status(Status.OK)
       .json(new ResJSON('레슨 게시물을 불러오는데 성공하였습니다.', lesson));

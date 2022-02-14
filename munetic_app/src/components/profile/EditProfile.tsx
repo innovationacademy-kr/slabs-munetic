@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { UserDataType } from '../../types/userData';
+import { IUserTable } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import * as AuthAPI from '../../lib/api/auth';
 import styled from 'styled-components';
@@ -128,7 +128,7 @@ export default function EditProfile() {
   const userId = useParams().id;
   const navigate = useNavigate();
 
-  const [userData, setUserData] = useState<UserDataType>();
+  const [userData, setUserData] = useState<IUserTable>();
   const [nicknameValue, setNicknameValue] = useState('');
   const [namePublicValue, setNamePublicValue] = useState<boolean>();
   const [phonePublicValue, setPhonePublicValue] = useState<boolean>();
