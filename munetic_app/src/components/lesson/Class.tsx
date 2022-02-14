@@ -6,7 +6,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as CommentAPI from '../../lib/api/comment';
-import { LessonData } from '../../types/lessonData';
+import { ILessonData } from '../../types/lessonData';
 import { CommentDataType } from '../../types/commentData';
 import { Gender } from '../../types/enums';
 import Comment from '../comment/Comment';
@@ -130,10 +130,11 @@ function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType>
 };
 
 
+// TODO: 추후에 컴포넌트 분리해야함 joohongpark
 interface InfosType {
-  나이: string;
+  '나이': string;
   '지역/장소': string;
-  가격: number;
+  '가격': number;
   '선생님 성별': string;
   '수업 시간': number;
 }
@@ -163,42 +164,7 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
 export default function Class() {
   const classId = useParams().id;
   const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
-  const [classInfo, setClassInfo] = useState<LessonData>({
-    lesson_id: 0,
-    tutor_id: 0,
-    tutor_name: '',
-    gender: Gender.Male,
-    birth: '',
-    phone_number: '',
-    image_url: '',
-    editable: {
-      category: '',
-      title: '',
-      price: 0,
-      location: '',
-      minute_per_lesson: 0,
-      content: '',
-    },
-  });
-
-  const {
-    image_url,
-    tutor_id,
-    tutor_name,
-    birth,
-    phone_number,
-    gender,
-    editable,
-  } = classInfo;
-  const { price, location, minute_per_lesson, content } = editable;
-
-  const basicInfos = {
-    나이: birth,
-    '지역/장소': location,
-    가격: price,
-    '선생님 성별': gender,
-    '수업 시간': minute_per_lesson,
-  };
+  const [classInfo, setClassInfo] = useState<ILessonData>();
 
   const getComment = async () => {
     try {
@@ -210,6 +176,14 @@ export default function Class() {
       console.log(e, 'id로 레슨을 불러오지 못했습니다.');
     }
   }
+
+  const getBasicInfo = (data: ILessonData): InfosType => ({
+    '나이': data.User.birth as unknown as string,
+    '지역/장소': data.location || "",
+    '가격': data.price || 0,
+    '선생님 성별': data.User.gender as unknown as string,
+    '수업 시간': data.minute_per_lesson || 0,
+  });
 
   const sortByStar = () => {
     const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
@@ -275,6 +249,7 @@ export default function Class() {
     async function getLessonById(id: string) {
       try {
         const res = await LessonAPI.getLesson(Number(id));
+        console.log(res);
         setClassInfo(res.data.data);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
@@ -290,9 +265,9 @@ export default function Class() {
     <ClassContainer>
       <ClassProfileWrapper>
         <div className="imgAndNickname">
-          <img className="profileImg" src={image_url} alt="" />
+          <img className="profileImg" src={classInfo?.User.image_url} alt="" />
           <div className="nickname">
-            <Link to={`/profile/${tutor_id}`}>{tutor_name}</Link>
+            <Link to={`/profile/${classInfo?.tutor_id}`}>{classInfo?.User.name}</Link>
           </div>
         </div>
         <div className="sns">
@@ -307,16 +282,16 @@ export default function Class() {
         </div>
       </ClassProfileWrapper>
       <ClassPhoneNumber>
-        연락처 : <span className="phoneNumber">{phone_number}</span>
+        연락처 : <span className="phoneNumber">{classInfo?.User.phone_number}</span>
       </ClassPhoneNumber>
       <ClassBasicInfo>
         레슨 기본 정보
-        <RenderInfo infos={basicInfos} />
+        {classInfo && <RenderInfo infos={getBasicInfo(classInfo)} />}
       </ClassBasicInfo>
       <ClassContent>
         본문
         <div className="contentBox">
-          <div className="contentText">{content}</div>
+          <div className="contentText">{classInfo?.content}</div>
         </div>
       </ClassContent>
       <CommentTop

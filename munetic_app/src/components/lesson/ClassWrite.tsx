@@ -3,14 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Contexts from '../../context/Contexts';
 import palette from '../../style/palette';
-import { LessonWriteData } from '../../types/lessonData';
+import { ILessonTable } from '../../types/lessonData';
 import Input, { InputBox } from '../common/Input';
 import Select from '../common/Select';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
-import * as CategoryAPI from '../../lib/api/category';
-import { UserDataType } from '../../types/userData';
-import { CategoryDataType } from '../../types/categoryData';
+import { IUserTable } from '../../types/userData';
+import getCategoriesByMap from '../../lib/getCategoriesByMap';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
@@ -61,18 +60,9 @@ export default function ClassWrite() {
 
   const navigate = useNavigate();
   const { state, actions } = useContext(Contexts);
-  const [userData, setUserData] = useState<UserDataType>();
-  const [categoryData, setCategoryData] = useState<string[]>();
-  const [classInfo, setClassInfo] = useState<LessonWriteData>({
-    title: '',
-    category: undefined,
-    location: '',
-    price: 10000,
-    minute_per_lesson: 30,
-    content: '',
-  });
-  const { title, category, price, location, minute_per_lesson, content } =
-    classInfo;
+  const [userData, setUserData] = useState<IUserTable>();
+  const [categoryData, setCategoryData] = useState<Map<number, string>>();
+  const [classInfo, setClassInfo] = useState<ILessonTable>();
 
   const onChangeInput = (
     e: React.ChangeEvent<
@@ -80,22 +70,28 @@ export default function ClassWrite() {
     >,
   ) => {
     const { value, name } = e.target;
-    if (name === 'price' || name === 'minute_per_lesson') {
-      setClassInfo({
-        ...classInfo,
-        [name]: parseInt(value),
-      });
-    } else {
-      setClassInfo({
-        ...classInfo,
-        [name]: value,
-      });
+    const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: 0, category_id: 0};
+    if (name === 'title' || name === 'location' || name === 'content') {
+      newClassInfo[name] = value as string;
+    } else if (name === 'createdAt' || name === 'updatedAt' || name === 'deletedAt') {
+      newClassInfo[name] = new Date();
+    } else if (name === 'price' || name === 'minute_per_lesson') {
+      newClassInfo[name] = parseInt(value);
+    } else if (name === 'category_id') {
+      for (let [k, v] of categoryData?.entries() || []) {
+        if (v === value) {
+          newClassInfo[name] = k;
+        }
+      }
     }
+    setClassInfo(newClassInfo);
   };
 
   const validateWriteForm = () => {
-    if (!title || !category || !price || !location || !minute_per_lesson) {
-      return false;
+    if (classInfo !== undefined) {
+      if (!classInfo.title || !classInfo.category_id || !classInfo.price || !classInfo.location || !classInfo.minute_per_lesson) {
+        return false;
+      }
     }
     return true;
   };
@@ -105,26 +101,26 @@ export default function ClassWrite() {
       actions.setValidationMode(true);
       if (validateWriteForm()) {
         let madeClassId;
-        if (classId) {
-          LessonAPI.editLessonById(Number(classId), classInfo)
-            .then(res => {
-              madeClassId = res.data.data.lesson_id;
-              actions.setWrite(false);
-              navigate(`/lesson/class/${madeClassId}`, { replace: true });
-            })
-            .catch(e => {
-              console.log(e);
-            });
-        } else {
-          LessonAPI.postLesson(Number(userData?.id), classInfo)
-            .then(res => {
-              madeClassId = res.data.data.lesson_id;
-              actions.setWrite(false);
-              navigate(`/lesson/class/${madeClassId}`, { replace: true });
-            })
-            .catch(e => {
-              console.log(e);
-            });
+        if (!!classInfo) {
+          if (classId) {
+            LessonAPI.editLessonById(Number(classId), classInfo)
+              .then(res => {
+                actions.setWrite(false);
+                navigate(`/lesson/class/${classId}`, { replace: true });
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          } else {
+            LessonAPI.postLesson(Number(userData?.id), classInfo)
+              .then(res => {
+                actions.setWrite(false);
+                navigate(`/lesson/class/${classId}`, { replace: true });
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }
         }
       }
       actions.setWrite(false);
@@ -149,7 +145,7 @@ export default function ClassWrite() {
     async function getLessonById(id: string) {
       try {
         const res = await LessonAPI.getLesson(Number(id));
-        setClassInfo(res.data.data.editable);
+        setClassInfo(res.data.data);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
       }
@@ -161,19 +157,10 @@ export default function ClassWrite() {
   }, [classId]);
 
   useEffect(() => {
-    async function getCategory() {
-      try {
-        const res = await CategoryAPI.getMyProfile();
-        const categoryLists: string[] = [];
-        res.data.data.map((category: CategoryDataType) =>
-          categoryLists.push(category.name),
-        );
-        setCategoryData(categoryLists);
-      } catch (e) {
-        console.log(e, '카테고리를 불러오지 못했습니다.');
-      }
-    }
-    getCategory();
+    (async () => {
+      const categoriesMap = await getCategoriesByMap();
+      setCategoryData(categoriesMap);
+    })();
   }, []);
 
   return (
@@ -181,19 +168,19 @@ export default function ClassWrite() {
       <StyledTitleInput
         name="title"
         placeholder="제목"
-        value={title}
-        isValid={!!title}
+        value={classInfo?.title || ""}
+        isValid={!!classInfo?.title}
         onChange={onChangeInput}
       />
       <Select
         title="카테고리"
-        options={categoryData}
-        value={category}
-        name="category"
-        disabledOptions={['카테고리']}
+        options={Array.from(categoryData?.values() || [])}
+        value={categoryData?.get(classInfo?.category_id || 0)}
+        name="category_id"
+        disabledOptions={[]}
         defaultValue="카테고리"
         onChange={onChangeInput}
-        isValid={!!category}
+        isValid={!!classInfo?.category_id}
         errorMessage="카테고리를 선택하세요."
       />
       <div className="infoName">레슨 기본 정보</div>
@@ -201,8 +188,8 @@ export default function ClassWrite() {
         inputName="가격"
         type="number"
         name="price"
-        value={price}
-        isValid={!!price}
+        value={classInfo?.price || 0}
+        isValid={!!classInfo?.price}
         onChange={onChangeInput}
       />
       <InputBox
@@ -220,16 +207,16 @@ export default function ClassWrite() {
       <InputBox
         inputName="지역"
         name="location"
-        value={location}
-        isValid={!!location}
+        value={classInfo?.location || ""}
+        isValid={!!classInfo?.location}
         onChange={onChangeInput}
       />
       <InputBox
         inputName="회차당 수업 시간"
         type="number"
         name="minute_per_lesson"
-        value={minute_per_lesson}
-        isValid={!!minute_per_lesson}
+        value={classInfo?.minute_per_lesson || 0}
+        isValid={!!classInfo?.minute_per_lesson}
         onChange={onChangeInput}
       />
       <IntroContent>
@@ -238,7 +225,7 @@ export default function ClassWrite() {
           name="content"
           className="introContent"
           placeholder="내용을 입력해주세요."
-          value={content}
+          value={classInfo?.content || ""}
           onChange={onChangeInput}
         />
       </IntroContent>

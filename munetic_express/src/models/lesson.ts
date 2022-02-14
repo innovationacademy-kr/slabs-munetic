@@ -14,9 +14,15 @@ export interface lessonAttributes {
   deletedAt: Date;
 }
 
+/**
+ * 레슨 테이블에 값을 삽입할 때 (자동 생성되어서) 생략해도 되는 데이터를 명시합니다.
+ * 
+ * @author Jonghyun Lim
+ * @version 1
+ */
 export type lessonCreationAttributes = Optional<
   lessonAttributes,
-  'title' | 'price' | 'location' | 'minute_per_lesson' | 'content'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >;
 
 export class Lesson

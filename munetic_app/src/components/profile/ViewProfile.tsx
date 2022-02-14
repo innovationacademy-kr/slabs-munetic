@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { UserDataType } from '../../types/userData';
+import { IUserTable } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import * as LessonAPI from '../../lib/api/lesson';
 import styled from 'styled-components';
 import palette from '../../style/palette';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import { LessonData } from '../../types/lessonData';
+import { ILessonData } from '../../types/lessonData';
 import Pagination from '../common/Pagination';
 import { LessonItem } from '../lesson/lessonlist/LessonItem';
 
@@ -64,8 +64,8 @@ interface UserClassListProps {
 }
 
 const UserClassList = ({ userId }: UserClassListProps) => {
-  const [classes, setClasses] = useState<LessonData[]>();
-  const [classCount, setClassCount] = useState(0);
+  const [classes, setClasses] = useState<ReadonlyArray<ILessonData>>();
+  const [classCount, setClassCount] = useState<number>(0);
   const itemsPerPage = 5;
 
   const handlePageClick = async (event: any) => {
@@ -76,7 +76,7 @@ const UserClassList = ({ userId }: UserClassListProps) => {
         itemsPerPage,
         newOffset,
       );
-      setClasses(res.data.data.rows);
+      setClasses(res.data.data);
     } catch (e) {
       console.log(e, '레슨을 불러오지 못했습니다.');
     }
@@ -86,8 +86,8 @@ const UserClassList = ({ userId }: UserClassListProps) => {
     async function getUserLessons(id: number, limit: number, offset: number) {
       try {
         const res = await LessonAPI.getLessonByUserId(id, limit, offset);
-        setClasses(res.data.data.rows);
-        setClassCount(res.data.data.count);
+        setClasses(res.data.data);
+        setClassCount(res.data.data.length);
       } catch (e) {
         console.log(e, '레슨을 불러오지 못했습니다.');
       }
@@ -101,11 +101,11 @@ const UserClassList = ({ userId }: UserClassListProps) => {
         {classes &&
           classes.map(lesson => (
             <LessonItem
-              lesson_id={lesson.lesson_id}
-              category={lesson.editable.category}
-              title={lesson.editable.title}
-              key={lesson.lesson_id}
-              image_url={lesson.image_url}
+              lesson_id={lesson.id}
+              category={lesson.Category.name || ""}
+              title={lesson.title || ""}
+              key={lesson.id}
+              image_url={lesson.User.image_url}
               />
           ))}
       </div>
@@ -120,7 +120,7 @@ const UserClassList = ({ userId }: UserClassListProps) => {
 
 export default function ViewProfile() {
   const userId = useParams().id;
-  const [userData, setUserData] = useState<UserDataType>();
+  const [userData, setUserData] = useState<IUserTable>();
 
   useEffect(() => {
     async function getProfile() {

@@ -5,8 +5,8 @@ import Button from '../common/Button';
 import { LessonItem } from './lessonlist/LessonItem';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
-import { UserDataType } from '../../types/userData';
-import { LessonData } from '../../types/lessonData';
+import { IUserTable } from '../../types/userData';
+import { ILessonData } from '../../types/lessonData';
 import Pagination from '../common/Pagination';
 
 const ClassManageContainer = styled.div`
@@ -36,9 +36,9 @@ const ClassListWrapper = styled.div`
 
 export default function ClassManage() {
   const userLogged = localStorage.getItem('user');
-  const [userData, setUserData] = useState<UserDataType>();
-  const [myClasses, setMyClasses] = useState<LessonData[]>();
-  const [classCount, setClassCount] = useState(0);
+  const [userData, setUserData] = useState<IUserTable>();
+  const [myClasses, setMyClasses] = useState<ReadonlyArray<ILessonData>>([]);
+  const [classCount, setClassCount] = useState<number>(0);
   const [isUpdate, setIsUpdate] = useState(false);
   const itemsPerPage = 5;
 
@@ -51,7 +51,7 @@ export default function ClassManage() {
           itemsPerPage,
           newOffset,
         );
-        setMyClasses(res.data.data.rows);
+        setMyClasses(res.data.data);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
       }
@@ -87,8 +87,8 @@ export default function ClassManage() {
     async function getMyLessons(id: number, limit: number, offset: number) {
       try {
         const res = await LessonAPI.getLessonByUserId(id, limit, offset);
-        setMyClasses(res.data.data.rows);
-        setClassCount(res.data.data.count);
+        setMyClasses(res.data.data);
+        setClassCount(res.data.data.length);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
       }
@@ -109,11 +109,11 @@ export default function ClassManage() {
           {myClasses &&
             myClasses.map(lesson => (
               <LessonItem
-                lesson_id={lesson.lesson_id}
-                category={lesson.editable.category}
-                title={lesson.editable.title}
-                key={lesson.lesson_id}
-                image_url={lesson.image_url}
+                lesson_id={lesson.id}
+                category={lesson.Category.name || ""}
+                title={lesson.title || ""}
+                key={lesson.id}
+                image_url={lesson.User.image_url}
                 del={onClickDelete}
                 editable
                 />

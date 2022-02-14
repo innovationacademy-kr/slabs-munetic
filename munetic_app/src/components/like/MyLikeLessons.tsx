@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { LessonItem, LessonItemIProps } from '../lesson/lessonlist/LessonItem';
 import * as LikeAPI from '../../lib/api/like';
-import * as CatrgoryAPI from '../../lib/api/category';
-import { CategoryDataType } from '../../types/categoryData';
+import getCategoriesByMap from '../../lib/getCategoriesByMap';
 
 export default function MyLikesPage() {
   const [lessons, setLessons] = useState<ReadonlyArray<LessonItemIProps>>([])
@@ -10,12 +9,8 @@ export default function MyLikesPage() {
   useEffect(() => {
     async function getMyProfile() {
       try {
-        const categoriesMap = new Map<number, string>();
-        const categoriesRes = await CatrgoryAPI.getMyProfile();
+        const categoriesMap = await getCategoriesByMap();
         const lessonLikeRes = await LikeAPI.getLessonLikes();
-        categoriesRes.data.data.forEach((e: CategoryDataType) => {
-          categoriesMap.set(e.id, e.name);
-        });
         const categories = lessonLikeRes.data.data.map((c: any) => ({
           lesson_id: c.lesson_id,
           category: categoriesMap.get(c.Lesson.category_id),
