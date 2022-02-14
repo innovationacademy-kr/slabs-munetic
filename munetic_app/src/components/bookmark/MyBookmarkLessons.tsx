@@ -62,20 +62,18 @@ export default function MyBookmarkLessons() {
   const [lessons, setLessons] = useState<ReadonlyArray<LessonItemIProps>>([]);
   const [edit, setEdit] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function getBookmarks() {
-      try {
-        const categoriesMap = await getCategoriesByMap();
-        const bookmarksRes = await BookmarkAPI.getLessonBookmarks();
-        const categories = bookmarksRes.data.data.map((c: any) => ({
-          lesson_id: c.lesson_id,
-          category: categoriesMap.get(c.Lesson.category_id),
-          title: c.Lesson.content,
-        }));
-        setLessons(categories);
-      } catch (e) {
-        console.log(e, '좋아요한 강의 목록을 불러오지 못했습니다.');
-      }
+  async function getBookmarks() {
+    try {
+      const categoriesMap = await getCategoriesByMap();
+      const bookmarksRes = await BookmarkAPI.getLessonBookmarks();
+      const categories = bookmarksRes.data.data.map((c: any) => ({
+        lesson_id: c.lesson_id,
+        category: categoriesMap.get(c.Lesson.category_id),
+        title: c.Lesson.content,
+      }));
+      setLessons(categories);
+    } catch (e) {
+      console.log(e, '좋아요한 강의 목록을 불러오지 못했습니다.');
     }
   }
 
