@@ -95,6 +95,20 @@ const StyledButton = styled(Button)`
   }
 `;
 
+async function vaildCheck<T>(param_name: string, param_value: T, callback: React.Dispatch<React.SetStateAction<boolean>>) {
+  if (param_value) {
+    try {
+      await AuthAPI.isValidInfo(`${param_name}=${param_value}`);
+      alert(`사용 가능합니다.`);
+      callback(true);
+    } catch (e) {
+      alert('중복입니다!');
+    }
+  } else {
+    alert(`값을 입력해 주세요!`);
+  }
+}
+
 export default function Register() {
   const [getParams] = useSearchParams();
   const tutorParam = getParams.get('tutor');
@@ -116,10 +130,12 @@ export default function Register() {
 
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  const [isValidId, setIsValidId] = useState(false);
-  const [isValidNickname, setIsValidNickname] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(false);
-  const [isValidPhone, setIsValidPhone] = useState(false);
+  // Vaild Check State
+  const [isValidId, setIsValidId] = useState<boolean>(false);
+  const [isValidNickname, setIsValidNickname] = useState<boolean>(false);
+  const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
+  const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
+
   const [birthYear, setBirthYear] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
   const [birthDay, setBirthDay] = useState<string | undefined>();
@@ -145,14 +161,14 @@ export default function Register() {
       setIsValidNickname(false);
     } else if (name === 'email') {
       setIsValidEmail(false);
-    } else if (name === 'phone_number') {
+    }/* else if (name === 'phone_number') {
       const phone_number_form = /^01([0-9])-([0-9]{3,4})-([0-9]{4})$/;
       if (phone_number_form.test(value)) {
         setIsValidPhone(true);
       } else {
         setIsValidPhone(false);
       }
-    }
+    }*/
     setRegisterInfo({
       ...registerInfo,
       [name]: value,
@@ -230,51 +246,9 @@ export default function Register() {
     }
   };
 
-  const onClickCheckId = async (id: string) => {
-    if (id) {
-      try {
-        await AuthAPI.isValidInfo(`login_id=${id}`);
-        alert('이 아이디는 사용할 수 있습니다!');
-        setIsValidId(true);
-      } catch (e) {
-        alert('중복된 아이디가 존재합니다.');
-        console.log(e, '중복된 아이디!');
-      }
-    }
-  };
-
-  const onClickCheckNickname = async (nickname: string) => {
-    if (nickname) {
-      try {
-        await AuthAPI.isValidInfo(`nickname=${nickname}`);
-        alert('이 닉네임은 사용할 수 있습니다!');
-        setIsValidNickname(true);
-      } catch (e) {
-        alert('중복된 닉네임이 존재합니다.');
-        console.log(e, '중복된 닉네임!');
-      }
-    }
-  };
-
-  const onClickCheckEmail = async (email: string) => {
-    if (email) {
-      try {
-        await AuthAPI.isValidInfo(`email=${email}`);
-        alert('이 이메일은 사용할 수 있습니다!');
-        setIsValidEmail(true);
-      } catch (e) {
-        alert('중복된 이메일이 존재합니다.');
-        console.log(e, '중복된 이메일!');
-      }
-    }
-  };
-
   useEffect(() => {
     return () => {
       actions.setValidationMode(false);
-      setIsValidId(false);
-      setIsValidNickname(false);
-      setIsValidEmail(false);
     };
   }, []);
 
@@ -290,7 +264,7 @@ export default function Register() {
             isValid={!!login_id}
           />
         </div>
-        <span className="checkBtn" onClick={() => onClickCheckId(login_id)}>
+        <span className="checkBtn" onClick={() => vaildCheck<string>("login_id", login_id, setIsValidId)}>
           중복체크
         </span>
       </div>
@@ -323,7 +297,7 @@ export default function Register() {
         </div>
         <span
           className="checkBtn"
-          onClick={() => onClickCheckNickname(nickname)}
+          onClick={() => vaildCheck<string>("nickname", nickname, setIsValidNickname)}
         >
           중복체크
         </span>
@@ -402,21 +376,28 @@ export default function Register() {
             onChange={onChange}
           />
         </div>
-        <span className="checkBtn" onClick={() => onClickCheckEmail(email)}>
+        <span className="checkBtn" onClick={() => vaildCheck<string>("email", email, setIsValidEmail)}>
           중복체크
         </span>
       </div>
-      <InputBox
-        inputName="휴대폰 번호"
-        placeholder="ex) 010-0000-0000"
-        value={phone_number}
-        name="phone_number"
-        isValid={!!phone_number && isValidPhone}
-        onChange={onChange}
-        errorMessage="휴대폰 번호를 정확히 입력해주세요."
-      />
+      <div className="checkWrapper">
+        <div className="checkInput">
+          <InputBox
+            inputName="휴대폰 번호"
+            placeholder="ex) 010-0000-0000"
+            value={phone_number}
+            name="phone_number"
+            isValid={!!phone_number && isValidPhone}
+            onChange={onChange}
+            errorMessage="휴대폰 번호를 정확히 입력해주세요."
+          />
+        </div>
+        <span className="checkBtn" onClick={() => vaildCheck<string>("phone_number", phone_number, setIsValidPhone)}>
+          중복체크
+        </span>
+      </div>
       {state.validationMode &&
-        (!isValidId || !isValidNickname || !isValidEmail) && (
+        (!isValidId || !isValidNickname || !isValidEmail || !isValidPhone) && (
           <div className="dupErrorMessage">중복체크를 해주세요.</div>
         )}
       <div className="registerButton">
