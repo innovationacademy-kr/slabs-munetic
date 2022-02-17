@@ -6,6 +6,9 @@ import ErrorResponse from '../modules/errorResponse';
 import * as Status from 'http-status';
 import { CountRows, LessonAllInfo, LessonEditable } from '../types/service/lesson.service';
 
+import { Comment } from '../models/comment';
+import { LessonLike } from '../models/lessonLike';
+
 /**
  * 레슨의 모든 정보 (유저, 카테고리를 포함한 정보) 를 가져올 때 사용하는 쿼리 옵션입니다.
  * 
@@ -36,6 +39,15 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
         'gender',
         'image_url',
       ],
+    },
+    {
+      model: Comment,
+    },
+    {
+      model: LessonLike,
+      where: {
+        lesson_like: true,
+      }
     },
   ],
 };

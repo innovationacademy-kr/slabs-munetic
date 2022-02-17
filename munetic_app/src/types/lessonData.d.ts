@@ -1,5 +1,7 @@
 import { ICategoryTable } from './categoryData';
 import { IUserTable } from './userData';
+import { ICommentTable } from './commentData';
+import { ILessonLikeTable } from './lessonLikeData';
 
 /**
  * 레슨 테이블의 데이터 타입을 정의합니다. 기본키나 외래키 제외 모두 optional로 설정합니다.
@@ -24,4 +26,6 @@ export interface ILessonTable {
 export interface ILessonData extends ILessonTable {
   Category: ICategoryTable;
   User: IUserTable;
+  Comments: ICommentTable[];
+  LessonLikes: ILessonLikeTable[];
 }
