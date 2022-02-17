@@ -78,6 +78,11 @@ export default function ClassList() {
               lesson_id={lesson.id}
               category={lesson.Category.name || ""}
               title={lesson.title || ""}
+              name = {lesson.User.name || ""}
+              location={lesson.location || ""}
+              price={lesson.price || 0}
+              comment_num={lesson.Comments.length || 0}
+              lessonLike_num={lesson.LessonLikes.length || 0}
               key={lesson.id}
               image_url={lesson.User.image_url}
               />

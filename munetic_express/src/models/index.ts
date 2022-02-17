@@ -84,7 +84,7 @@ export function Models() {
   LessonLike.belongsTo(User, {
     foreignKey: 'user_id',
   });
-  Lesson.hasOne(LessonLike, {
+  Lesson.hasMany(LessonLike, {
     foreignKey: 'lesson_id',
   });
   LessonLike.belongsTo(Lesson, {

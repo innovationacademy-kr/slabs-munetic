@@ -34,3 +34,20 @@ export interface CommentPropsType {
   edit: (commentId:number, stars: number, comment: string) => void;
   del: (commentId:number) => void;
 }
+
+
+/**
+ * 댓글 테이블의 데이터 타입을 정의합니다.
+ * 
+ * @author sungkim
+ */
+export interface ICommentTable {
+  id: number;
+  user_id: number;
+  lesson_id: number;
+  content: string;
+  stars: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+}

@@ -88,13 +88,56 @@ export const Category = styled.div`
  * @author joohongpark
  */
 export const Title = styled.div`
-  padding: 3px 0px;
+  padding: 2px 0px;
   font-size: 16px;
   font-weight: normal;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
+
+export const Name = styled.div`
+  padding: 3px 0px;
+  margin: 5px 0px;
+  font-size: 16px;
+  font-weight: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+export const Location = styled.div`
+  display: inline;
+  padding: 2px 0px;
+  margin: 0px 4px;
+  font-size: 13px;
+  font-weight: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+export const Price = styled.div`
+  display: inline;
+  padding: 2px 0px;
+  margin-left: 48%;
+  font-size: 13px;
+  font-weight: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+// FIXME: CSS를 어떻게 조작해야하는지 몰라서 일단 마진 퍼센트로 때렸습니다..
+export const CommentWithHeart = styled.div`
+  display: inline;
+  padding: 2px 0px;
+  margin-left: 15%;
+  font-size: 13px;
+  font-weight: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
 /**
  * 버튼을 감싸는 컴포넌트입니다.
@@ -143,10 +186,16 @@ export const StyledButton = styled(Button)<{deleteBtn?: boolean, to?: string}>`
 /**
  * LessonItem 컴포넌트의 프로퍼티 정의
  */
+// FIXME: 일단은 Props에서 쓰지 않는 속성들(ex. category, title) 빼지 않았습니다. (추후 어떻게 변경될 지 몰라서)
 export interface LessonItemIProps {
   lesson_id: number;                // 레슨 고유 ID
   category: string;                 // 카테고리명
   title: string;                    // 레슨 제목
+  name: string;
+  location: string;
+  price: number;
+  comment_num: number;
+  lessonLike_num: number;
   image_url?: string;               // 이미지 링크 (optional)
   editable?: boolean;               // 수정 가능 여부 (optional)
   del?: (id: number) => void;       // 삭제 콜백함수 (optional)
@@ -161,15 +210,19 @@ export interface LessonItemIProps {
  * @returns 리액트 앨리먼트
  * @author joohongpark
  */
-export function LessonItem({lesson_id, category, title, image_url, editable, del}: LessonItemIProps) {
+export function LessonItem({lesson_id, category, title, name, location, price, comment_num, lessonLike_num, image_url, editable, del}: LessonItemIProps) {
   return (
     <LessonItemContainer>
       <ClassItemDescription to={`/lesson/class/${lesson_id}`}>
-        {image_url && <LessonItemImg src={image_url} alt="" />}
         <LessonItemDescriptionContainer haveLeft={image_url != undefined}>
-          <Category>카테고리 : {category}</Category>
-          <Title>{title}</Title>
+          <Name>{name}</Name>
+          <div>
+            <Location>지역: {location}</Location>
+            <Price>가격: {price}</Price>
+            <CommentWithHeart>댓글/하트: {comment_num}/{lessonLike_num}</CommentWithHeart>
+          </div>
         </LessonItemDescriptionContainer>
+        {image_url && <LessonItemImg src={image_url} alt="" />}
         <Buttons>
           {editable && <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>}
           {del && <StyledButton 
