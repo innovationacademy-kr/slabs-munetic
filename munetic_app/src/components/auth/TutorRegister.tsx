@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import palette from '../../style/palette';
 import Button from '../common/Button';
 import { InputBox } from '../common/Input';
+import * as AuthAPI from '../../lib/api/auth';
+import { ITutorInfoType } from '../../types/userSignupData';
 
 const Container = styled.form`
 margin: 100px 30px 30px 30px;
@@ -49,17 +52,23 @@ const StyledButton = styled(Button)`
 
 export default function TutorRegister() {
 
-  const [registerInfo, setRegisterInfo] = useState({
+  const navigate = useNavigate();
+  const [registerInfo, setRegisterInfo] = useState<ITutorInfoType>({
     spec: '',
     career: '',
-    youtubeLink: '',
-    InstagramId: '',
-    SoundCloudLink: '',
+    youtube: '',
+    instagram: '',
+    soundcloud: '',
   });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(registerInfo);
+    e.preventDefault(); 
+    try {
+      await AuthAPI.tutorsignup(registerInfo);
+      navigate('/profile/manage');
+    } catch (e) {
+      console.log(e, '회원가입 실패');
+    }
   };
 
   const onChange = (
@@ -90,20 +99,20 @@ export default function TutorRegister() {
       />
       <InputBox
         inputName="유튜브 채널 링크 (선택)"
-        name="youtubeLink"
-        value={registerInfo.youtubeLink}
+        name="youtube"
+        value={registerInfo.youtube}
         onChange={onChange}
       />
       <InputBox
         inputName="인스타 아이디 (선택)"
-        name="InstagramId"
-        value={registerInfo.InstagramId}
+        name="instagram"
+        value={registerInfo.instagram}
         onChange={onChange}
       />
       <InputBox
         inputName="사운드클라우드 링크 (선택)"
-        name="SoundCloudLink"
-        value={registerInfo.SoundCloudLink}
+        name="soundcloud"
+        value={registerInfo.soundcloud}
         onChange={onChange}
       />
       <div className="registerButton">

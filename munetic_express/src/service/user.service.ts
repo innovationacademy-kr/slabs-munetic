@@ -2,6 +2,9 @@ import { Op } from 'sequelize';
 import { Account, User } from '../models/user';
 import * as Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
+import * as TutorInfoMapper from '../mapping/TutorInfoMapper';
+import { TutorInfo } from '../models/tutorInfo'
+import { ITutorInfoInsertType, ITutorInfoType } from '../types/controller/tutorInfoData';
 
 export interface IsearchUser {
   login_id?: string;
@@ -178,4 +181,54 @@ export const findTutorIdByName = async (tutor_name: string) => {
   })
   if (data === null) return {id: 0};
   return data;
+}
+
+/**
+ * 튜터 타입 변경
+ * 
+ * @param user_id user ID
+ * @param type Account user 타입
+ * @returns Promise<boolean>
+ * @author joohongpark
+ */
+export const userTypeChange = async (
+  user_id: number,
+  type: Account,
+): Promise< boolean > => {
+  const [userUpdate] = await User.update( {
+    type: type,
+  } , {
+    where: {
+      id: user_id,
+    },
+  });
+  return (userUpdate === 0);
+}
+
+/**
+ * 튜터의 추가 데이터를 새로 추가하거나 업데이트
+ * 
+ * @param user_id user ID
+ * @param tutor_info ITutorInfoType
+ * @returns Promise<boolean>
+ * @throws ErrorResponse if the user ID or lesson ID is not exists.
+ * @author joohongpark
+ */
+export const addTutorDataById = async (
+  user_id: number,
+  tutor_info: ITutorInfoType,
+): Promise< boolean > => {
+  let rtn: boolean = false;
+  const data: ITutorInfoInsertType = TutorInfoMapper.toTutorInfoEntity(user_id, tutor_info);
+  try {
+    const newTutorData: [TutorInfo, boolean] = await TutorInfo.findOrCreate({
+      where: { user_id },
+      defaults: data,
+    });
+    const check = await newTutorData[0].update({ ...tutor_info });
+    rtn = check !== null;
+  } catch (e) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 강의 id입니다.');
+  }
+  return rtn;
 }

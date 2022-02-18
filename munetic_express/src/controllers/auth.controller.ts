@@ -3,12 +3,13 @@ import * as Status from 'http-status';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 
-import { User } from '../models/user';
+import { Account, User } from '../models/user';
 import * as UserService from '../service/user.service';
 import { ResJSON } from '../modules/types';
 import ErrorResponse from '../modules/errorResponse';
 import * as Reshape from './../modules/reshape';
 import * as jwt from './../modules/jwt';
+import { ITutorInfoType } from '../types/controller/tutorInfoData';
 
 /**
  * 로그인
@@ -49,6 +50,33 @@ export const signup: RequestHandler = async (req, res, next) => {
     userInfo.login_password = bcrypt.hashSync(userInfo.login_password, 10);
     const data = await UserService.createUser(new User({ ...userInfo }));
     res.status(Status.CREATED).json(new ResJSON('request success', data));
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * 학생에서 튜터로 회원가입하는 미들웨어
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+export const tutorsignup: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+      const TutorInfoData: ITutorInfoType = req.body;
+      const changeToTutor = await UserService.userTypeChange(req.user.id, Account.Tutor);
+      const setData = await UserService.addTutorDataById(req.user.id, TutorInfoData);
+      let result: ResJSON = new ResJSON(
+        '튜터 회원가입 성공 여부',
+        changeToTutor && setData,
+      );
+      res.status(Status.OK).json(result);
+    } else {
+      next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
+    }
   } catch (err) {
     next(err);
   }

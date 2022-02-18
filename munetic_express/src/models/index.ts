@@ -6,6 +6,7 @@ import { Comment } from './comment';
 import { User, Gender, Account } from './user';
 import * as UserService from '../service/user.service';
 import { LessonLike } from './lessonLike';
+import { TutorInfo } from './tutorInfo';
 
 const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
@@ -41,6 +42,7 @@ export function Models() {
   Bookmark.initModel(sequelize);
   Comment.initModel(sequelize);
   LessonLike.initModel(sequelize);
+  TutorInfo.initModel(sequelize);
 
   Category.hasMany(Lesson, {
     foreignKey: {
@@ -101,6 +103,12 @@ export function Models() {
   });
   Comment.belongsTo(Lesson, {
     foreignKey: 'lesson_id',
+  });
+  User.hasOne(TutorInfo, {
+    foreignKey: 'user_id',
+  });
+  TutorInfo.belongsTo(User, {
+    foreignKey: 'user_id',
   });
   return sequelize;
 }
