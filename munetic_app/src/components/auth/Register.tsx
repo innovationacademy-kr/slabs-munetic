@@ -6,10 +6,11 @@ import { InputBox } from '../common/Input';
 import Select from '../common/Select';
 import * as AuthAPI from '../../lib/api/auth';
 import Contexts from '../../context/Contexts';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { dayList, monthList, yearList } from '../../lib/staticData';
+import { useNavigate } from 'react-router-dom';
 import { Account } from '../../types/enums';
 import client from '../../lib/api/client';
+import DateSelect from '../ui/DateSelect';
+import vaildCheck from '../../lib/auth/vaildCheck';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -68,21 +69,6 @@ const SelectContainer = styled.div`
     font-size: 15px;
     text-align: center;
   }
-  .selectBirth {
-    display: flex;
-  }
-  .selectYear {
-    flex: 2;
-    margin-left: 3px;
-  }
-  .selectMonth {
-    flex: 1;
-    margin-left: 3px;
-  }
-  .selectDay {
-    flex: 1;
-    margin-left: 3px;
-  }
 `;
 
 const StyledButton = styled(Button)`
@@ -95,29 +81,13 @@ const StyledButton = styled(Button)`
   }
 `;
 
-async function vaildCheck<T>(param_name: string, param_value: T, callback: React.Dispatch<React.SetStateAction<boolean>>) {
-  if (param_value) {
-    try {
-      await AuthAPI.isValidInfo(`${param_name}=${param_value}`);
-      alert(`사용 가능합니다.`);
-      callback(true);
-    } catch (e) {
-      alert('중복입니다!');
-    }
-  } else {
-    alert(`값을 입력해 주세요!`);
-  }
-}
-
 export default function Register() {
-  const [getParams] = useSearchParams();
-  const tutorParam = getParams.get('tutor');
 
   const { state, actions } = useContext(Contexts);
   const [registerInfo, setRegisterInfo] = useState({
     login_id: '',
     login_password: '',
-    type: tutorParam ? Account.Tutor : Account.Student,
+    type: Account.Student,
     nickname: '',
     name: '',
     email: '',
@@ -136,9 +106,6 @@ export default function Register() {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
   const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
 
-  const [birthYear, setBirthYear] = useState<string | undefined>();
-  const [birthMonth, setBirthMonth] = useState<string | undefined>();
-  const [birthDay, setBirthDay] = useState<string | undefined>();
   const {
     login_id,
     login_password,
@@ -147,6 +114,7 @@ export default function Register() {
     email,
     phone_number,
     gender,
+    birth
   } = registerInfo;
 
   const onChange = (
@@ -175,29 +143,6 @@ export default function Register() {
     });
   };
 
-  const onChangeBirth = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value, name } = e.target;
-    if (name === 'birthYear') {
-      setBirthYear(value);
-      setRegisterInfo({
-        ...registerInfo,
-        birth: `${value}-${birthMonth}-${birthDay}`,
-      });
-    } else if (name === 'birthMonth') {
-      setBirthMonth(value);
-      setRegisterInfo({
-        ...registerInfo,
-        birth: `${birthYear}-${value}-${birthDay}`,
-      });
-    } else {
-      setBirthDay(value);
-      setRegisterInfo({
-        ...registerInfo,
-        birth: `${birthYear}-${birthMonth}-${value}`,
-      });
-    }
-  };
-
   const onChangePasswordConfirm = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -216,9 +161,7 @@ export default function Register() {
       !gender ||
       !email ||
       !phone_number ||
-      !birthYear ||
-      !birthMonth ||
-      !birthDay
+      !birth
     ) {
       return false;
     }
@@ -326,44 +269,7 @@ export default function Register() {
       </SelectContainer>
       <SelectContainer>
         <span className="selectBirthTitle">생년월일</span>
-        <div className="selectBirth">
-          <div className="selectYear">
-            <Select
-              options={yearList}
-              value={birthYear}
-              disabledOptions={['출생년도']}
-              defaultValue="출생년도"
-              name="birthYear"
-              onChange={onChangeBirth}
-              isValid={!!birthYear}
-              errorMessage="출생년도를 선택하세요."
-            />
-          </div>
-          <div className="selectMonth">
-            <Select
-              options={monthList}
-              value={birthMonth}
-              disabledOptions={['월']}
-              defaultValue="월"
-              name="birthMonth"
-              onChange={onChangeBirth}
-              isValid={!!birthMonth}
-              errorMessage="월을 선택하세요."
-            />
-          </div>
-          <div className="selectDay">
-            <Select
-              options={dayList}
-              value={birthDay}
-              disabledOptions={['일']}
-              defaultValue="일"
-              name="birthDay"
-              onChange={onChangeBirth}
-              isValid={!!birthDay}
-              errorMessage="일을 선택하세요."
-            />
-          </div>
-        </div>
+        <DateSelect set={(date) => setRegisterInfo({ ...registerInfo, birth: date})} />
       </SelectContainer>
       <div className="checkWrapper">
         <div className="checkInput">
