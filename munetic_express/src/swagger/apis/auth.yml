@@ -131,6 +131,83 @@ paths:
             type: string
             example: '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
 
+  /auth/tutorsignup:
+    post:
+      tags:
+        - Auth
+      summary: Signup Tutor
+      description: '튜터 회원가입'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              spec:
+                type: string
+              career:
+                type: string
+              youtube:
+                type: string
+              instagram:
+                type: string
+              soundcloud:
+                type: string
+      responses:
+        '200':
+          description: join success
+          schema:
+            properties:
+              message:
+                type: string
+              data:
+                type: boolean
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+
+
+  /auth/changeaccount:
+    post:
+      tags:
+        - Auth
+      summary: Change account
+      description: '튜터로 회원가입한 이력이 있을 때에 튜터와 학생 간 계정 변경'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: 'to'
+          in: path
+          description: 'category_name'
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Change Success
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              data:
+                type: boolean
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+
   /auth/signup/user:
     get:
       tags:
