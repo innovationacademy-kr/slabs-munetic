@@ -12,8 +12,8 @@ import { Gender } from '../../types/enums';
 import Comment from '../comment/Comment';
 import CommentTop from '../comment/CommentTop';
 import CommentWrite from '../comment/CommentWrite';
-import LikeButton from '../buttons/LikeButton';
-import BookmarkButton from '../buttons/BookmarkButton';
+import LikeButton from '../like/LikeButton';
+import BookmarkButton from '../bookmark/BookmarkButton';
 
 const ClassContainer = styled.div`
   margin: 10px;

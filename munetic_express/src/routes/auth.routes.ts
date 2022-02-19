@@ -9,5 +9,7 @@ export const router = Router();
 router.post('/login', Auth.login);
 router.get('/logout', jwtAuth(), Auth.logout);
 router.post('/signup', Auth.signup);
+router.post('/tutorsignup', jwtAuth(), Auth.tutorsignup);
 router.get('/refresh', jwtReAuth(), Auth.refresh);
 router.get('/signup/user', Auth.isValidInfo);
+router.put('/changeaccount', jwtAuth(), Auth.changeAccount);
