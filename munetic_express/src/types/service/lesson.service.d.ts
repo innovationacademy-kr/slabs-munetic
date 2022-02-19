@@ -32,11 +32,13 @@ export interface CountRows<T> {
 
 /**
  * HTTP 요청의 Req Body입니다. 레슨의 수정 가능한 항목들을 나타냅니다.
+ * # TODO: 레슨의 수정 뿐만 아니라 추가시에도 동일한 인터페이스가 사용되므로 인터페이스 이름 변경 필요
  * 
  * @author Jonghyun Lim
  * @version 1
  */
 export interface LessonEditable {
+  tutor_id?: number;
   category_id?: number;
   title?: string;
   price?: number;
