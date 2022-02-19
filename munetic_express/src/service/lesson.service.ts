@@ -45,6 +45,7 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
     },
     {
       model: LessonLike,
+      required: false,
       where: {
         lesson_like: true,
       }

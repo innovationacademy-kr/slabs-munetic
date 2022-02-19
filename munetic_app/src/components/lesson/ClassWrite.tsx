@@ -70,7 +70,7 @@ export default function ClassWrite() {
     >,
   ) => {
     const { value, name } = e.target;
-    const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: 0, category_id: 0};
+    const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: Number(userData?.id), category_id: 0};
     if (name === 'title' || name === 'location' || name === 'content') {
       newClassInfo[name] = value as string;
     } else if (name === 'createdAt' || name === 'updatedAt' || name === 'deletedAt') {
@@ -115,7 +115,7 @@ export default function ClassWrite() {
             LessonAPI.postLesson(Number(userData?.id), classInfo)
               .then(res => {
                 actions.setWrite(false);
-                navigate(`/lesson/class/${classId}`, { replace: true });
+                navigate(`/lesson/class/${res.data.data.id}`, { replace: true });
               })
               .catch(e => {
                 console.log(e);

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '../../style/palette';
 import Select from '../common/Select';
@@ -78,7 +78,7 @@ export default function DateSelect(props: DateSelectIProps) {
     if (year && month && day && props.set) {
       props.set(`${year}-${month}-${day}`, year, month, day);
     }
-  });
+  }, [year, month, day]);
 
   return (
     <Container>
