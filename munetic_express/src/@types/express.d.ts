@@ -5,6 +5,7 @@ declare module Express {
       id: number;
       login_password?: string;
       type: string;
+      TutorInfo?: ITutorInfoData;
     };
   }
 }

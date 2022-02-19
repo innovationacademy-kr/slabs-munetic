@@ -83,6 +83,41 @@ export const tutorsignup: RequestHandler = async (req, res, next) => {
 };
 
 /**
+ * 튜터로 가입한 이력이 있을 때 학생/튜터 간 전환하는 미들웨어
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+export const changeAccount: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+      const userData = req.user;
+      const to = req.query.to as string;
+      let rtn;
+      console.log(to, userData.TutorInfo);
+      if (to == Account.Tutor && userData.TutorInfo) {
+        rtn = await UserService.userTypeChange(req.user.id, Account.Tutor);
+      } else if (to == Account.Student && userData.TutorInfo) {
+        rtn = await UserService.userTypeChange(req.user.id, Account.Student);
+      } else {
+        rtn = false;
+      }
+      let result: ResJSON = new ResJSON(
+        '계정 전환 성공 여부',
+        rtn,
+      );
+      res.status(Status.OK).json(result);
+    } else {
+      next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * accessToken 갱신
  */
 

@@ -50,6 +50,12 @@ export const searchActiveUser = async (userInfo: IsearchUser) => {
     where: {
       ...userInfo,
     },
+    include: [
+      {
+        model: TutorInfo,
+        attributes: ["spec", "career", "youtube", "instagram", "soundcloud"],
+      }
+    ],
   });
   return data;
 };
@@ -202,7 +208,7 @@ export const userTypeChange = async (
       id: user_id,
     },
   });
-  return (userUpdate === 0);
+  return (userUpdate !== 0);
 }
 
 /**
