@@ -191,11 +191,11 @@ export interface LessonItemIProps {
   lesson_id: number;                // 레슨 고유 ID
   category: string;                 // 카테고리명
   title: string;                    // 레슨 제목
-  name: string;
-  location: string;
-  price: number;
-  comment_num: number;
-  lessonLike_num: number;
+  name?: string;
+  location?: string;
+  price?: number;
+  comment_num?: number;
+  lessonLike_num?: number;
   image_url?: string;               // 이미지 링크 (optional)
   editable?: boolean;               // 수정 가능 여부 (optional)
   del?: (id: number) => void;       // 삭제 콜백함수 (optional)
@@ -210,26 +210,26 @@ export interface LessonItemIProps {
  * @returns 리액트 앨리먼트
  * @author joohongpark
  */
-export function LessonItem({lesson_id, category, title, name, location, price, comment_num, lessonLike_num, image_url, editable, del}: LessonItemIProps) {
+export function LessonItem(props: LessonItemIProps) {
   return (
     <LessonItemContainer>
-      <ClassItemDescription to={`/lesson/class/${lesson_id}`}>
-        <LessonItemDescriptionContainer haveLeft={image_url != undefined}>
-          <Name>{name}</Name>
+      <ClassItemDescription to={`/lesson/class/${props.lesson_id}`}>
+        <LessonItemDescriptionContainer haveLeft={props.image_url != undefined}>
+          <Name>{props.name}</Name>
           <div>
-            <Location>지역: {location}</Location>
-            <Price>가격: {price}</Price>
-            <CommentWithHeart>댓글/하트: {comment_num}/{lessonLike_num}</CommentWithHeart>
+            <Location>지역: {props.location}</Location>
+            <Price>가격: {props.price}</Price>
+            <CommentWithHeart>댓글/하트: {props.comment_num}/{props.lessonLike_num}</CommentWithHeart>
           </div>
         </LessonItemDescriptionContainer>
-        {image_url && <LessonItemImg src={image_url} alt="" />}
+        {props.image_url && <LessonItemImg src={props.image_url} alt="" />}
         <Buttons>
-          {editable && <StyledButton to={`/lesson/write/${lesson_id}`}>수정</StyledButton>}
-          {del && <StyledButton 
+          {props.editable && <StyledButton to={`/lesson/write/${props.lesson_id}`}>수정</StyledButton>}
+          {props.del && <StyledButton 
               onClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
-                del(lesson_id);
+                props.del && props.del(props.lesson_id);
               }} deleteBtn>삭제</StyledButton>}
         </Buttons>
       </ClassItemDescription>
