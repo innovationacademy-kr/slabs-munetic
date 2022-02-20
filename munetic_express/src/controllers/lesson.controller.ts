@@ -24,11 +24,18 @@ export const postLesson: RequestHandler = async (
   try {
     const tutor_id: number = parseInt(req.query.tutor_id as string);
     const newLesson: LessonEditable = req.body;
+
+    const lesson_id: number = 0;
+    const checkIfDuplicated: boolean = await LessonServive.checkLessonWithUserId(tutor_id, (newLesson.category_id || 0), lesson_id);
+
     if (Number.isNaN(tutor_id)) {
       res.status(status.BAD_REQUEST).send('wrong tutor ID');
     } else if (!newLesson) {
       res.status(status.BAD_REQUEST).send('Invalid data passed');
-    } else {
+    } else if (checkIfDuplicated) {
+      res.status(status.BAD_REQUEST).send('Already existed in same category');
+    }
+    else {
       const response = await LessonServive.createLesson(tutor_id, newLesson);
       const result: ResJSON = new ResJSON(
         '응답에 성공하였습니다.',
@@ -95,6 +102,10 @@ export const getLessons: RequestHandler = async (
       res.status(status.BAD_REQUEST).send('offset / limit error');
     } else {
       const response: Lesson[] = await LessonServive.findLessons(offset, limit, false);
+
+      console.log("***");
+      console.log(response);
+
       const result: ResJSON = new ResJSON(
         '응답에 성공하였습니다.',
         response,
@@ -124,8 +135,13 @@ export const patchLesson: RequestHandler = async (
   try {
     const lessonEditable = req.body as LessonEditable;
     const lesson_id: number = parseInt(req.params.id as string);
+
+    const checkIfDuplicated: boolean = await LessonServive.checkLessonWithUserId((lessonEditable.tutor_id || 0), (lessonEditable.category_id || 0), lesson_id);
+
     if (!lessonEditable || Number.isNaN(lesson_id) || lesson_id < 0) {
       res.status(status.BAD_REQUEST).send('Invalid data');
+    } else if (checkIfDuplicated) {
+      res.status(status.BAD_REQUEST).send('Already existed in same category');
     } else {
       const response = await LessonServive.editLesson(lesson_id, lessonEditable);
       const result: ResJSON = new ResJSON(

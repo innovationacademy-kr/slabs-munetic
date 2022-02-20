@@ -222,3 +222,39 @@ export const findLessonsByUserId = async (
   });
   return lessonData.rows;
 };
+
+/**
+ * 튜터가 해당 카테고리에 쓴 글이 있는 지 확인하는 메소드.
+ * 이미 해당 카테고리에 글이 존재한다면, true를 반환. 없다면 false를 반환.
+ * But, 글의 수정의 경우를 생각해서 arrLessonId와 lessonId가 같은 경우에는 false를 반환.
+ * 
+ * @param userId 유저 ID
+ * @param categoryId 카테고리 ID
+ * @param lessonId 레슨 ID
+ * @returns Promise<boolean>
+ * @author sungkim
+ */
+export const checkLessonWithUserId = async (
+  userId: number,
+  categoryId: number,
+  lessonId: number,
+) : Promise<boolean> => {
+  
+  const lessonData = await Lesson.findAndCountAll({
+    where: {
+      tutor_id: userId,
+      category_id: categoryId,
+    }
+  })
+  
+  let arrLessonId: number = -1;
+
+  lessonData.rows.map((arr: Lesson) => {
+    arrLessonId = arr.id;
+  })
+  if (arrLessonId === lessonId)
+    return false;
+  if (lessonData.count)
+    return true;
+  return false;
+}
