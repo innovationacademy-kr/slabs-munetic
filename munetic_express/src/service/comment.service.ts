@@ -4,17 +4,22 @@ import ErrorResponse from '../modules/errorResponse';
 import { Comment } from '../models/comment';
 import { Lesson } from '../models/lesson';
 import { User } from '../models/user';
+import addProperty from '../util/addProperty';
 
 /**
  * user 로그인 id의 모든 댓글 조회
  * 
  * @param user_id user login ID
+ * @param offset number (optional)
+ * @param limit number (optional)
  * @returns Promise<Comment[]>
  * @throws ErrorResponse if the user login ID is not exists.
  * @author joohongpark
  */
 export const searchAllCommentsByUserId = async (
   user_id: string,
+  offset?: number,
+  limit?: number,
 ): Promise< Comment[] > => {
   const searchUserID = await User.findOne({
     where: {
@@ -23,7 +28,7 @@ export const searchAllCommentsByUserId = async (
   });
   if (!searchUserID)
     throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');
-  const searchAllComments = await searchUserID.getComments({
+  let query = {
     attributes: {
       exclude: ['user_id', 'createdAt', 'deletedAt'],
     },
@@ -31,9 +36,44 @@ export const searchAllCommentsByUserId = async (
       {
         model: Lesson,
         attributes: ["id", "category_id", "title"],
+      },
+    ],
+  };
+  if (offset !== undefined && limit !== undefined) {
+    addProperty<number>(query, 'offset', offset);
+    addProperty<number>(query, 'limit', limit);
+  }
+  const searchAllComments = await searchUserID.getComments(query);
+  return searchAllComments;
+};
+
+/**
+ * 모든 댓글 조회
+ * 
+ * @param offset number (optional)
+ * @param limit number (optional)
+ * @returns Promise<Comment[]>
+ * @throws ErrorResponse if the user login ID is not exists.
+ * @author joohongpark
+ */
+export const searchAllComments = async (
+  offset?: number,
+  limit?: number,
+): Promise< {count: number, rows: Comment[]} > => {
+  let query = {
+    include: [
+      {
+        model: Lesson,
+        attributes: ["id", "category_id", "title"],
       }
     ],
-  });
+    raw: true,
+  };
+  if (offset !== undefined && limit !== undefined) {
+    addProperty<number>(query, 'offset', offset);
+    addProperty<number>(query, 'limit', limit);
+  }
+  const searchAllComments = await Comment.findAndCountAll(query);
   return searchAllComments;
 };
 

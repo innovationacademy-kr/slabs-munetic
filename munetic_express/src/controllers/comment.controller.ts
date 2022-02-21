@@ -5,6 +5,32 @@ import { ResJSON } from '../modules/types';
 import * as CommentService from '../service/comment.service';
 
 /**
+ * 모든 댓글을 읽어오는 미들웨어
+ * GET Request -> 200, 401 Response
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+export const getComments: RequestHandler = async (req, res, next) => {
+  try {
+    let offset: number | undefined = parseInt(req.query.offset as string);
+    let limit: number | undefined = parseInt(req.query.limit as string);
+    offset = Number.isNaN(offset) ? undefined : offset;
+    limit = Number.isNaN(limit) ? undefined : limit;
+    let comments = await CommentService.searchAllComments(offset, limit);
+    let result: ResJSON = new ResJSON(
+      '댓글들을 불러오는데 성공하였습니다.',
+      comments,
+    );
+    res.status(Status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * 유저에 대한 모든 댓글을 읽어오는 미들웨어
  * GET Request -> 200, 401 Response
  * 

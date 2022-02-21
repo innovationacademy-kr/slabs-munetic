@@ -48,6 +48,7 @@ export default function MUITableToolbar(props: MUITableToolbarProps) {
           component="div"
         >
           {path === '/users' && 'App User'}
+          {path === '/comments' && 'Comments'}
           {path === '/admin_users' && 'Admin User'}
           {(path === '/lessons' || path === `/users/${info!.id}`) && 'Lesson'}
         </Typography>

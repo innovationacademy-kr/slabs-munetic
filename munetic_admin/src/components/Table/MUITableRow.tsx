@@ -7,6 +7,7 @@ import AdminUserTableCell from './AdminUser/AdminUserTableCell';
 import LessonTableCell from './Lesson/LessonTableCell';
 import { useInfo } from '../../contexts/info';
 import { useNavigate } from 'react-router-dom';
+import CommentTableCell from './Comment/CommentHeadCell';
 
 export interface MUITableRowProps {
   numSelected: number;
@@ -57,6 +58,7 @@ export default function MUITableRow({
         {row.id}
       </TableCell>
       {path === '/users' && <UserTableCell row={row} />}
+      {path === '/comments' && <CommentTableCell row={row} />}
       {path === '/admin_users' && <AdminUserTableCell row={row} />}
       {(path === '/lessons' || path === `/users/${info!.id}`) && (
         <LessonTableCell row={row} />

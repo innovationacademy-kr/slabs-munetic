@@ -73,6 +73,10 @@ export const getAllLessons = async (offset: number, limit: number) => {
   return await instance.get(`lesson?offset=${offset}&limit=${limit}`);
 };
 
+export const getAllComments = async (offset: number, limit: number) => {
+  return await instance.get(`comment?offset=${offset}&limit=${limit}`);
+};
+
 export const getUserLessons = async (
   userId: number,
   offset: number,
