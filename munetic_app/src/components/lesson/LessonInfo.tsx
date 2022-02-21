@@ -14,6 +14,7 @@ import CommentTop from '../comment/CommentTop';
 import CommentWrite from '../comment/CommentWrite';
 import LikeButton from '../like/LikeButton';
 import BookmarkButton from '../bookmark/BookmarkButton';
+import SnsButtons from '../ui/SnsButtons';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -48,6 +49,7 @@ const ClassProfileWrapper = styled.div`
   }
   .snsTop {
     color: ${palette.red};
+    text-align: right;
   }
 `;
 
@@ -161,7 +163,7 @@ const RenderInfo = ({ infos }: RenderInfoProps) => {
   );
 };
 
-export default function Class() {
+export default function LessonInfo() {
   const classId = useParams().id;
   const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
   const [classInfo, setClassInfo] = useState<ILessonData>();
@@ -276,8 +278,7 @@ export default function Class() {
             <BookmarkButton lesson_id={Number(classId)} />
           </div>
           <div className="snsBottom">
-            <InstagramIcon />
-            <YouTubeIcon />
+            <SnsButtons />
           </div>
         </div>
       </ClassProfileWrapper>

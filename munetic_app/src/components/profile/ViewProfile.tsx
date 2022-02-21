@@ -5,11 +5,10 @@ import * as ProfileAPI from '../../lib/api/profile';
 import * as LessonAPI from '../../lib/api/lesson';
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import { ILessonData } from '../../types/lessonData';
 import Pagination from '../common/Pagination';
 import { LessonItem } from '../lesson/lessonlist/LessonItem';
+import SnsButtons from '../ui/SnsButtons';
 
 const Container = styled.div`
   margin: 30px 10px 60px 10px;
@@ -31,8 +30,7 @@ const Container = styled.div`
     color: ${palette.darkBlue};
   }
   .sns {
-    display: flex;
-    justify-content: right;
+    text-align: right;
   }
 `;
 
@@ -143,8 +141,7 @@ export default function ViewProfile() {
           <img className="img" src={userData.image_url} alt="" />
           <div className="nickname">{userData.nickname}</div>
           <div className="sns">
-            <InstagramIcon />
-            <YouTubeIcon />
+            <SnsButtons />
           </div>
           {userData.name_public ? (
             <InfoWrapper>

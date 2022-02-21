@@ -1,10 +1,10 @@
 import BottomMenu from '../../components/common/BottomMenu';
-import Class from '../../components/lesson/Class';
+import LessonInfo from '../../components/lesson/LessonInfo';
 
 export default function ClassPage() {
   return (
     <>
-      <Class />
+      <LessonInfo />
       {/* <BottomMenu /> */}
     </>
   );
