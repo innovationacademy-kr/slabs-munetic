@@ -40,6 +40,12 @@ const ClassProfileWrapper = styled.div`
     font-size: large;
     font-weight: bold;
   }
+  .update {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 15px;
+  }
   .sns {
     display: flex;
     flex-direction: column;
@@ -245,6 +251,15 @@ export default function Class() {
     }
   }
 
+  const updateOrder = async () => {
+    try {
+      await LessonAPI.updateLessonOrder(parseInt(classId as string));
+    } catch (e) {
+      alert('아직 1시간이 지나지 않았습니다.');
+      console.log(e, "글 끌어올리기에 실패하였습니다.");
+    }
+  }
+
   useEffect(() => {
     async function getLessonById(id: string) {
       try {
@@ -270,6 +285,13 @@ export default function Class() {
             <Link to={`/profile/${classInfo?.tutor_id}`}>{classInfo?.User.name}</Link>
           </div>
         </div>
+
+        <div className="update">
+          <div>
+            <button onClick={updateOrder}>글 위로 올리기</button>
+          </div>
+        </div>
+
         <div className="sns">
           <div className="snsTop">
             <LikeButton lesson_id={Number(classId)} />

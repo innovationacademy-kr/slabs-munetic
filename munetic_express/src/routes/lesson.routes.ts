@@ -6,6 +6,7 @@ import {
   getUserLessons,
   patchLesson,
   postLesson,
+  updateLessonOrder,
 } from '../controllers/lesson.controller';
 
 export const path = '/lesson';
@@ -17,4 +18,6 @@ router
   .get('/:id', getLesson) // findLesson
   .patch('/:id', patchLesson) // editLesson
   .delete('/:id', deleteLesson) // removeLesson
-  .get('/user/:id', getUserLessons); // findLessonsByUserId
+  .get('/user/:id', getUserLessons) // findLessonsByUserId
+
+  .patch('/update/:id', updateLessonOrder); // updateLessonOrderByButton
