@@ -11,7 +11,7 @@ import {
 } from './AdminUser/adminUserHeadCells';
 import { LessonHeadCell, lessonHeadCells } from './Lesson/LessonHeadCells';
 import { useInfo } from '../../contexts/info';
-import { CommentHeadCell, CommentHeadCells } from './Comment/commentHeadCells';
+import { CommentHeadCell, CommentHeadCells } from './Comment/CommentHeadCells';
 
 export interface MUITableProps {
   numSelected: number;
