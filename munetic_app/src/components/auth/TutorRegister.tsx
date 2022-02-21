@@ -110,7 +110,7 @@ export default function TutorRegister() {
         onChange={onChange}
       />
       <InputBox
-        inputName="사운드클라우드 링크 (선택)"
+        inputName="사운드클라우드 아이디 (선택)"
         name="soundcloud"
         value={registerInfo.soundcloud}
         onChange={onChange}

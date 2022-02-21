@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import palette from '../../style/palette';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as CommentAPI from '../../lib/api/comment';
@@ -15,6 +13,8 @@ import CommentWrite from '../comment/CommentWrite';
 import LikeButton from '../like/LikeButton';
 import BookmarkButton from '../bookmark/BookmarkButton';
 import SnsButtons from '../ui/SnsButtons';
+import * as ProfileAPI from '../../lib/api/profile';
+import { ITutorInfoData } from '../../types/tutorInfoData';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -53,7 +53,7 @@ const ClassProfileWrapper = styled.div`
   }
 `;
 
-const ClassPhoneNumber = styled.div`
+const Divider = styled.div`
   padding: 15px 20px;
   font-size: 17px;
   font-weight: bold;
@@ -65,12 +65,12 @@ const ClassPhoneNumber = styled.div`
   }
 `;
 
-const ClassBasicInfo = styled.div`
-  padding: 15px 20px;
-  font-size: 17px;
-  font-weight: bold;
-  color: ${palette.darkBlue};
-  border-bottom: 1px solid ${palette.darkBlue};
+const PhoneNumber = styled.div`
+  font-weight: normal;
+  color: ${palette.grayBlue};
+`;
+
+const BasicInfo = styled.div`
   .basicInfo {
     margin: 10px 15px 0px 5px;
   }
@@ -89,12 +89,7 @@ const ClassBasicInfo = styled.div`
   }
 `;
 
-const ClassContent = styled.div`
-  padding: 15px 20px;
-  font-size: 17px;
-  font-weight: bold;
-  color: ${palette.darkBlue};
-  border-bottom: 1px solid ${palette.darkBlue};
+const Content = styled.div`
   .contentBox {
     margin: 10px 0;
     padding: 25px 15px;
@@ -167,6 +162,7 @@ export default function LessonInfo() {
   const classId = useParams().id;
   const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
   const [classInfo, setClassInfo] = useState<ILessonData>();
+  const [tutorData, setTutorData] = useState<ITutorInfoData>();
 
   const getComment = async () => {
     try {
@@ -251,7 +247,6 @@ export default function LessonInfo() {
     async function getLessonById(id: string) {
       try {
         const res = await LessonAPI.getLesson(Number(id));
-        console.log(res);
         setClassInfo(res.data.data);
       } catch (e) {
         console.log(e, 'id로 레슨을 불러오지 못했습니다.');
@@ -262,6 +257,20 @@ export default function LessonInfo() {
       getComment();
     }
   }, [classId]);
+
+  useEffect(() => {
+    async function getTutorProfile() {
+      try {
+        if (classInfo?.tutor_id) {
+          const userProfile = await ProfileAPI.getTutorProfileById(classInfo?.tutor_id);
+          setTutorData(userProfile.data.data);
+        }
+      } catch (e) {
+        console.log(e, '튜터 프로필을 불러오지 못했습니다.');
+      }
+    }
+    getTutorProfile();
+  }, [classInfo]);
 
   return (
     <ClassContainer>
@@ -278,23 +287,39 @@ export default function LessonInfo() {
             <BookmarkButton lesson_id={Number(classId)} />
           </div>
           <div className="snsBottom">
-            <SnsButtons />
+            <SnsButtons
+              instagramId={tutorData?.instagram}
+              youtubeChannel={tutorData?.youtube}
+              soundcloudId={tutorData?.soundcloud}
+            />
           </div>
         </div>
       </ClassProfileWrapper>
-      <ClassPhoneNumber>
+      <Divider>
+        <PhoneNumber>
         연락처 : <span className="phoneNumber">{classInfo?.User.phone_number}</span>
-      </ClassPhoneNumber>
-      <ClassBasicInfo>
+        </PhoneNumber>
+      </Divider>
+      <Divider>
+        <BasicInfo>
         레슨 기본 정보
         {classInfo && <RenderInfo infos={getBasicInfo(classInfo)} />}
-      </ClassBasicInfo>
-      <ClassContent>
+        </BasicInfo>
+      </Divider>
+      <Divider>
+        {/* TODO: 추후에 경력 세밀화 할 때 리팩터링 해야함 */}
+        강사 정보<br />
+        <div>학력 : {tutorData?.spec || '없음'}</div>
+        <div>경력 : {tutorData?.career || '없음'}</div>
+      </Divider>
+      <Divider>
+        <Content>
         본문
         <div className="contentBox">
           <div className="contentText">{classInfo?.content}</div>
         </div>
-      </ClassContent>
+        </Content>
+      </Divider>
       <CommentTop
         commentCount={comments.length}
         refrash={getComment}
@@ -303,8 +328,7 @@ export default function LessonInfo() {
         decSortByStar={decSortByStar} />
       <Comment comments_arr={comments} edit={modComment} del={delComment} />
       <CommentWrite initStars={5} initComment={""} submit={addComment} />
-      <ClassContent>
-      </ClassContent>
+      <Divider />
     </ClassContainer>
   );
 }

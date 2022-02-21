@@ -19,7 +19,7 @@ export default function SnsButtons(props: LessonItemIProps) {
       <IconButton
         color="inherit"
         disabled={props.instagramId === undefined}
-        href={props.instagramId || ''}
+        href={`https://www.instagram.com/${props.instagramId || ''}/`}
       >
         <Instagram />
       </IconButton>
@@ -33,7 +33,7 @@ export default function SnsButtons(props: LessonItemIProps) {
       <IconButton
         color="inherit"
         disabled={props.soundcloudId === undefined}
-        href={props.soundcloudId || ''}
+        href={`https://soundcloud.com/${props.soundcloudId || ''}/`}
       >
         <CloudQueue />
       </IconButton>

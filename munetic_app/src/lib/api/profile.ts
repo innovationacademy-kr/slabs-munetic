@@ -14,3 +14,4 @@ export const getProfileById = (id: number) => client.get(`/user/${id}`);
 export const getMyProfile = () => client.get('/user');
 export const createProfileImg = (body: FormData) =>
   client.post('/user/image', body);
+export const getTutorProfileById = (id: number) => client.get(`/user/tutor/${id}`);
