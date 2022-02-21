@@ -24,6 +24,7 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
     'location',
     'minute_per_lesson',
     'content',
+    'updatedAt'
   ],
   include: [
     { model: Category, attributes: ['name'] },
@@ -50,6 +51,9 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
         lesson_like: true,
       }
     },
+  ],
+  order: [
+    ['updatedAt', 'DESC'],
   ],
 };
 
@@ -222,3 +226,69 @@ export const findLessonsByUserId = async (
   });
   return lessonData.rows;
 };
+
+/**
+ * 튜터가 해당 카테고리에 쓴 글이 있는 지 확인하는 메소드.
+ * 이미 해당 카테고리에 글이 존재한다면, true를 반환. 없다면 false를 반환.
+ * But, 글의 수정의 경우를 생각해서 arrLessonId와 lessonId가 같은 경우에는 false를 반환.
+ * 
+ * @param userId 유저 ID
+ * @param categoryId 카테고리 ID
+ * @param lessonId 레슨 ID
+ * @returns Promise<boolean>
+ * @author sungkim
+ */
+export const checkLessonWithUserId = async (
+  userId: number,
+  categoryId: number,
+  lessonId: number,
+) : Promise<boolean> => {
+  
+  const lessonData = await Lesson.findAndCountAll({
+    where: {
+      tutor_id: userId,
+      category_id: categoryId,
+    }
+  })
+  
+  let arrLessonId: number = -1;
+
+  lessonData.rows.map((arr: Lesson) => {
+    arrLessonId = arr.id;
+  })
+  if (arrLessonId === lessonId)
+    return false;
+  if (lessonData.count)
+    return true;
+  return false;
+}
+
+/**
+ * 글 끌어올리기 기능을 수행하기 위한 메소드입니다.
+ * 이때 쿨타임 60분이 있기 때문에 그에 대한 제한을 time_diff_min으로 체크합니다.
+ * 
+ * @param lessonId 레슨 ID
+ * @returns Promise<boolean>
+ * @author sungkim
+ */
+export const updateLessonOrderByButton = async (
+  lessonId: number,
+) : Promise<boolean> => {
+
+  const checkCompleted = await Lesson.findOne({where: {id: lessonId,}});
+
+  let now = new Date();
+  now.setHours(now.getHours() + 9);
+  let updatedTime = new Date(checkCompleted?.updatedAt.toString() || "");
+  let time_diff_min = (Number(now) - Number(updatedTime)) / 1000 / 60;
+
+  if (time_diff_min < 60)
+    throw new ErrorResponse(Status.BAD_REQUEST, '쿨타임이 남아있습니다.');
+
+  checkCompleted?.changed('updatedAt', true);
+  checkCompleted?.save();
+
+  if (checkCompleted)
+    return true;
+  return false;
+}

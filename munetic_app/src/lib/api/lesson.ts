@@ -13,3 +13,4 @@ export const editLessonById = async (id: number, body: ILessonTable) => {
   return await client.patch(`/lesson/${id}`, body);
 };
 export const deleteLessonById = (id: number) => client.delete(`/lesson/${id}`);
+export const updateLessonOrder = async (id: number) => await client.patch(`/lesson/update/${id}`);

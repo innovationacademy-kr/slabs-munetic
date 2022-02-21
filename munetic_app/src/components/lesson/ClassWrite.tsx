@@ -109,6 +109,7 @@ export default function ClassWrite() {
                 navigate(`/lesson/class/${classId}`, { replace: true });
               })
               .catch(e => {
+                alert("해당 카테고리에는 하나의 글만 작성 가능합니다.");
                 console.log(e);
               });
           } else {
@@ -118,6 +119,7 @@ export default function ClassWrite() {
                 navigate(`/lesson/class/${res.data.data.id}`, { replace: true });
               })
               .catch(e => {
+                alert("해당 카테고리에는 하나의 글만 작성 가능합니다.");
                 console.log(e);
               });
           }
