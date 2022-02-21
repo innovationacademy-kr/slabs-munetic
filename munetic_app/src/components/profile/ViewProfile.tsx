@@ -5,11 +5,11 @@ import * as ProfileAPI from '../../lib/api/profile';
 import * as LessonAPI from '../../lib/api/lesson';
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import { ILessonData } from '../../types/lessonData';
 import Pagination from '../common/Pagination';
 import { LessonItem } from '../lesson/lessonlist/LessonItem';
+import SnsButtons from '../ui/SnsButtons';
+import { ITutorInfoData } from '../../types/tutorInfoData';
 
 const Container = styled.div`
   margin: 30px 10px 60px 10px;
@@ -31,8 +31,7 @@ const Container = styled.div`
     color: ${palette.darkBlue};
   }
   .sns {
-    display: flex;
-    justify-content: right;
+    text-align: right;
   }
 `;
 
@@ -121,6 +120,7 @@ const UserClassList = ({ userId }: UserClassListProps) => {
 export default function ViewProfile() {
   const userId = useParams().id;
   const [userData, setUserData] = useState<IUserTable>();
+  const [tutorData, setTutorData] = useState<ITutorInfoData>();
 
   useEffect(() => {
     async function getProfile() {
@@ -134,6 +134,20 @@ export default function ViewProfile() {
     getProfile();
   }, []);
 
+  useEffect(() => {
+    async function getTutorProfile() {
+      try {
+        if (userData?.type === 'Tutor') {
+          const userProfile = await ProfileAPI.getTutorProfileById(userData?.id);
+          setTutorData(userProfile.data.data);
+        }
+      } catch (e) {
+        console.log(e, '튜터 프로필을 불러오지 못했습니다.');
+      }
+    }
+    getTutorProfile();
+  }, [userData]);
+
   return (
     <>
       {!userData ? (
@@ -143,8 +157,11 @@ export default function ViewProfile() {
           <img className="img" src={userData.image_url} alt="" />
           <div className="nickname">{userData.nickname}</div>
           <div className="sns">
-            <InstagramIcon />
-            <YouTubeIcon />
+            <SnsButtons
+              instagramId={tutorData?.instagram}
+              youtubeChannel={tutorData?.youtube}
+              soundcloudId={tutorData?.soundcloud}
+            />
           </div>
           {userData.name_public ? (
             <InfoWrapper>
@@ -165,6 +182,15 @@ export default function ViewProfile() {
           <InfoWrapper column>
             <div className="infoName">소개</div>
             <div className="infoContent">{userData.introduction}</div>
+          </InfoWrapper>
+          <InfoWrapper column>
+            <div className="infoName">튜터 정보</div>
+            <div className="infoContent">
+              {/* TODO: 추후에 경력 세밀화 할 때 리팩터링 해야함 */}
+              강사 정보<br />
+              <div>학력 : {tutorData?.spec || '없음'}</div>
+              <div>경력 : {tutorData?.career || '없음'}</div>
+            </div>
           </InfoWrapper>
           {userData.type === 'Tutor' ? (
             <InfoWrapper column>

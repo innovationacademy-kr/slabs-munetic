@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 
 import { Account, User } from '../models/user';
 import * as UserService from '../service/user.service';
+import * as TutorService from '../service/tutorInfo.service';
 import { ResJSON } from '../modules/types';
 import ErrorResponse from '../modules/errorResponse';
 import * as Reshape from './../modules/reshape';
@@ -68,7 +69,7 @@ export const tutorsignup: RequestHandler = async (req, res, next) => {
     if (req.user) {
       const TutorInfoData: ITutorInfoType = req.body;
       const changeToTutor = await UserService.userTypeChange(req.user.id, Account.Tutor);
-      const setData = await UserService.addTutorDataById(req.user.id, TutorInfoData);
+      const setData = await TutorService.addTutorDataById(req.user.id, TutorInfoData);
       let result: ResJSON = new ResJSON(
         '튜터 회원가입 성공 여부',
         changeToTutor && setData,
