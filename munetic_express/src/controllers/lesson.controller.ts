@@ -102,10 +102,6 @@ export const getLessons: RequestHandler = async (
       res.status(status.BAD_REQUEST).send('offset / limit error');
     } else {
       const response: Lesson[] = await LessonServive.findLessons(offset, limit, false);
-
-      console.log("***");
-      console.log(response);
-
       const result: ResJSON = new ResJSON(
         '응답에 성공하였습니다.',
         response,
@@ -220,3 +216,32 @@ export const getUserLessons: RequestHandler = async (
     next(err);
   }
 };
+
+/**
+ * 끌어올리기 기능을 위한 미들웨어
+ * 성공시 status 200, 실패시 status 400 
+ * 
+ * @param req 
+ * @param res 
+ * @param next 
+ * @author sungkim
+ */
+
+export const updateLessonOrder: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const lessonId: number = parseInt(req.params.id as string);
+    const response: boolean = await LessonServive.updateLessonOrderByButton(lessonId);
+
+    const result: ResJSON = new ResJSON(
+      '응답에 성공하였습니다.',
+      response,
+    );
+    res.status(status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
