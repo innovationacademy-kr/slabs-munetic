@@ -10,6 +10,7 @@ import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
 import { IUserTable } from '../../types/userData';
 import getCategoriesByMap from '../../lib/getCategoriesByMap';
+import getYoutubeId from '../../lib/getYoutubeId';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
@@ -71,7 +72,7 @@ export default function ClassWrite() {
   ) => {
     const { value, name } = e.target;
     const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: Number(userData?.id), category_id: 0};
-    if (name === 'title' || name === 'location' || name === 'content') {
+    if (name === 'title' || name === 'location' || name === 'content' || name === 'youtube') {
       newClassInfo[name] = value as string;
     } else if (name === 'createdAt' || name === 'updatedAt' || name === 'deletedAt') {
       newClassInfo[name] = new Date();
@@ -89,7 +90,7 @@ export default function ClassWrite() {
 
   const validateWriteForm = () => {
     if (classInfo !== undefined) {
-      if (!classInfo.title || !classInfo.category_id || !classInfo.price || !classInfo.location || !classInfo.minute_per_lesson) {
+      if (!classInfo.title || !classInfo.category_id || !classInfo.price || !classInfo.location || !classInfo.youtube || !classInfo.minute_per_lesson) {
         return false;
       }
     }
@@ -100,8 +101,9 @@ export default function ClassWrite() {
     if (state.write) {
       actions.setValidationMode(true);
       if (validateWriteForm()) {
-        let madeClassId;
         if (!!classInfo) {
+          // FIXME: 유튜브 링크에서 ID만 추출해 저장하기 위한 로직 (수정 필요할 듯)
+          classInfo.youtube = getYoutubeId(classInfo?.youtube || '');
           if (classId) {
             LessonAPI.editLessonById(Number(classId), classInfo)
               .then(res => {
@@ -211,6 +213,13 @@ export default function ClassWrite() {
         name="location"
         value={classInfo?.location || ""}
         isValid={!!classInfo?.location}
+        onChange={onChangeInput}
+      />
+      <InputBox
+        inputName="유튜브 영상 링크"
+        name="youtube"
+        value={classInfo?.youtube || ""}
+        isValid={getYoutubeId(classInfo?.youtube || "") !== undefined}
         onChange={onChangeInput}
       />
       <InputBox

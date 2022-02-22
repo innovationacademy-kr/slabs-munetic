@@ -15,6 +15,7 @@ export interface ILessonTable {
   location?: string | null;
   minute_per_lesson?: number | null;
   content?: string | null;
+  youtube?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

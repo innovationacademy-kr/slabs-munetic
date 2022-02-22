@@ -24,6 +24,7 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
     'location',
     'minute_per_lesson',
     'content',
+    'youtube',
     'updatedAt'
   ],
   include: [

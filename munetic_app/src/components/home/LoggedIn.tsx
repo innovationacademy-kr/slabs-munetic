@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Button from '../common/Button';
-import BestPlayingVideo from '../media/BestPlayingVideo';
+import VideoEmbed from '../media/VideoEmbed';
 import ViewTutorsProfile from '../profile/ViewTutorsProfile';
 
 
@@ -41,7 +41,7 @@ export default function LoggedIn({type}: {type: string}) {
         </ButtonWrapper>
       </ButtonsWrapper>
       <ViewTutorsProfile />
-      <BestPlayingVideo />
+      <VideoEmbed title='베스트 연주 영상' id='jTcNsCLIowE' />
     </Container>
   );
 }
