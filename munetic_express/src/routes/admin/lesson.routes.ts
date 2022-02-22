@@ -10,3 +10,4 @@ router.get('/', jwtAdminAuth(), lesson.getAllLessons);
 router.get('/:id', jwtAdminAuth(), lesson.getLessonById);
 router.delete('/:id', jwtAdminAuth(), lesson.deleteLesson);
 router.get('/user/:id', jwtAdminAuth(), lesson.getUserLessons);
+router.post('/del', jwtAdminAuth(), lesson.delLessons);

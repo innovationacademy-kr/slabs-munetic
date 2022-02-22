@@ -3,6 +3,7 @@ import { Account, User } from '../models/user';
 import Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
 import { TutorInfo } from '../models/tutorInfo'
+import addProperty from '../util/addProperty';
 
 export interface IsearchUser {
   login_id?: string;
@@ -208,3 +209,25 @@ export const userTypeChange = async (
   });
   return (userUpdate !== 0);
 }
+
+/**
+ * 고유 ID를 통해 유저들을 삭제
+ * 
+ * @param id 삭제하고자 하는 ID 배열
+ * @param force 실제로 테이블에서 삭제하는지 여부
+ * @returns Promise<number>
+ * @author joohongpark
+ */
+ export const removeUsers = async (
+  id: number[],
+  force?: boolean,
+): Promise< number > => {
+  let query = {
+    where: { id }
+  };
+  if (force !== undefined) {
+    addProperty<boolean>(query, 'force', force);
+  }
+  const rtn = await User.destroy(query);
+  return rtn;
+};

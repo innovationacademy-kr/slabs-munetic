@@ -52,6 +52,7 @@ export const searchAllCommentsByUserId = async (
  * 
  * @param offset number (optional)
  * @param limit number (optional)
+ * @param all boolean (optional)
  * @returns Promise<Comment[]>
  * @throws ErrorResponse if the user login ID is not exists.
  * @author joohongpark
@@ -59,6 +60,7 @@ export const searchAllCommentsByUserId = async (
 export const searchAllComments = async (
   offset?: number,
   limit?: number,
+  all?: boolean,
 ): Promise< {count: number, rows: Comment[]} > => {
   let query = {
     include: [
@@ -73,6 +75,11 @@ export const searchAllComments = async (
     addProperty<number>(query, 'offset', offset);
     addProperty<number>(query, 'limit', limit);
   }
+  if (all !== undefined) {
+    addProperty<boolean>(query, 'paranoid', !all);
+    addProperty<boolean>(query.include[0], 'paranoid', !all);
+  }
+  console.log(query);
   const searchAllComments = await Comment.findAndCountAll(query);
   return searchAllComments;
 };
@@ -184,4 +191,26 @@ export const removeComment = async (
   if (!checkExistence) return false;
   await checkExistence.destroy();
   return true;
+};
+
+/**
+ * 고유 ID를 통해 댓글들을 삭제
+ * 
+ * @param id 삭제하고자 하는 ID 배열
+ * @param force 실제로 테이블에서 삭제하는지 여부
+ * @returns Promise<number>
+ * @author joohongpark
+ */
+ export const removeComments = async (
+  id: number[],
+  force?: boolean,
+): Promise< number > => {
+  let query = {
+    where: { id }
+  };
+  if (force !== undefined) {
+    addProperty<boolean>(query, 'force', force);
+  }
+  const rtn = await Comment.destroy(query);
+  return rtn;
 };

@@ -99,3 +99,15 @@ interface passwordProps {
 export const updatePassword = async (newPassword: passwordProps) => {
   return await instance.patch('auth/password', newPassword);
 };
+
+export const deleteComments = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`comment/del?force=${force ? 'true' : 'false'}`, ids);
+};
+
+export const deleteUsers = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`user/del?force=${force ? 'true' : 'false'}`, ids);
+};
+
+export const deleteLessons = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`lesson/del?force=${force ? 'true' : 'false'}`, ids);
+};
