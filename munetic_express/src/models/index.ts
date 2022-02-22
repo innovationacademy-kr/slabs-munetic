@@ -7,6 +7,7 @@ import { User, Gender, Account } from './user';
 import * as UserService from '../service/user.service';
 import { LessonLike } from './lessonLike';
 import { TutorInfo } from './tutorInfo';
+import { Etc, Key } from './etc';
 
 const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
@@ -43,6 +44,7 @@ export function Models() {
   Comment.initModel(sequelize);
   LessonLike.initModel(sequelize);
   TutorInfo.initModel(sequelize);
+  Etc.initModel(sequelize);
 
   Category.hasMany(Lesson, {
     foreignKey: {
@@ -144,4 +146,15 @@ export function createCategories() {
     Category.create(category as Category).catch(e => console.log(e));
   });
   console.log('🎺 App:CategoryLists created');
+}
+
+export function createEtcData() {
+  const dataLists = [
+    {id: Key.Terms, content: "약관 데이터"},
+    {id: Key.License, content: "오픈소스 라이센스 데이터"},
+  ];
+  dataLists.map(data => {
+    Etc.create(data as Etc).catch(e => console.log(e));
+  });
+  console.log('🎺 App:EtcLists created');
 }

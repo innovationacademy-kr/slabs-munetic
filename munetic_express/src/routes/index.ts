@@ -10,6 +10,7 @@ import * as bookmark from './bookmark.routes';
 import * as comment from './comment.routes';
 import * as search from './search.routes';
 import * as lessonLike from './lessonLike.routes';
+import * as etc from './etc.routes';
 
 import passport from 'passport';
 import AdminStrategy from '../modules/admin.strategy';
@@ -41,3 +42,4 @@ router.use(bookmark.path, bookmark.router);
 router.use(comment.path, comment.router);
 router.use(search.path, search.router);
 router.use(lessonLike.path, lessonLike.router);
+router.use(etc.path, etc.router);
