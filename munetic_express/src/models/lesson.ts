@@ -9,6 +9,7 @@ export interface lessonAttributes {
   location: string | null;
   minute_per_lesson: number | null;
   content: string | null;
+  youtube: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -37,6 +38,7 @@ export class Lesson
   public location!: string | null;
   public minute_per_lesson!: number | null;
   public content!: string | null;
+  public youtube!: string | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -85,6 +87,10 @@ export class Lesson
         content: {
           allowNull: true,
           type: DataTypes.STRING(8192),
+        },
+        youtube: {
+          allowNull: true,
+          type: DataTypes.STRING(1024),
         },
         createdAt: {
           field: 'createdAt',

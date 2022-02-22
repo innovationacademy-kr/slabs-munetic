@@ -15,6 +15,7 @@ import BookmarkButton from '../bookmark/BookmarkButton';
 import SnsButtons from '../ui/SnsButtons';
 import * as ProfileAPI from '../../lib/api/profile';
 import { ITutorInfoData } from '../../types/tutorInfoData';
+import VideoEmbed from '../media/VideoEmbed';
 
 const ClassContainer = styled.div`
   margin: 10px;
@@ -334,6 +335,11 @@ export default function LessonInfo() {
         <div>학력 : {tutorData?.spec || '없음'}</div>
         <div>경력 : {tutorData?.career || '없음'}</div>
       </Divider>
+      {classInfo?.youtube && (
+        <Divider>
+        <VideoEmbed title='연주 동영상' id={classInfo?.youtube || ''} />
+        </Divider>
+      )}
       <Divider>
         <Content>
         본문
