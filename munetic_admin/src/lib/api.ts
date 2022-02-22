@@ -111,3 +111,28 @@ export const deleteUsers = async (ids: ReadonlyArray<number>, force: boolean) =>
 export const deleteLessons = async (ids: ReadonlyArray<number>, force: boolean) => {
   return await instance.post(`lesson/del?force=${force ? 'true' : 'false'}`, ids);
 };
+
+export const getTerms = async () => {
+  return await instance.get('etc/terms');
+};
+
+interface saveTermsProps {
+  data: string;
+}
+
+export const saveTerms = async (data: saveTermsProps) => {
+  return await instance.put('etc/terms', data);
+};
+
+
+export const getLicense = async () => {
+  return await instance.get('etc/license');
+};
+
+interface saveLicenseProps {
+  data: string;
+}
+
+export const saveLicense = async (data: saveLicenseProps) => {
+  return await instance.put('etc/license', data);
+};

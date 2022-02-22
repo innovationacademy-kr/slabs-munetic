@@ -21,7 +21,7 @@ export const menuLinks = ['/users', '/lessons', '', '', '', ''];
 export const subMenuLinks = [
   ['/users', '/admin_users'],
   ['/lessons', '/comments'],
-  ['', '', '', ''],
+  ['/terms', '', '/license', ''],
   [''],
   ['', '', ''],
   ['', ''],
