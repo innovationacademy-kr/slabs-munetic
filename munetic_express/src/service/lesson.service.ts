@@ -8,6 +8,7 @@ import { CountRows, LessonAllInfo, LessonEditable } from '../types/service/lesso
 
 import { Comment } from '../models/comment';
 import { LessonLike } from '../models/lessonLike';
+import addProperty from '../util/addProperty';
 
 /**
  * 레슨의 모든 정보 (유저, 카테고리를 포함한 정보) 를 가져올 때 사용하는 쿼리 옵션입니다.
@@ -148,14 +149,14 @@ export const findLessons = async (
   offset: number,
   limit: number,
   all: boolean,
-): Promise<Lesson[]> => {
+): Promise<{rows: Lesson[], count: number}> => {
   const query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
   const lessonData = await Lesson.findAndCountAll({
     ...query,
     offset,
     limit,
   });
-  return lessonData.rows;
+  return lessonData;
 };
 
 /**
@@ -293,3 +294,25 @@ export const updateLessonOrderByButton = async (
     return true;
   return false;
 }
+
+/**
+ * 고유 ID를 통해 레슨들을 삭제
+ * 
+ * @param id 삭제하고자 하는 ID 배열
+ * @param force 실제로 테이블에서 삭제하는지 여부
+ * @returns Promise<number>
+ * @author joohongpark
+ */
+ export const removeLessons = async (
+  id: number[],
+  force?: boolean,
+): Promise< number > => {
+  let query = {
+    where: { id }
+  };
+  if (force !== undefined) {
+    addProperty<boolean>(query, 'force', force);
+  }
+  const rtn = await Lesson.destroy(query);
+  return rtn;
+};

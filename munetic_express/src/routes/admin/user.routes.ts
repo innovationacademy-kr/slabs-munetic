@@ -11,3 +11,4 @@ router.get('/check', jwtAdminAuth(), UserApi.doubleCheck);
 router.get('/:id', jwtAdminAuth(), UserApi.getUserInfo);
 router.patch('/:id', jwtAdminAuth(), UserApi.patchUserByAdmin);
 router.delete('/:id', jwtAdminAuth(), UserApi.deleteUserByAdmin);
+router.post('/del', jwtAdminAuth(), UserApi.delLessons);

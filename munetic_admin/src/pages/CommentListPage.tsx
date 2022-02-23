@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import MUITable from '../components/Table/MUITable';
 import * as Api from '../lib/api';
 
+function delComments(arr: ReadonlyArray<number>) {
+  Api.deleteComments(arr, false)
+  .then(res => console.log(`${res.data.data}개의 댓글 삭제`))
+  .catch(e => console.log(`err : ${e}`));
+}
+
 export default function CommentListPage() {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -28,14 +34,17 @@ export default function CommentListPage() {
     setPage(0);
   };
 
-  useEffect(() => {
+  const getComments = () => {
     const limit = 10;
     const offset = page * limit;
     Api.getAllComments(offset, limit).then(({ data }: any) => {
-      console.log(data.data);
       setRows(data.data.rows);
       setCount(parseInt(data.data.count, 10));
     });
+  }
+
+  useEffect(() => {
+    getComments();
   }, [page]);
 
   return (
@@ -44,6 +53,10 @@ export default function CommentListPage() {
       count={count}
       rows={rows}
       rowsPerPage={rowsPerPage}
+      onClickDeleteButton={(arr) => {
+        delComments(arr);
+        getComments();
+      }}
       handleChangePage={handleChangePage}
       handleChangeRowsPerPage={handleChangeRowsPerPage}
     />

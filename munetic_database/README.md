@@ -98,4 +98,11 @@ erDiagram
         DATE updatedAt
         DATE deletedAt
     }
+    ETC {
+        integer id
+        text content
+        DATE createdAt
+        DATE updatedAt
+        DATE deletedAt
+    }
 ```

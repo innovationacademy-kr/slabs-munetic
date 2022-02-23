@@ -101,10 +101,10 @@ export const getLessons: RequestHandler = async (
     if (Number.isNaN(offset) || Number.isNaN(limit) || offset < 0 || limit < 0) {
       res.status(status.BAD_REQUEST).send('offset / limit error');
     } else {
-      const response: Lesson[] = await LessonServive.findLessons(offset, limit, false);
+      const {rows} = await LessonServive.findLessons(offset, limit, false);
       const result: ResJSON = new ResJSON(
         '응답에 성공하였습니다.',
-        response,
+        rows,
       );
       res.status(status.OK).json(result);
     }

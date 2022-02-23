@@ -16,6 +16,7 @@ export type TableProps = {
   count: number;
   rows: [];
   rowsPerPage: number;
+  onClickDeleteButton: (selectedIndexes: ReadonlyArray<number>) => void;
   handleChangePage: (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -28,6 +29,7 @@ export default function MUITable({
   page,
   rows,
   rowsPerPage,
+  onClickDeleteButton,
   handleChangePage,
   handleChangeRowsPerPage,
 }: TableProps) {
@@ -78,7 +80,7 @@ export default function MUITable({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <MUITableToolbar numSelected={selected.length} />
+        <MUITableToolbar numSelected={selected.length} onClickDeleteButton={() => onClickDeleteButton(selected)} />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} size="medium">
             <MUITableHead

@@ -99,3 +99,40 @@ interface passwordProps {
 export const updatePassword = async (newPassword: passwordProps) => {
   return await instance.patch('auth/password', newPassword);
 };
+
+export const deleteComments = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`comment/del?force=${force ? 'true' : 'false'}`, ids);
+};
+
+export const deleteUsers = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`user/del?force=${force ? 'true' : 'false'}`, ids);
+};
+
+export const deleteLessons = async (ids: ReadonlyArray<number>, force: boolean) => {
+  return await instance.post(`lesson/del?force=${force ? 'true' : 'false'}`, ids);
+};
+
+export const getTerms = async () => {
+  return await instance.get('etc/terms');
+};
+
+interface saveTermsProps {
+  data: string;
+}
+
+export const saveTerms = async (data: saveTermsProps) => {
+  return await instance.put('etc/terms', data);
+};
+
+
+export const getLicense = async () => {
+  return await instance.get('etc/license');
+};
+
+interface saveLicenseProps {
+  data: string;
+}
+
+export const saveLicense = async (data: saveLicenseProps) => {
+  return await instance.put('etc/license', data);
+};

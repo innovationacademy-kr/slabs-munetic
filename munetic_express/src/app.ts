@@ -5,7 +5,7 @@ import { options } from './swagger/swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { createCategories, createFirstOwnerAccount, Models } from './models';
+import { createCategories, createFirstOwnerAccount, createEtcData, Models } from './models';
 import errorHandler from './modules/errorHandler';
 import passport from 'passport';
 
@@ -48,6 +48,8 @@ Models()
       createFirstOwnerAccount();
       // app category 자동 생성
       createCategories();
+      // 약관, 라이센스 자동 생성
+      createEtcData();
     }
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));
