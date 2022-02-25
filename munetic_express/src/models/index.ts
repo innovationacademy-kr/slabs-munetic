@@ -3,11 +3,10 @@ import { Category } from './category';
 import { Lesson } from './lesson';
 import { Bookmark } from './bookmark';
 import { Comment } from './comment';
-import { User, Gender, Account } from './user';
-import * as UserService from '../service/user.service';
+import { User } from './user';
 import { LessonLike } from './lessonLike';
 import { TutorInfo } from './tutorInfo';
-import { Etc, Key } from './etc';
+import { Etc } from './etc';
 
 const { development } = require('../config/config');
 const { host, port, database, username, password } = development;
@@ -113,48 +112,4 @@ export function Models() {
     foreignKey: 'user_id',
   });
   return sequelize;
-}
-export function createFirstOwnerAccount() {
-  const admin = {
-    login_id: 'munetic@gmail.com',
-    login_password:
-      '$2b$10$9ZgatOfeQp5Di8QLo21ODuOFjrm1/zKwgOkJIPD7Yu0Ws.opQTeqK',
-    name: '대표님',
-    nickname: 'munetic@gmail.com',
-    birth: new Date(),
-    gender: Gender.Other,
-    type: Account.Owner,
-    email: 'munetic@gmail.com',
-  };
-
-  UserService.createUser(new User({ ...admin })).then(() =>
-    console.log('👑 Admin:First Owner account created'),
-  );
-}
-
-export function createCategories() {
-  const categoryLists = [
-    { name: '전체' },
-    { name: '기타' },
-    { name: '바이올린' },
-    { name: '드럼' },
-    { name: '피아노' },
-    { name: '하프' },
-    { name: '첼로' },
-  ];
-  categoryLists.map(category => {
-    Category.create(category as Category).catch(e => console.log(e));
-  });
-  console.log('🎺 App:CategoryLists created');
-}
-
-export function createEtcData() {
-  const dataLists = [
-    {id: Key.Terms, content: "약관 데이터"},
-    {id: Key.License, content: "오픈소스 라이센스 데이터"},
-  ];
-  dataLists.map(data => {
-    Etc.create(data as Etc).catch(e => console.log(e));
-  });
-  console.log('🎺 App:EtcLists created');
 }
