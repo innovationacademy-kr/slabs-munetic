@@ -81,14 +81,14 @@ export const getLesson: RequestHandler = async (
 };
 
 /**
- * offset, limit 범위만큼 레슨을 가져오는 미들웨어
+ * offset, limit 범위만큼 카테고리 별 레슨을 가져오는 미들웨어 (카테고리 입력 안하면 전체 조회)
  * GET Request -> 200, 400 Response
  * 
  * @param req request Objrct
  * @param res response Objrct
  * @param next next middleware function Object
- * @author Jonghyun Lim
- * @version 1
+ * @author joohongpark
+ * @version 2
  */
 export const getLessons: RequestHandler = async (
   req: Request,
@@ -98,13 +98,15 @@ export const getLessons: RequestHandler = async (
   try {
     const offset: number = parseInt(req.query.offset as string);
     const limit: number = parseInt(req.query.limit as string);
+    const category_id: number = parseInt(req.params.category_id as string);
     if (Number.isNaN(offset) || Number.isNaN(limit) || offset < 0 || limit < 0) {
       res.status(status.BAD_REQUEST).send('offset / limit error');
     } else {
-      const {rows} = await LessonServive.findLessons(offset, limit, false);
+      const cid = Number.isNaN(category_id) ? 0 : category_id;
+      const data = await LessonServive.findLessons(offset, limit, false, cid);
       const result: ResJSON = new ResJSON(
         '응답에 성공하였습니다.',
-        rows,
+        data,
       );
       res.status(status.OK).json(result);
     }

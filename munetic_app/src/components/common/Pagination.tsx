@@ -44,7 +44,7 @@ const Pagination = ({ itemsPerPage, classCount, handlePageClick }: IProps) => {
 
   return (
     <PaginationContainer>
-      {pageCount > 1 ? (
+      {pageCount > 1 && (
         <ReactPaginate
           breakLabel="..."
           onPageChange={handlePageClick}
@@ -56,8 +56,6 @@ const Pagination = ({ itemsPerPage, classCount, handlePageClick }: IProps) => {
           activeClassName="currentPage"
           disabledLinkClassName="disabledLink"
         />
-      ) : (
-        ''
       )}
     </PaginationContainer>
   );

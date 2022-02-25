@@ -29,4 +29,6 @@ export interface ILessonData extends ILessonTable {
   User: IUserTable;
   Comments: ICommentTable[];
   LessonLikes: ILessonLikeTable[];
+  CommentsCount?: number;
+  LessonLikesCount?: number;
 }

@@ -1,3 +1,4 @@
+import { Sequelize, Op } from 'sequelize';
 import { FindOptions } from 'sequelize/dist';
 import { Category, categoryAttributes } from '../models/category';
 import { Lesson, lessonAttributes } from '../models/lesson';
@@ -9,6 +10,8 @@ import { CountRows, LessonAllInfo, LessonEditable } from '../types/service/lesso
 import { Comment } from '../models/comment';
 import { LessonLike } from '../models/lessonLike';
 import addProperty from '../util/addProperty';
+import { router } from '../routes';
+import * as LessonMapper from '../mapping/LessonMapper';
 
 /**
  * 레슨의 모든 정보 (유저, 카테고리를 포함한 정보) 를 가져올 때 사용하는 쿼리 옵션입니다.
@@ -42,16 +45,6 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
         'gender',
         'image_url',
       ],
-    },
-    {
-      model: Comment,
-    },
-    {
-      model: LessonLike,
-      required: false,
-      where: {
-        lesson_like: true,
-      }
     },
   ],
   order: [
@@ -141,22 +134,43 @@ export const findLessonById = async (
  * @param offset number
  * @param limit number
  * @param all boolean 삭제된 정보도 가져옴 (운영자용)
- * @returns Promise<CountRows<LessonAllInfo>>
+ * @returns Promise<>
  * @author Jonghyun Lim
- * @version 1
+ * @version 2
  */
 export const findLessons = async (
   offset: number,
   limit: number,
   all: boolean,
-): Promise<{rows: Lesson[], count: number}> => {
-  const query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
-  const lessonData = await Lesson.findAndCountAll({
-    ...query,
+  category_id?: number,
+): Promise<{rows: LessonAllInfo[], count: number}> => {
+  const _query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
+  const query = {
+    ..._query,
     offset,
     limit,
-  });
-  return lessonData;
+  };
+  if (category_id !== undefined || category_id !== 0) {
+    const where = { category_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  const {rows, count} = await Lesson.findAndCountAll(query);
+
+  const rows_new = await Promise.all( rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new, count};
 };
 
 /**
