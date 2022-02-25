@@ -5,9 +5,12 @@ import { options } from './swagger/swagger';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { router } from './routes';
-import { createCategories, createFirstOwnerAccount, createEtcData, Models } from './models';
+import { Models } from './models';
 import errorHandler from './modules/errorHandler';
 import passport from 'passport';
+import UserInit from './models/initdata/user.init'
+import CategoryInit from './models/initdata/category.init'
+import EtcInit from './models/initdata/etc.init'
 
 const app: express.Application = express();
 
@@ -45,11 +48,11 @@ Models()
 
     if (init) {
       // admin Owner 계정 자동 생성
-      createFirstOwnerAccount();
+      UserInit();
       // app category 자동 생성
-      createCategories();
+      CategoryInit();
       // 약관, 라이센스 자동 생성
-      createEtcData();
+      EtcInit();
     }
   })
   .catch(err => console.log(err, '🙀 Modeling Failed'));

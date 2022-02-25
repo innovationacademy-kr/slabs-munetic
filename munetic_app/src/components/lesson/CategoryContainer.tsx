@@ -68,7 +68,7 @@ export default function CategoryContainer() {
           <div className="categoryIconWrapper">
             {categoryData.map((category, i) => (
               <StyledButton
-                to={`/lesson/classes?category=${category.name}`}
+                to={`/lesson/classes?category=${category.id}`}
                 key={i}
               >
                 {category.name}

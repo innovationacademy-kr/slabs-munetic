@@ -9,6 +9,8 @@ export const getLessonByUserId = (id: number, limit: number, offset: number) =>
   client.get(`/lesson/user/${id}?limit=${limit}&offset=${offset}`);
 export const getLessons = (limit: number, offset: number) =>
   client.get(`/lesson/?limit=${limit}&offset=${offset}`);
+export const getLessonsByCategoryId = (category: number, limit: number, offset: number) =>
+  client.get(`/lesson/lesson/${category}?limit=${limit}&offset=${offset}`);
 export const editLessonById = async (id: number, body: ILessonTable) => {
   return await client.patch(`/lesson/${id}`, body);
 };

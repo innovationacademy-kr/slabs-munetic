@@ -41,7 +41,7 @@ export default function LoggedIn({type}: {type: string}) {
         </ButtonWrapper>
       </ButtonsWrapper>
       <ViewTutorsProfile />
-      <VideoEmbed title='베스트 연주 영상' id='jTcNsCLIowE' />
+      <VideoEmbed title='베스트 연주 영상' id='ldxVFDvWCgg' />
     </Container>
   );
 }

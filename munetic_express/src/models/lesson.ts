@@ -1,4 +1,6 @@
-import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { Sequelize, DataTypes, Model, Optional, HasManyGetAssociationsMixin } from 'sequelize';
+import { LessonLike } from './lessonLike';
+import { Comment } from './comment';
 
 export interface lessonAttributes {
   id: number;
@@ -42,6 +44,9 @@ export class Lesson
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
+
+  declare getComments: HasManyGetAssociationsMixin<Comment>;
+  declare getLessonLikes: HasManyGetAssociationsMixin<LessonLike>;
 
   static initModel(sequelize: Sequelize): typeof Lesson {
     return Lesson.init(

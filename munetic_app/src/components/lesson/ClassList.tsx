@@ -1,4 +1,3 @@
-import { Link, useSearchParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import palette from '../../style/palette';
 import { ILessonData } from '../../types/lessonData';
@@ -38,62 +37,64 @@ export const StyledButton = styled(Button)<StyledButtonProps>`
     `}
 `;
 
-export default function ClassList() {
-  const [getParams, setParams] = useSearchParams();
+/**
+ * ClassList 컴포넌트의 프로퍼티 정의
+ */
+export interface ClassListIProps {
+  category_id?: number;
+}
+
+export default function ClassList(props: ClassListIProps) {
   const [classes, setClasses] = useState<ReadonlyArray<ILessonData>>([]);
   const [classCount, setClassCount] = useState<number>(0);
-  const categoryParam = getParams.get('category');
   const itemsPerPage = 5;
 
-  const handlePageClick = async (event: any) => {
-    const newOffset = (event.selected * itemsPerPage) % classCount;
+  const getList = async (limit: number, offset: number) => {
     try {
-      const res = await LessonAPI.getLessons(itemsPerPage, newOffset);
+      let res;
+      if (props.category_id) {
+        res = await LessonAPI.getLessonsByCategoryId(props.category_id, limit, offset);
+      } else {
+        res = await LessonAPI.getLessons(limit, offset);
+      }
       setClasses(res.data.data.rows);
+      setClassCount(res.data.data.count);
     } catch (e) {
-      console.log(e, 'id로 레슨을 불러오지 못했습니다.');
+      console.log(e, '레슨 리스트를 불러오지 못했습니다.');
     }
   };
 
+  const handlePageClick = async (event: any) => {
+    const newOffset = (event.selected * itemsPerPage) % classCount;
+    await getList(itemsPerPage, newOffset);
+  };
+
   useEffect(() => {
-    async function getLessons(limit: number, offset: number) {
-      try {
-        const res = await LessonAPI.getLessons(limit, offset);
-        setClasses(res.data.data);
-        setClassCount(res.data.data.length);
-        classes.filter((lesson) => (categoryParam === "전체" || lesson.Category.name === categoryParam)).map(lesson => console.log(lesson));
-      } catch (e) {
-        console.log(e, '레슨 전체 목록을 불러오지 못했습니다.');
-      }
-    }
-    getLessons(itemsPerPage, 0);
+    getList(itemsPerPage, 0);
   }, []);
   return (
     <ClassListContainer>
     {
-      classes &&
-        (
-          classes.filter((lesson) => (categoryParam === "전체" || lesson.Category.name === categoryParam)).map(lesson => (
-            <LessonItem
-              lesson_id={lesson.id}
-              category={lesson.Category.name || ""}
-              title={lesson.title || ""}
-              name = {lesson.User.name || ""}
-              location={lesson.location || ""}
-              price={lesson.price || 0}
-              comment_num={lesson.Comments.length || 0}
-              lessonLike_num={lesson.LessonLikes.length || 0}
-              key={lesson.id}
-              image_url={lesson.User.image_url}
-              />
-          ))
-        )
-      }
-      <Pagination
-        itemsPerPage={itemsPerPage}
-        classCount={classCount}
-        handlePageClick={e => handlePageClick(e)}
-      />
+      classes.map(lesson => (
+        <LessonItem
+          lesson_id={lesson.id}
+          category={lesson.Category.name || ""}
+          title={lesson.title || ""}
+          name = {lesson.User.name || ""}
+          location={lesson.location || ""}
+          price={lesson.price || 0}
+          comment_num={lesson.CommentsCount || 0}
+          lessonLike_num={lesson.LessonLikesCount || 0}
+          key={lesson.id}
+          image_url={lesson.User.image_url}
+          />
+      ))
+    }
+    <Pagination
+      itemsPerPage={itemsPerPage}
+      classCount={classCount}
+      handlePageClick={e => handlePageClick(e)}
+    />
     </ClassListContainer>
   );
 }

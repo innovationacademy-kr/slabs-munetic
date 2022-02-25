@@ -15,6 +15,7 @@ export const router = Router();
 router
   .post('/', postLesson) // createLesson
   .get('/', getLessons) // findLessons
+  .get('/lesson/:category_id', getLessons) // findLessons
   .get('/:id', getLesson) // findLesson
   .patch('/:id', patchLesson) // editLesson
   .delete('/:id', deleteLesson) // removeLesson

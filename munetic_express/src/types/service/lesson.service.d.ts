@@ -9,7 +9,7 @@ import { userAttributes } from '../../models/user'
  * @version 1
  */
  export interface LessonAllInfo {
-  lesson_id: number;
+  id: number;
   tutor_id: number;
   title: string;
   price?: number;
@@ -18,6 +18,8 @@ import { userAttributes } from '../../models/user'
   content?: string;
   Category: categoryAttributes;
   User: userAttributes;
+  CommentsCount?: number;
+  LessonLikesCount?: number;
 };
 
 /**

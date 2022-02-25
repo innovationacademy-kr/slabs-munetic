@@ -7,7 +7,7 @@ module.exports = {
         {
           user_id: 13,
           lesson_id: 2,
-          content: 'asdasd',
+          content: '안녕하세요',
           stars: 5,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -15,7 +15,7 @@ module.exports = {
         {
           user_id: 8,
           lesson_id: 1,
-          content: 'wqer',
+          content: '반가워요',
           stars: 5,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -23,7 +23,7 @@ module.exports = {
         {
           user_id: 9,
           lesson_id: 3,
-          content: 'asdasd',
+          content: '좋아요',
           stars: 5,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -31,7 +31,7 @@ module.exports = {
         {
           user_id: 13,
           lesson_id: 3,
-          content: 'asdasd',
+          content: '짱이에요',
           stars: 5,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -39,7 +39,7 @@ module.exports = {
         {
           user_id: 13,
           lesson_id: 2,
-          content: 'asdsadfssdfdsfasd',
+          content: '너무 좋아요',
           stars: 2,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -47,7 +47,7 @@ module.exports = {
         {
           user_id: 11,
           lesson_id: 5,
-          content: 'adsadasdadsdasd',
+          content: '좋습니다',
           stars: 5,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
@@ -55,8 +55,24 @@ module.exports = {
         {
           user_id: 3,
           lesson_id: 5,
-          content: 'qqqqqqqqqasdasd',
+          content: '굿이에요',
           stars: 5,
+          createdAt: Sequelize.fn('now'),
+          updatedAt: Sequelize.fn('now'),
+        },
+        {
+          user_id: 1,
+          lesson_id: 5,
+          content: '그저 그래요',
+          stars: 3,
+          createdAt: Sequelize.fn('now'),
+          updatedAt: Sequelize.fn('now'),
+        },
+        {
+          user_id: 2,
+          lesson_id: 5,
+          content: '별로에요',
+          stars: 1,
           createdAt: Sequelize.fn('now'),
           updatedAt: Sequelize.fn('now'),
         },
