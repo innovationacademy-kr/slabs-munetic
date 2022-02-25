@@ -17,7 +17,7 @@ module.exports = {
         phone_number: '010-1234-1234',
         phone_public: true,
         image_url: '/img/basicProfileImg.png',
-        introduction: '안녕하세요. kunlee입니다. test data입니다.',
+        introduction: '안녕하세요. kunlee입니다. 반가워요',
         createdAt: Sequelize.fn('now'),
         updatedAt: Sequelize.fn('now'),
       },
