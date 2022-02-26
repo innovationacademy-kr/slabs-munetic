@@ -51,3 +51,13 @@ export interface ICommentTable {
   updatedAt: Date;
   deletedAt: Date;
 }
+
+/**
+ * 댓글 많은 강사의 타입을 지정합니다.
+ * 
+ * @author joohongpark
+ */
+export interface ICommentPerTutorTable {
+  tutor_id: number,
+  comment_count: number,
+}

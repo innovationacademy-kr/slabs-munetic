@@ -13,3 +13,4 @@ router.post('/tutorsignup', jwtAuth(), Auth.tutorsignup);
 router.get('/refresh', jwtReAuth(), Auth.refresh);
 router.get('/signup/user', Auth.isValidInfo);
 router.put('/changeaccount', jwtAuth(), Auth.changeAccount);
+router.get('/logincheck', jwtAuth(), Auth.loginCheck);

@@ -140,3 +140,25 @@ export const delLessonLike: RequestHandler = async (req, res, next) => {
       next(err);
     }
 };
+
+/**
+ * 튜터 강의에 좋아요 눌린 수를 구해주는 미들웨어
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+export const getAllLessonLikePerTutor: RequestHandler = async (req, res, next) => {
+  try {
+    console.log("????????????????????????????????????????????????");
+    const likes = await LessonLikeService.getLikesByTutor();
+    const result: ResJSON = new ResJSON(
+      '데이터를 가져오는데 성공하였습니다.',
+      likes,
+    );
+    res.status(Status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+};

@@ -31,6 +31,21 @@ export const login: RequestHandler = (req, res, next) => {
 };
 
 /**
+ * 로그인 check
+ */
+export const loginCheck: RequestHandler = (req, res, next) => {
+  try {
+    let result: ResJSON = new ResJSON(
+      '로그인 여부 확인',
+      !!req.user,
+    );
+    res.status(Status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * 로그아웃
  */
 export const logout: RequestHandler = (req, res, next) => {

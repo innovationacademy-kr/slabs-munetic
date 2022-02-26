@@ -12,3 +12,4 @@ export const isValidInfo = (body: string) =>
 export const refresh = () => client.get('/auth/refresh');
 export const changeAccount = (to: string) => client.put(`/auth/changeaccount?to=${to}`);
 export const tutorsignup = (tutorInfoType: ITutorInfoType) => client.post('/auth/tutorsignup', tutorInfoType);
+export const loginCheck = () => client.get('/auth/logincheck');

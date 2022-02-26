@@ -13,3 +13,13 @@ export interface ILessonLikeTable {
     updatedAt: Date;
     deletedAt: Date;
 }
+
+/**
+ * 좋아요 많은 강사의 타입을 지정합니다.
+ * 
+ * @author joohongpark
+ */
+export interface ILikesPerTutorTable {
+  tutor_id: number,
+  like_count: number,
+}

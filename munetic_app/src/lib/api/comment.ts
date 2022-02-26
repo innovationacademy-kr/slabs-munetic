@@ -66,3 +66,13 @@ export const modComment = async (comment_id: number, comment: string, stars: num
 export const delComment = async (comment_id: number) => {
   return await client.delete(`/comment/${comment_id}`);
 }
+
+/**
+ * 강사 당 달린 댓글 수를 가져옵니다.
+ * 
+ * @returns Axios response
+ * @author joohongpark
+ */
+export const getStarTutors = async () => {
+  return await client.get(`/comment/startutor`);
+}

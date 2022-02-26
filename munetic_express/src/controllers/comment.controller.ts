@@ -195,3 +195,24 @@ export const delComment: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * 강사당 레슨 게시물에 댓글 달린 개수를 구해주는 미들웨어
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+export const getAllCommentsCountPerTutor: RequestHandler = async (req, res, next) => {
+  try {
+    const likes = await CommentService.getCommentsCountByTutor();
+    const result: ResJSON = new ResJSON(
+      '데이터를 가져오는데 성공하였습니다.',
+      likes,
+    );
+    res.status(Status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
