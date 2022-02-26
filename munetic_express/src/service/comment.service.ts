@@ -1,11 +1,10 @@
-import { Op } from 'sequelize';
+import { Sequelize, FindOptions, FindAttributeOptions, Op } from 'sequelize';
 import Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
 import { Comment } from '../models/comment';
-import { Lesson } from '../models/lesson';
+import { Lesson, lessonAttributes } from '../models/lesson';
 import { User } from '../models/user';
 import addProperty from '../util/addProperty';
-
 /**
  * user 로그인 id의 모든 댓글 조회
  * 
@@ -212,5 +211,88 @@ export const removeComment = async (
     addProperty<boolean>(query, 'force', force);
   }
   const rtn = await Comment.destroy(query);
+  return rtn;
+};
+
+/**
+ * 강사 당 댓글 개수
+ * 
+ * @param offset number (optional)
+ * @param limit number (optional)
+ * @author joohongpark
+ */
+ export const getCommentCountByTutor = async (
+  offset?: number,
+  limit?: number,
+): Promise< Comment[] > => {
+  let rtn: Comment[];
+  try {
+    let query : {
+      attributes: FindAttributeOptions,
+      group: string[],
+    } = {
+      attributes: [
+        'lesson_id',
+        [Sequelize.fn('COUNT', Sequelize.col('*')), 'likes'],
+      ],
+      group: ['lesson_id'],
+    };
+    if (offset !== undefined && limit !== undefined) {
+      addProperty<number>(query, 'offset', offset);
+      addProperty<number>(query, 'limit', limit);
+    }
+    rtn = await Comment.findAll(query);
+  } catch (e) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '에러');
+  }
+  return rtn;
+};
+
+/**
+ * 강사 당 댓글 개수
+ * 
+ * @author joohongpark
+ */
+ export const getCommentsCountByTutor = async (
+): Promise< {tutor_id: number, comment_count: number}[] > => {
+  let rtn: {tutor_id: number, comment_count: number}[] = [];
+  try {
+    let query: FindOptions<lessonAttributes> = {
+      attributes: [
+        'lesson_id',
+        [Sequelize.fn('COUNT', Sequelize.col('*')), 'likes'],
+      ],
+      group: ['lesson_id'],
+      include: [
+        {
+          model: Lesson,
+          attributes: ['tutor_id'],
+        }
+      ],
+      order: Sequelize.col('likes'),
+    };
+    let result = await Comment.findAll(query);
+    let map = new Map<number, number>();
+    result.forEach(lessonLike => {
+      const lesson = lessonLike.get('Lesson') as Lesson;
+      const tutor_id = lesson ? lesson.get('tutor_id') as number : 0;
+      let likes = lessonLike.get('likes') as number;
+      if (tutor_id !== 0) {
+        if (map.has(tutor_id)) {
+          const val = map.get(tutor_id) || 0;
+          map.set(tutor_id, val + likes);
+        } else {
+          map.set(tutor_id, likes);
+        }
+      }
+    });
+    map.forEach( (value, key) => {
+      rtn.push({tutor_id: key, comment_count: value});
+    });
+    rtn.sort((a, b) => (b.comment_count - a.comment_count));
+    console.log(rtn);
+  } catch (e) {
+    throw new ErrorResponse(Status.BAD_REQUEST, '에러');
+  }
   return rtn;
 };

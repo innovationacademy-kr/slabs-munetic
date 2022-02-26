@@ -1,7 +1,12 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import VideoEmbed from '../media/VideoEmbed';
-import ViewTutorsProfile from '../profile/ViewTutorsProfile';
+import ViewTutorsProfile, { ViewTutorsProfileDataIProps } from '../profile/ViewTutorsProfile';
+import * as LikeAPI from '../../lib/api/like';
+import * as CommentAPI from '../../lib/api/comment';
+import { ICommentPerTutorTable } from '../../types/commentData';
+import { ILikesPerTutorTable } from '../../types/lessonLikeData';
 
 
 const Container = styled.div`
@@ -23,6 +28,30 @@ const ButtonWrapper = styled.div`
 `;
 
 export default function LoggedIn({type}: {type: string}) {
+  const [manyCommentsTutors, setManyCommentsTutors] = useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
+  const [manyLikesTutors, setManyLikesTutors] = useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const commentsResult = await CommentAPI.getStarTutors();
+        const likesResult = await LikeAPI.getStarTutors();
+        const comments = commentsResult.data.data.map((o: ICommentPerTutorTable) : ViewTutorsProfileDataIProps => ({
+          tutor_id: o.tutor_id,
+          num: o.comment_count,
+        }));
+        const likes = likesResult.data.data.map((o: ILikesPerTutorTable) : ViewTutorsProfileDataIProps => ({
+          tutor_id: o.tutor_id,
+          num: o.like_count,
+        }));
+        setManyCommentsTutors(comments);
+        setManyLikesTutors(likes);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    init();
+  }, []);
   return (
     <Container>
       <ButtonsWrapper>
@@ -40,7 +69,8 @@ export default function LoggedIn({type}: {type: string}) {
           }
         </ButtonWrapper>
       </ButtonsWrapper>
-      <ViewTutorsProfile />
+      {manyLikesTutors && <ViewTutorsProfile label="좋아요 많은 강사" row={manyLikesTutors} />}
+      {manyCommentsTutors && <ViewTutorsProfile label="댓글 많은 강사" row={manyCommentsTutors} />}
       <VideoEmbed title='베스트 연주 영상' id='ldxVFDvWCgg' />
     </Container>
   );

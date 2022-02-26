@@ -7,7 +7,7 @@ export default async function Logout () {
     await Auth.logout();
     client.defaults.headers.common['Authorization'] = '';
   } catch (e) {
-    alert("오류로 로그아웃에 실패하였습니다.");
+    alert("Authorization Error!");
     console.log(e, '로그아웃 실패');
   }
 };

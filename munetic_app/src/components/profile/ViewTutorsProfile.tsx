@@ -1,11 +1,12 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
+import * as ProfileAPI from '../../lib/api/profile';
+
 
 const TutorsWrapper = styled.div`
   margin: 20px 0;
@@ -32,28 +33,78 @@ const Label = styled.div`
   background: transparent;
 `;
 
-const favTutors = [
-  { tutor_id: 1, image_uri: "/img/basicProfileImg.png", tutor_name: "베토벤", reviews: 98},
-  { tutor_id: 2, image_uri: "/img/basicProfileImg.png", tutor_name: "모짜르트", reviews: 70},
-  { tutor_id: 3, image_uri: "/img/basicProfileImg.png", tutor_name: "쇼팽", reviews: 40},
-  { tutor_id: 4, image_uri: "/img/basicProfileImg.png", tutor_name: "바흐", reviews: 30},
-  { tutor_id: 5, image_uri: "/img/basicProfileImg.png", tutor_name: "쇼팽", reviews: 20},
-  { tutor_id: 6, image_uri: "/img/basicProfileImg.png", tutor_name: "루피", reviews: 10},
-  { tutor_id: 7, image_uri: "/img/basicProfileImg.png", tutor_name: "에스파", reviews: 9},
-  { tutor_id: 8, image_uri: "/img/basicProfileImg.png", tutor_name: "키츠요지", reviews: 8},
-  { tutor_id: 9, image_uri: "/img/basicProfileImg.png", tutor_name: "다이나믹듀오", reviews: 7},
-  { tutor_id: 10, image_uri: "/img/basicProfileImg.png", tutor_name: "피타입", reviews: 6},
-  { tutor_id: 11, image_uri: "/img/basicProfileImg.png", tutor_name: "Lil Mosey", reviews: 5},
-  { tutor_id: 12, image_uri: "/img/basicProfileImg.png", tutor_name: "Drake", reviews: 4},
-  { tutor_id: 13, image_uri: "/img/basicProfileImg.png", tutor_name: "Alexander O'Neal", reviews: 3},
-  { tutor_id: 14, image_uri: "/img/basicProfileImg.png", tutor_name: "Aron Afshar", reviews: 2},
-];
+/**
+ * TutorListElement 컴포넌트의 프로퍼티 정의
+ */
+interface TutorListElementIProps {
+  tutor_id: number;
+  image_uri: string;
+  tutor_name: string;
+  reviews: number;
+}
 
+/**
+ * 튜터 리스트 중 하나의 요소
+ */
+function TutorListElement(props: TutorListElementIProps) {
+  return (
+    <ImageListItem key={props.tutor_id} sx={{ width: 150 }}>
+    <Badge
+      overlap="circular"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      badgeContent={
+        (<Badge badgeContent={props.reviews} color="secondary" />)
+      }>
+      <Avatar src={props.image_uri} sx={{ width: 150, height: 150 }} />
+    </Badge>
+    <ImageListItemBar title={props.tutor_name} />
+  </ImageListItem>
+  );
+}
 
-export default function ViewTutorsProfile() {
+/**
+ * ViewTutorsProfile 컴포넌트에 들어가는 데이터 타입 정의
+ */
+export interface ViewTutorsProfileDataIProps {
+  tutor_id: number,
+  num: number,
+}
+
+/**
+ * ViewTutorsProfile 컴포넌트의 프로퍼티 정의
+ */
+export interface ViewTutorsProfileIProps {
+  label: string,
+  row: ReadonlyArray<ViewTutorsProfileDataIProps>,
+}
+
+export default function ViewTutorsProfile(props: ViewTutorsProfileIProps) {
+  const [startutors, setStartutors] = useState<TutorListElementIProps[]>([]);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const startutors_new = await Promise.all( props.row.map(async (row: ViewTutorsProfileDataIProps) : Promise<TutorListElementIProps> => {
+          const tutor = await ProfileAPI.getProfileById(row.tutor_id);
+          return {
+            tutor_id: row.tutor_id,
+            image_uri: tutor.data.data.image_url,
+            tutor_name: tutor.data.data.name,
+            reviews: row.num,
+          }
+        }));
+        setStartutors(startutors_new);
+        console.log(startutors);
+      } catch (e) {
+        console.log(e, '튜터 프로필을 불러오지 못했습니다.');
+      }
+    }
+    init();
+  }, []);
+
   return (
     <TutorsWrapper>
-      <Label>리뷰 많은 강사 (상위 20명)</Label>
+      <Label>{props.label}</Label>
       <ImagesWrapper>
         <ImageList
           rowHeight={200}
@@ -63,18 +114,13 @@ export default function ViewTutorsProfile() {
             gridAutoColumns: "minmax(160px, 1fr)"
           }}
         >
-        {favTutors.map((tutor) => (
-          <ImageListItem key={tutor.tutor_id}>
-            <Badge
-              overlap="circular"
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={
-                (<Badge badgeContent={tutor.reviews} color="secondary" />)
-              }>
-              <Avatar src={tutor.image_uri} sx={{ width: 150, height: 150 }} />
-            </Badge>
-            <ImageListItemBar title={tutor.tutor_name} />
-          </ImageListItem>
+        {startutors.map((tutor) => (
+          <TutorListElement
+            key={tutor.tutor_id}
+            tutor_id={tutor.tutor_id}
+            image_uri={tutor.image_uri}
+            tutor_name={tutor.tutor_name}
+            reviews={tutor.reviews} />
         ))}
         </ImageList>
       </ImagesWrapper>

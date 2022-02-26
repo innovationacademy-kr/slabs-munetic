@@ -1,5 +1,6 @@
 import client from './client';
 
+export const getStarTutors = () => client.get(`/like/startutor`);
 export const getLessonLikes = () => client.get(`/like`);
 export const getLessonLike = (lesson_id: number) => client.get(`/like/${lesson_id}`);
 export const getLikedPeoples = (lesson_id: number) => client.get(`/like/${lesson_id}/all`);
