@@ -158,9 +158,9 @@ export default function ViewProfile() {
           <div className="nickname">{userData.nickname}</div>
           <div className="sns">
             <SnsButtons
-              instagramId={tutorData?.instagram}
-              youtubeChannel={tutorData?.youtube}
-              soundcloudId={tutorData?.soundcloud}
+              instagramId={tutorData?.instagram === '' ? undefined : tutorData?.instagram}
+              youtubeChannel={tutorData?.youtube === '' ? undefined : tutorData?.youtube}
+              soundcloudId={tutorData?.soundcloud === '' ? undefined : tutorData?.soundcloud}
             />
           </div>
           {userData.name_public ? (
