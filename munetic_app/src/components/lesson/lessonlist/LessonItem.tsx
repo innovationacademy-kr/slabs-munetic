@@ -49,36 +49,16 @@ export const LessonItemImg = styled.img`
  * 레슨 아이템을 링크로 감싸는 컴포넌트입니다.
  * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
  * 
- * @param haveLeft boolean 컴포넌트의 왼쪽에 무엇인가 존재할 때에만 왼쪽에 줄을 그음
  * @author joohongpark
  */
-export const LessonItemDescriptionContainer = styled.div<{haveLeft: boolean}>`
+export const LessonItemDescriptionContainer = styled.div`
   position: relative;
   color: ${palette.lightgray};
   display: inline-block;
   margin: 5px 0px;
   padding: 1px 0px 1px 8px;
-  ${props =>
-    props.haveLeft &&
-    css`border-left: 1px solid ${palette.lightgray};`
-  };
   flex-grow: 1;
   width: 0;
-`;
-
-/**
- * 카테고리 라벨을 감싸는 컴포넌트입니다.
- * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
- * 
- * @author joohongpark
- */
-export const Category = styled.div`
-  padding: 2px 0px;
-  font-size: 13px;
-  font-weight: normal;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 `;
 
 /**
@@ -96,17 +76,13 @@ export const Title = styled.div`
   overflow: hidden;
 `;
 
-export const Name = styled.div`
-  padding: 3px 0px;
-  margin: 5px 0px;
-  font-size: 16px;
-  font-weight: normal;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-
-export const Location = styled.div`
+/**
+ * 타이틀 밑 작은 라벨을 감싸는 컴포넌트입니다.
+ * styled-components를 이용해 리액트 컴포넌트로 만들어 스타일을 적용합니다.
+ * 
+ * @author joohongpark
+ */
+export const MiniLabel = styled.div`
   display: inline;
   padding: 2px 0px;
   margin: 0px 4px;
@@ -115,29 +91,7 @@ export const Location = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-`
-
-export const Price = styled.div`
-  display: inline;
-  padding: 2px 0px;
-  margin-left: 48%;
-  font-size: 13px;
-  font-weight: normal;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-// FIXME: CSS를 어떻게 조작해야하는지 몰라서 일단 마진 퍼센트로 때렸습니다..
-export const CommentWithHeart = styled.div`
-  display: inline;
-  padding: 2px 0px;
-  margin-left: 15%;
-  font-size: 13px;
-  font-weight: normal;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
+`;
 
 /**
  * 버튼을 감싸는 컴포넌트입니다.
@@ -186,16 +140,15 @@ export const StyledButton = styled(Button)<{deleteBtn?: boolean, to?: string}>`
 /**
  * LessonItem 컴포넌트의 프로퍼티 정의
  */
-// FIXME: 일단은 Props에서 쓰지 않는 속성들(ex. category, title) 빼지 않았습니다. (추후 어떻게 변경될 지 몰라서)
 export interface LessonItemIProps {
   lesson_id: number;                // 레슨 고유 ID
   category: string;                 // 카테고리명
   title: string;                    // 레슨 제목
-  name?: string;
-  location?: string;
-  price?: number;
-  comment_num?: number;
-  lessonLike_num?: number;
+  name?: string;                    // 강사명 (optional)
+  location?: string;                // 지역 (optional)
+  price?: number;                   // 가격 (optional)
+  comment_num?: number;             // 댓글 수 (optional)
+  lessonLike_num?: number;          // 좋아요 수 (optional)
   image_url?: string;               // 이미지 링크 (optional)
   editable?: boolean;               // 수정 가능 여부 (optional)
   del?: (id: number) => void;       // 삭제 콜백함수 (optional)
@@ -214,12 +167,15 @@ export function LessonItem(props: LessonItemIProps) {
   return (
     <LessonItemContainer>
       <ClassItemDescription to={`/lesson/class/${props.lesson_id}`}>
-        <LessonItemDescriptionContainer haveLeft={props.image_url != undefined}>
-          <Name>{props.name}</Name>
+        <LessonItemDescriptionContainer>
+          <Title>{props.title}</Title>
           <div>
-            <Location>지역: {props.location}</Location>
-            <Price>가격: {props.price}</Price>
-            <CommentWithHeart>댓글/하트: {props.comment_num}/{props.lessonLike_num}</CommentWithHeart>
+            <MiniLabel>{props.category}</MiniLabel>
+            {props.name !== undefined && <MiniLabel>{props.name} 튜터</MiniLabel>}
+            {props.location !== undefined && <MiniLabel>{props.location}</MiniLabel>}
+            {props.price !== undefined && <MiniLabel>{props.price} 원</MiniLabel>}
+            {props.comment_num !== undefined && <MiniLabel>댓글: {props.comment_num}</MiniLabel>}
+            {props.lessonLike_num !== undefined && <MiniLabel>하트: {props.lessonLike_num}</MiniLabel>}
           </div>
         </LessonItemDescriptionContainer>
         {props.image_url && <LessonItemImg src={props.image_url} alt="" />}
