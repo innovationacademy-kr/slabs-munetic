@@ -66,6 +66,21 @@ const InputBoxContainer = styled.div`
     height: 30px;
   }
 `;
+
+const SearchInputBoxContainer = styled.div`
+  margin: 10px 0px;
+  font-size: 15px;
+  .input {
+    width: 100%;
+    font-weight: normal;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid ${palette.grayBlue};
+    color: ${palette.grayBlue};
+    height: 30px;
+  }
+`;
+
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputName: string;
   isReadOnly?: boolean;
@@ -101,6 +116,30 @@ export const InputBox = ({
         {...props}
       />
     </InputBoxContainer>
+  );
+};
+
+export const SearchInputBox = ({
+  inputName,
+  isReadOnly,
+  useValidation,
+  onChange,
+  isValid,
+  errorMessage,
+  ...props
+}: InputBoxProps) => {
+  return (
+    <SearchInputBoxContainer>
+      <Input
+        className="input"
+        isReadOnly={isReadOnly}
+        useValidation={useValidation}
+        isValid={isValid}
+        onChange={onChange}
+        errorMessage={errorMessage}
+        {...props}
+      />
+    </SearchInputBoxContainer>
   );
 };
 

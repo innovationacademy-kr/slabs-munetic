@@ -330,3 +330,58 @@ export const updateLessonOrderByButton = async (
   const rtn = await Lesson.destroy(query);
   return rtn;
 };
+
+
+/**
+ * 조건에 따라 레슨 정보들을 받아옵니다.
+ * 
+ * @param offset number
+ * @param limit number
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @returns Promise<>
+ * @author Jonghyun Lim
+ * @version 2
+ */
+export const findLessonsBySomething = async (
+  instrument_id?: number,
+  tutor_id?: number,
+  location_name?: string,
+): Promise<{rows: LessonAllInfo[]}> => {
+  const _query = lessonQueryOptions;
+  const query = {
+    ..._query,
+  };
+  if (instrument_id !== undefined && instrument_id !== -1) {
+    const where = { category_id: instrument_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  if (tutor_id !== undefined && tutor_id !== -1) {
+    const where = { tutor_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  if (location_name !== undefined && location_name !== "") {
+    const where = { location: {
+      [Op.like]: '%' + location_name + '%',
+    }};
+    addProperty<Object>(query, 'where', where);
+  }
+
+  const rows = await Lesson.findAll(query);
+
+  const rows_new = await Promise.all(rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new};
+};
+

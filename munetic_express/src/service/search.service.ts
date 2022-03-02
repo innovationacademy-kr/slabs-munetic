@@ -4,6 +4,7 @@ import ErrorResponse from '../modules/errorResponse';
 import { Lesson } from '../models/lesson';
 import * as CategoryService from './category.service';
 import * as UserService from './user.service';
+import * as LessonService from './lesson.service';
 import { Category } from '../models/category';
 import { User } from '../models/user';
 
@@ -50,30 +51,20 @@ export const searchLessonsByTitle = async (category: string, title: string) => {
     return data;
 };
 
-export const searchLessonsByTutor = async (category: string, tutor_name: string) => {
 
-    let category_id = (await CategoryService.findCategoryIdByName(category)).id;
-    let result = (await UserService.findTutorIdByName(tutor_name)).id;
-    const condition = (category_id === 0) ? 
-        {tutor_id: result} : 
-        {[Op.and]: [{category_id},{tutor_id: result}]}
+export const searchLessonsByInstrument = async (instrument_name: string) => {
 
-    const data = await Lesson.findAll({
-        where: condition,
-        include: [
-            {
-                model: Category,
-                attributes: [
-                    'id', 'name'
-                ]
-            },
-            {
-                model: User,
-                attributes: [
-                    'id', 'nickname', 'name', 'name_public', 'image_url'
-                ]
-            },
-        ]
-    })
-    return data;
+    let instrument_id = (await CategoryService.findCategoryIdByName(instrument_name)).id;
+    return await LessonService.findLessonsBySomething(instrument_id, -1, "");
+}
+
+export const searchLessonsByTutor = async (tutor_name: string) => {
+
+    let tutor_id = (await UserService.findTutorIdByName(tutor_name)).id;
+    return await LessonService.findLessonsBySomething(-1, tutor_id, "");
+}
+
+export const searchLessonsByLocation = async (location_name: string) => {
+
+    return await LessonService.findLessonsBySomething(-1, -1, location_name);
 }

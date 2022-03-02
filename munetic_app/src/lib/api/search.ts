@@ -1,7 +1,11 @@
 import client from './client';
 
-export const searchLessonsByTitle = (category: string | undefined, title: string | undefined) => 
-    client.get(`/search/title/?category=${category}&title=${title}`);
 
-export const searchLessonsByTutor = (category: string | undefined, tutor: string | undefined) => 
-    client.get(`/search/tutor/?category=${category}&tutor=${tutor}`);
+export const searchLessonsByInstrument = (instrument: string | undefined) => 
+    client.get(`/search/instrument/?instrument=${instrument}`);
+
+export const searchLessonsByTutor = (tutor: string | undefined) => 
+    client.get(`/search/tutor/?tutor=${tutor}`);
+
+export const searchLessonsByLocation = (location: string | undefined) => 
+    client.get(`/search/location/?location=${location}`);

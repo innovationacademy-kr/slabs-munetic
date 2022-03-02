@@ -25,18 +25,22 @@ export const getLessonsAll: RequestHandler = async (req, res, next) => {
     }
 }
 
+
+
+
 /**
- * 카테고리 별로 Lesson 데이터를 가져옵니다.
+ * 악기 이름을 통해 Lesson 데이터를 가져옵니다.
  * @param req 
  * @param res 
- * @param next
- * @author sungkim 
+ * @param next 
  */
 
-export const getLessonsByCategory: RequestHandler = async (req, res, next) => {
+export const getLessonsByInstrument: RequestHandler = async (req, res, next) => {
     try {
         let result: ResJSON;
-        const data = await SearchService.searchLessonsByCategory(req.params.category_name);
+
+        const instrument_name = req.query.instrument as string;
+        const data = await SearchService.searchLessonsByInstrument(instrument_name);
         result = new ResJSON (
             '데이터를 불러오는데 성공하였습니다.',
             data,
@@ -48,31 +52,7 @@ export const getLessonsByCategory: RequestHandler = async (req, res, next) => {
 }
 
 /**
- * 제목을 토대로 Lesson 데이터를 가져옵니다.
- * @param req 
- * @param res 
- * @param next 
- */
-
-export const getLessonsByTitle: RequestHandler = async (req, res, next) => {
-    try {
-        let result: ResJSON;
-
-        const category_name = req.query.category as string;
-        const title_name = req.query.title as string;
-        const data = await SearchService.searchLessonsByTitle(category_name, title_name);
-        result = new ResJSON (
-            '데이터를 불러오는데 성공하였습니다.',
-            data
-        )
-        res.status(Status.OK).json(result);
-    } catch (err) {
-        next(err);
-    }
-}
-
-/**
- * 선생님 이름을 통해 Lesson 데이터를 가져옵니다.
+ * 튜터 이름을 통해 Lesson 데이터를 가져옵니다.
  * @param req 
  * @param res 
  * @param next 
@@ -82,9 +62,32 @@ export const getLessonsByTutor: RequestHandler = async (req, res, next) => {
     try {
         let result: ResJSON;
 
-        const category_name = req.query.category as string;
         const tutor_name = req.query.tutor as string;
-        const data = await SearchService.searchLessonsByTutor(category_name, tutor_name);
+        const data = await SearchService.searchLessonsByTutor(tutor_name);
+        result = new ResJSON (
+            '데이터를 불러오는데 성공하였습니다.',
+            data,
+        )
+        res.status(Status.OK).json(result);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+/**
+ * 위치를 통해 Lesson 데이터를 가져옵니다.
+ * @param req 
+ * @param res 
+ * @param next 
+ */
+
+export const getLessonsByLocation: RequestHandler = async (req, res, next) => {
+    try {
+        let result: ResJSON;
+
+        const location_name = req.query.location as string;
+        const data = await SearchService.searchLessonsByLocation(location_name);
         result = new ResJSON (
             '데이터를 불러오는데 성공하였습니다.',
             data,
