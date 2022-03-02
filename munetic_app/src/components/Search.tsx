@@ -7,10 +7,11 @@ import * as Auth from '../lib/api/auth';
 import client from '../lib/api/client';
 import palette from '../style/palette';
 import Select from './common/Select';
-import { InputBox } from './common/Input';
+import { SearchInputBox } from './common/Input';
 
 import * as SearchAPI from '../lib/api/search';
 import { LessonItem, LessonItemIProps } from './lesson/lessonlist/LessonItem';
+import { ILessonData } from '../types/lessonData';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -73,8 +74,8 @@ export default function Search() {
   const [searchInstrument, setSearchInstrument] = useState<string | undefined>(
     '악기 전체',
   );
-  const [searchValue, setSearchValue] = useState<string | undefined>('글 제목');
-  const [searchResult, setSearchResult] = useState<ReadonlyArray<LessonItemIProps>>([]);
+  const [searchValue, setSearchValue] = useState<string | undefined>('악기별 검색');
+  const [searchResult, setSearchResult] = useState<ReadonlyArray<ILessonData>>([]);
 
   const onChangeSearch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value, name } = e.target;
@@ -104,24 +105,17 @@ export default function Search() {
     if (validateSearchForm()) {
       try {
         //검색 결과 받기
-        if (searchValue === '글 제목') {
-          const res = await SearchAPI.searchLessonsByTitle(
-            searchInstrument,
-            searchInput,
-          );
-          setSearchResult(convertResponse(res.data.data));
-        } else {
-          const res = await SearchAPI.searchLessonsByTutor(
-            searchInstrument,
-            searchInput,
-          );
-          setSearchResult(convertResponse(res.data.data));
+        if (searchValue === '악기별 검색') {
+          const res = await SearchAPI.searchLessonsByInstrument(searchInput);
+          setSearchResult((res.data.data.rows));
+        } else if (searchValue === '글쓴이 이름으로 검색') {
+          const res = await SearchAPI.searchLessonsByTutor(searchInput);
+          setSearchResult((res.data.data.rows));
+        } else { // 지역 검색
+          const res = await SearchAPI.searchLessonsByLocation(searchInput);
+          setSearchResult((res.data.data.rows));
         }
-
-        //검색 결과 파싱
-
-        //setSearchResult(true)
-        //searchReasult 가 존재할 경우 (showSearchResult)
+        
       } catch (e) {
         console.log(e, '검색 오류 발생');
       }
@@ -137,46 +131,42 @@ export default function Search() {
     <>
       <Container onSubmit={onSubmit}>
         <Select
-          options={[
-            '악기 전체',
-            '기타',
-            '드럼',
-            '피아노',
-            '하프',
-            '첼로',
-            '바이올린',
-          ]}
-          value={searchInstrument}
-          name="instrument"
-          isValid={!!searchInstrument}
-          onChange={onChangeSearch}
-        />
-        <Select
-          options={['글 제목', '작성자명']}
-          value={searchValue}
-          name="category"
-          isValid={!!searchValue}
-          onChange={onChangeSearch}
-        />
-        <InputBox
-          inputName="검색어 입력"
-          name="Search_Input"
-          value={searchInput}
-          onChange={onChange}
-          isValid={!!searchInput}
-          errorMessage="검색어를 입력하세요."
-        />
-        <StyledButton type="submit">검색하기</StyledButton>
+            options={[
+              '악기별 검색',
+              '글쓴이 이름으로 검색',
+              '지역 검색',
+            ]}
+            value={searchValue}
+            name="category"
+            isValid={!!searchValue}
+            onChange={onChangeSearch}
+          />
+          <SearchInputBox
+            inputName="검색어 입력"
+            name="Search_Input"
+            value={searchInput}
+            onChange={onChange}
+            isValid={!!searchInput}
+            errorMessage="검색어를 입력하세요."
+          />
+          <StyledButton type="submit">검색하기</StyledButton>
       </Container>
 
       <ClassListContainer>
         {searchResult &&
-          searchResult.map(data => (
-            <LessonItem 
-              lesson_id={data.lesson_id}
-              category={data.category}
-              title={data.title}
-              key={data.lesson_id} />
+          searchResult.map(lesson => (
+            <LessonItem
+              lesson_id={lesson.id}
+              category={lesson.Category.name || ""}
+              title={lesson.title || ""}
+              name = {lesson.User.name || ""}
+              location={lesson.location || ""}
+              price={lesson.price || 0}
+              comment_num={lesson.CommentsCount || 0}
+              lessonLike_num={lesson.LessonLikesCount || 0}
+              key={lesson.id}
+              image_url={lesson.User.image_url}
+            />
           ))}
       </ClassListContainer>
     </>
