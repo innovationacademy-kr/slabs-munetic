@@ -20,7 +20,7 @@ Munetic 앱의 프로젝트는 docker-compose로 구성되어 있습니다. 이 
    - SERVER_HOST : 서버의 호스트 네임 (localhost일 경우 ssl 설정은 하지 않습니다.)
    - MODE : 서버의 배포 모드를 선택합니다. (dev / serve)
 2. munetic_admin, munetic_app, munetic_express 내에서 `npm i`를 실행하여 package-lock.json 파일을 생성합니다.
-3. `docker-compose -f docker-compose.yaml -f network-main.yaml up` 를 통해 실행시킵니다. docker-compose를 이용해 실행시킬 경우 munetic_admin, munetic_app, munetic_express에 직접 접근하지 못하고 nginx proxy를 통해 접근하게 됩니다.
+3. `docker-compose -f docker-compose.yaml -f network.yaml up` 를 통해 실행시킵니다. docker-compose를 이용해 실행시킬 경우 munetic_admin, munetic_app, munetic_express에 직접 접근하지 못하고 nginx proxy를 통해 접근하게 됩니다.
 4. 브라우저를 통해 http://hostname 에 접속합니다. 호스트 네임이 localhost가 아닐 경우 자동으로 https로 리다이렉트 시킵니다. (SSL 인증서 경로는 munetic_proxy에서 설정합니다.)
 
 ## Browser Support
