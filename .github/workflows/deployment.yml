@@ -17,8 +17,7 @@ jobs:
       - name: executing remote ssh commands using key
         uses: appleboy/ssh-action@master
         with:
-          host: localhost
-          #host: ${{ secrets.HOST }} NOTE: 현재 EC2 서버에서 main/develop 두개 구동되고 있으므로 SSL은 EC2 서버에서 적용
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
@@ -33,8 +32,7 @@ jobs:
       - name: executing remote ssh commands using key
         uses: appleboy/ssh-action@master
         with:
-          host: localhost
-          #host: ${{ secrets.HOST }} NOTE: 현재 EC2 서버에서 main/develop 두개 구동되고 있으므로 SSL은 EC2 서버에서 적용
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
