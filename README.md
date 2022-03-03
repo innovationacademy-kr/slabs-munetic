@@ -1,7 +1,7 @@
 # slabs-munetic
 
 ## 소개
-42와 기업이 협력하여 결과물을 만드는 프로젝트입니다.
+42 Seoul과 기업이 협력하여 애플리케이션을 만드는 프로젝트입니다.
 
 Munetic이라는 음악 레슨 매칭앱의 MVP(Minimum Viable Product)를 구현하는 것을 목적으로 하며 3 명이 한 팀이 되어 약 1달간의 개발 기간을 가지며 총 3개의 개발 팀이 릴레이 방식으로 개발하는 프로젝트입니다.
 
@@ -9,9 +9,19 @@ Munetic이라는 음악 레슨 매칭앱의 MVP(Minimum Viable Product)를 구�
 Munetic 앱의 프로젝트는 docker-compose로 구성되어 있습니다. 이 프로젝트는 github actions를 통한 배포를 상정하여 구현이 되어 있습니다.
 
 프로젝트를 실행시키는 방법은 다음과 같습니다.
-1. .env_template 파일을 통해 .env를 설정해줍니다. `SERVER_HOST=localhost`가 아닌 경우 자동으로 https가 설정됩니다.
-2. munetic_admin, munetic_app, munetic_express 내에서 `npm i`를 실행하여 package-lock.json파일을 생성합니다.
-3. `docker-compose -f docker-compose.yaml -f network-main.yaml up` 를 통해 실행시킵니다.
+1. .env_template 파일을 통해 .env를 설정해줍니다. `SERVER_HOST=localhost`가 아닌 경우 자동으로 https가 설정됩니다. 설정해야 하는 항목은 다음과 같습니다.
+   - MARIADB_USER : MariaDB 유저 ID
+   - MARIADB_PASSWORD : MariaDB 유저 PW
+   - MARIADB_ROOT_PASSWORD : MariaDB ROOT PW
+   - EXPRESS_USER : express에서 MariaDB에 접속할 때 사용하는 유저 ID (MARIADB_USER와 동일해야 함)
+   - EXPRESS_USER : express에서 MariaDB에 접속할 때 사용하는 유저 PW (MARIADB_PASSWORD와 동일해야 함)
+   - ACCESS_SECRET : express에서 JWT Token을 생성할 때 사용하는 임의의 문자열
+   - REFRESH_SECRET : express에서 JWT Refrash Token을 생성할 때 사용하는 임의의 문자열
+   - SERVER_HOST : 서버의 호스트 네임 (localhost일 경우 ssl 설정은 하지 않습니다.)
+   - MODE : 서버의 배포 모드를 선택합니다. (dev / serve)
+2. munetic_admin, munetic_app, munetic_express 내에서 `npm i`를 실행하여 package-lock.json 파일을 생성합니다.
+3. `docker-compose -f docker-compose.yaml -f network-main.yaml up` 를 통해 실행시킵니다. docker-compose를 이용해 실행시킬 경우 munetic_admin, munetic_app, munetic_express에 직접 접근하지 못하고 nginx proxy를 통해 접근하게 됩니다.
+4. 브라우저를 통해 http://hostname 에 접속합니다. 호스트 네임이 localhost가 아닐 경우 자동으로 https로 리다이렉트 시킵니다. (SSL 인증서 경로는 munetic_proxy에서 설정합니다.)
 
 ## Browser Support
 이 프로젝트는 모바일 전용 앱 (관리자 페이지는 PC 전용 앱) 으로 구현되었으며 크롬과 사파리 브라우저에서 테스트되었습니다.
@@ -36,5 +46,5 @@ nginx를 이용해 munetic 프로젝트를 한 포트에서 접근할 수 있게
 * https://github.com/innovationacademy-kr/slabs-munetic/wiki
 
 ## Service Domain
-* https://munetic.dev.42cadet.kr
-* https://munetic.42cadet.kr
+* https://munetic.dev.42cadet.kr (develop branch)
+* https://munetic.42cadet.kr (main branch)

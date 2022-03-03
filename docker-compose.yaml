@@ -13,8 +13,6 @@ services: # 사용되는 서비스들입니다.
     working_dir: /munetic_admin # 컨테이너 내부에서 기본적으로 사용할 디렉토리를 지정해줍니다.
     networks: # 사용할 네트워크(최하단)를 설정합니다.
       - munetic
-    ports:
-      - '4242:4242'
     volumes: # 볼륨을 쓰겠다는 선언입니다.
       - ./munetic_admin/src:/munetic_admin/src # ':' 왼쪽의 host 폴더를 오른쪽의 container 폴더에 마운트 하겠다는 뜻입니다.
 
@@ -30,8 +28,6 @@ services: # 사용되는 서비스들입니다.
     working_dir: /munetic_app
     networks:
       - munetic
-    ports:
-      - '2424:2424'
     volumes:
       - ./munetic_app/src:/munetic_app/src
 
@@ -70,8 +66,6 @@ services: # 사용되는 서비스들입니다.
       context: ./munetic_express
       dockerfile: Dockerfile
     command: npm run ${MODE}
-    ports:
-      - '3030:3030'
     working_dir: /munetic_express
     networks:
       - munetic
@@ -85,9 +79,6 @@ services: # 사용되는 서비스들입니다.
     build: ./munetic_proxy
     networks:
       - munetic
-    ports:
-      - '80:80'
-      - '443:443'
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./munetic_proxy/templates:/templates:ro
