@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { now } from 'sequelize/dist/lib/utils';
 import { Account, Gender } from '../models/user';
 
 export const userObject = (req: Request) => {

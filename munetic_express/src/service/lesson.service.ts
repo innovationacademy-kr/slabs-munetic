@@ -1,5 +1,4 @@
-import { Sequelize, Op } from 'sequelize';
-import { FindOptions } from 'sequelize/dist';
+import { Sequelize, Op, FindOptions } from 'sequelize';
 import { Category, categoryAttributes } from '../models/category';
 import { Lesson, lessonAttributes } from '../models/lesson';
 import { User, userAttributes } from '../models/user';
