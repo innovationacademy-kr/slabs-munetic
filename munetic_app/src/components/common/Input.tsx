@@ -119,6 +119,20 @@ export const InputBox = ({
   );
 };
 
+interface InputFormProps {
+  inputName: string;
+  children?: React.ReactNode;
+}
+
+export const InputForm = (props: InputFormProps) => {
+  return (
+    <InputBoxContainer>
+      <span className="inputTitle">{props.inputName}</span>
+      {props.children}
+    </InputBoxContainer>
+  );
+}
+
 export const SearchInputBox = ({
   inputName,
   isReadOnly,
