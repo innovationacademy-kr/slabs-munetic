@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import Contexts from '../../context/Contexts';
 import palette from '../../style/palette';
 import { ILessonTable } from '../../types/lessonData';
-import Input, { InputBox } from '../common/Input';
+import Input, { InputBox, InputForm } from '../common/Input';
 import Select from '../common/Select';
 import * as LessonAPI from '../../lib/api/lesson';
 import * as ProfileAPI from '../../lib/api/profile';
 import { IUserTable } from '../../types/userData';
 import getCategoriesByMap from '../../lib/getCategoriesByMap';
 import getYoutubeId from '../../lib/getYoutubeId';
+import AddressSelect from '../ui/AddressSelect';
 
 const Container = styled.div`
   margin: 10px 10px 64px 10px;
@@ -72,7 +73,7 @@ export default function ClassWrite() {
   ) => {
     const { value, name } = e.target;
     const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: Number(userData?.id), category_id: 0};
-    if (name === 'title' || name === 'location' || name === 'content' || name === 'youtube') {
+    if (name === 'title' || name === 'content' || name === 'youtube') {
       newClassInfo[name] = value as string;
     } else if (name === 'createdAt' || name === 'updatedAt' || name === 'deletedAt') {
       newClassInfo[name] = new Date();
@@ -87,6 +88,12 @@ export default function ClassWrite() {
     }
     setClassInfo(newClassInfo);
   };
+
+  const onChangeLocation = (si: string, gu: string) => {
+    const newClassInfo: ILessonTable = classInfo ? {...classInfo} : {id: 0, tutor_id: Number(userData?.id), category_id: 0};
+    newClassInfo['location'] = `${si} ${gu}`;
+    setClassInfo(newClassInfo);
+  }
 
   const validateWriteForm = () => {
     if (classInfo !== undefined) {
@@ -208,13 +215,14 @@ export default function ClassWrite() {
         useValidation={false}
         value={userData?.gender ? userData.gender : ''}
       />
-      <InputBox
-        inputName="지역"
-        name="location"
-        value={classInfo?.location || ""}
-        isValid={!!classInfo?.location}
-        onChange={onChangeInput}
-      />
+      <InputForm inputName='지역'>
+        {classInfo && // FIXME: 해당 컴포넌트의 initAddress는 컴포넌트가 로딩될 때 set 되어있어야 함. 그래서 classInfo가 undefined 가 아닐때 해당 컴포넌트를 로딩함.
+        <AddressSelect
+          set={onChangeLocation}
+          initAddress={classInfo?.location ? classInfo.location : ''}
+        />
+        }
+      </InputForm>
       <InputBox
         inputName="유튜브 영상 링크"
         name="youtube"
