@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import { CategoryDataType } from '../../types/categoryData';
+import { ICategoryTable } from '../../types/categoryData';
 import Button from '../common/Button';
 import * as CategoryAPI from '../../lib/api/category';
 
@@ -46,12 +46,12 @@ const StyledButton = styled(Button)`
 `;
 
 export default function CategoryContainer() {
-  const [categoryData, setCategoryData] = useState<CategoryDataType[]>();
+  const [categoryData, setCategoryData] = useState<ICategoryTable[]>();
 
   useEffect(() => {
     async function getCategory() {
       try {
-        const res = await CategoryAPI.getMyProfile();
+        const res = await CategoryAPI.getCategories();
         setCategoryData(res.data.data);
       } catch (e) {
         console.log(e, '카테고리를 불러오지 못했습니다.');
@@ -68,7 +68,7 @@ export default function CategoryContainer() {
           <div className="categoryIconWrapper">
             {categoryData.map((category, i) => (
               <StyledButton
-                to={`/lesson/classes?category=${category.name}`}
+                to={`/lesson/classes?category=${category.id}`}
                 key={i}
               >
                 {category.name}

@@ -5,7 +5,7 @@ export default function ManageClassPage() {
   return (
     <>
       <ClassManage />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

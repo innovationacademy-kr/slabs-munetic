@@ -5,7 +5,7 @@ export default function CategoryPage() {
   return (
     <>
       <CategoryContainer />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

@@ -46,6 +46,7 @@ export default function UserPosts() {
         count={count}
         rows={rows}
         rowsPerPage={rowsPerPage}
+        onClickDeleteButton={() => {}}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
       />

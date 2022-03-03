@@ -5,7 +5,7 @@ export default function ManageProfilePage() {
   return (
     <>
       <ManageProfile />
-      <BottomMenu />
+      {/* <BottomMenu /> */}
     </>
   );
 }

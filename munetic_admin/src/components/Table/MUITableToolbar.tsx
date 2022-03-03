@@ -10,10 +10,11 @@ import { useInfo } from '../../contexts/info';
 
 interface MUITableToolbarProps {
   numSelected: number;
+  onClickDeleteButton: () => void;
 }
 
 export default function MUITableToolbar(props: MUITableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, onClickDeleteButton } = props;
   const path = useLocation().pathname;
   const info = useInfo() as any;
 
@@ -48,13 +49,14 @@ export default function MUITableToolbar(props: MUITableToolbarProps) {
           component="div"
         >
           {path === '/users' && 'App User'}
+          {path === '/comments' && 'Comments'}
           {path === '/admin_users' && 'Admin User'}
           {(path === '/lessons' || path === `/users/${info!.id}`) && 'Lesson'}
         </Typography>
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onClickDeleteButton}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

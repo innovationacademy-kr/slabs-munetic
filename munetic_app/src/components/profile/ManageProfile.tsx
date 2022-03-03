@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import { useEffect, useState } from 'react';
-import { UserDataType } from '../../types/userData';
+import { IUserTable } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
+import * as AuthAPI from '../../lib/api/auth';
 import Button from '../common/Button';
 import { Link, useNavigate } from 'react-router-dom';
+import logout from '../../lib/auth/logout';
+import ViewAllCommentByUser from '../comment/ViewAllCommentByUser';
+import SwitchWithLabel from '../ui/SwitchWithLabel';
+import { Account } from '../../types/enums';
 
 const Container = styled.div`
   margin: 30px 0;
@@ -39,7 +42,8 @@ const ProfileWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 10px;
+    margin: 15px;
+    padding: 5px 0px;
   }
 `;
 
@@ -56,12 +60,12 @@ const StyledButton = styled(Button)`
 const StyledEditButton = styled(Button)`
   background-color: white;
   font-size: 16px;
-  width: 70px;
+  width: 100px;
   height: 35px;
   border-radius: 5px;
   margin-left: 5px;
   .buttonText {
-    margin: 0;
+    width: 100px;
     color: ${palette.darkBlue};
   }
 `;
@@ -78,7 +82,7 @@ const Separater = styled.div`
 
 export default function ManageProfile() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState<UserDataType>();
+  const [userData, setUserData] = useState<IUserTable>();
 
   useEffect(() => {
     async function getMyProfile() {
@@ -93,19 +97,52 @@ export default function ManageProfile() {
     getMyProfile();
   }, []);
 
+  const onClickLogout = async () => {
+    logout();
+    navigate('/');
+  };
+
+  const changeAccount = async (changeTo: boolean) => {
+    const res = await AuthAPI.changeAccount(userData?.type === 'Student' ? 'Tutor' : 'Student');
+    let new_userData = {...userData} as IUserTable;
+    if (userData) {
+      new_userData.type = userData.type === 'Student' ? Account.Tutor : Account.Student;
+      setUserData(new_userData);
+    }
+    return res.data.data || false;
+  };
+
+  const Label = styled.div`
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 1.3rem;
+    line-height: 2.2rem;
+    font-weight: 400;
+    margin-left: 10px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  `;
+
   return (
     <div>
       {!userData ? (
         'loading'
       ) : (
         <Container>
-          {userData.type === 'Student' ? (
-            <ChangeTypeButton>
-              <Link to="/auth/register?tutor=tutor">선생님 계정으로 변경</Link>
-            </ChangeTypeButton>
-          ) : (
-            ''
-          )}
+          <Label>
+          {
+            userData.TutorInfo ? (
+              <SwitchWithLabel
+                init={userData.type !== 'Student'}
+                label={`${userData.type === 'Student' ? '선생님' : '학생'} 계정으로 변경`}
+                change={changeAccount} />
+            ) : (
+              <ChangeTypeButton>
+                <Link to="/auth/register?tutor=tutor">튜터 등록</Link>
+              </ChangeTypeButton>
+            )
+          }
+          </Label>
           <ProfileWrapper>
             <div className="imgAndNickname">
               <img className="profileImg" src={userData.image_url} alt="" />
@@ -115,12 +152,14 @@ export default function ManageProfile() {
             </div>
             <div className="sns">
               <StyledEditButton to={`/profile/edit/${userData.id}`}>
-                수정
+                프로필 수정
               </StyledEditButton>
-              <div className="snsBottom">
-                <InstagramIcon />
-                <YouTubeIcon />
-              </div>
+              <StyledEditButton to={`/profile/likes`}>
+                관심있는 강의
+              </StyledEditButton>
+              <StyledEditButton onClick={onClickLogout}>
+                로그아웃
+              </StyledEditButton>
             </div>
           </ProfileWrapper>
           <Separater />
@@ -136,6 +175,8 @@ export default function ManageProfile() {
           ) : (
             ''
           )}
+          <Label>작성한 댓글</Label>
+          <ViewAllCommentByUser userId={userData.login_id as string} />
         </Container>
       )}
     </div>

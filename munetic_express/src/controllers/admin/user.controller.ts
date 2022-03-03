@@ -98,3 +98,34 @@ export const patchUserByAdmin: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * 유저들을 삭제하는 미들웨어
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author joohongpark
+ */
+ export const delLessons: RequestHandler = async (req, res, next) => {
+  try {
+    const numbers = req.body as number[];
+    if (numbers.length === undefined) {
+      next(new ErrorResponse(Status.BAD_REQUEST, '잘못된 요청입니다.'));
+    } else {
+      let force: boolean = 'true'.localeCompare(req.query.force as string) == 0;
+      const del: number = await UserService.removeUsers(
+        numbers,
+        force,
+      );
+      let result: ResJSON = new ResJSON(
+        '유저들을 삭제했습니다.' ,
+        del,
+      );
+      res.status(Status.OK).json(result);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+

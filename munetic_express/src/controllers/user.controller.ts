@@ -3,6 +3,7 @@ import * as Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
 import { ResJSON } from '../modules/types';
 import * as UserService from '../service/user.service';
+import * as TutorService from '../service/tutorInfo.service';
 
 export const getMyProfile: RequestHandler = async (req, res, next) => {
   try {
@@ -31,6 +32,20 @@ export const getUserProfile: RequestHandler = async (req, res, next) => {
     let result: ResJSON;
     const user = await UserService.findUserById(Number(req.params.id));
     result = new ResJSON('유저 프로필을 불러오는데 성공하였습니다.', user);
+    res.status(Status.OK).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getTutorProfile: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      res.status(Status.BAD_REQUEST).send('유저 아이디가 없습니다.');
+    }
+    let result: ResJSON;
+    const user = await TutorService.getTutorDataById(Number(req.params.id));
+    result = new ResJSON('튜터 프로필을 불러왔습니다.', user);
     res.status(Status.OK).json(result);
   } catch (err) {
     next(err);

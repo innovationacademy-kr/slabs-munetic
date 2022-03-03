@@ -1,0 +1,109 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Search
+    description: '검색 부분에서 조회'
+paths:
+  /search/:
+    get:
+      tags:
+        - Search
+      summary: '모든 레슨 데이터 조회'  
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '모든 레슨 데이터'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '데이터를 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/Lesson'
+
+  /search/instrument/{category_name}:
+    get:
+      tags:
+        - Search
+      summary: '카테고리에 따른 레슨 데이터 조회'
+      parameters:
+        - name: 'category_name'
+          in: path
+          description: 'category_name'
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '카테코리에 따른 레슨 데이터'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '데이터를 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/Lesson'
+
+  /search/title/{title_name}:
+    get:
+      tags:
+        - Search
+      summary: '제목에 따른 레슨 데이터 조회'
+      parameters:
+        - name: 'title_name'
+          in: path
+          description: 'title_name'
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '제목에 따른 레슨 데이터'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '데이터를 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/Lesson'
+
+  /search/tutor/{tutor_name}:
+    get:
+      tags:
+        - Search
+      summary: '튜터에 따른 레슨 데이터 조회'
+      parameters:
+        - name: 'tutor_name'
+          in: path
+          description: 'tutor_name'
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '튜터에 따른 레슨 데이터'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '데이터를 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/Lesson'

@@ -9,4 +9,5 @@ export const router = Router();
 router.get('/', jwtAuth(), UserAPI.getMyProfile);
 router.patch('/', jwtAuth(), UserAPI.editUserProfile);
 router.get('/:id', UserAPI.getUserProfile);
+router.get('/tutor/:id', UserAPI.getTutorProfile);
 router.post('/image', jwtAuth(), storage.imgUpload, UserAPI.createProfileImg);

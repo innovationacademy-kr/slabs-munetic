@@ -1,0 +1,233 @@
+swagger: '2.0'
+info:
+  title: API Title
+  version: '1.0'
+tags:
+  - name: Comment
+    description: '레슨 글에 대한 댓글 조회, 추가, 변경, 삭제'
+paths:
+  /comment/user/{user_id}:
+    get:
+      tags:
+        - Comment
+      summary: '유저 로그인 id에 대한 모든 댓글 조회'
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'user_id'
+          in: path
+          description: 'user login ID'
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: '유저에 대한 모든 댓글'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: '유저에 대한 댓글들을 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/CommentByUser'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+  /comment/lesson/{lesson_id}:
+    get:
+      tags:
+        - Comment
+      summary: '레슨 ID에 대한 모든 댓글 조회'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'lesson_id'
+          in: path
+          description: 'lesson ID'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: '레슨에 대한 모든 댓글'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 레슨에 대한 댓글들을 불러오는데 성공하였습니다.'
+              data:
+                type: array
+                items:
+                  $ref: '#definitions/CommentByLesson'
+        '400':
+          description: 레슨 ID 형식이 숫자가 아닐 때
+          schema:
+            type: string
+            example: '레슨 ID엔 숫자만 올 수 있습니다.'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+    post:
+      tags:
+        - Comment
+      summary: '레슨 ID에 대한 댓글 추가'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'lesson_id'
+          in: path
+          description: 'lesson id'
+          type: integer
+          format: int32
+          required: true
+        - name: 'comment, stars'
+          in: body
+          description: 'new Comment and stars'
+          schema:
+            type: object
+            required:
+              - 'comment'
+              - 'stars'
+            properties:
+              comment:
+                type: string
+              stars:
+                type: integer
+      responses:
+        '200':
+          description: 댓글 추가에 성공하였을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                type: string
+                example: '레슨에 댓글을 추가하는데 성공하였습니다.'
+              data:
+                type: object
+                $ref: '#definitions/Comment'
+        '400':
+          description: '빈 댓글을 전송할 때'
+          schema:
+            type: string
+            example: '댓글 내용을 적어주세요'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+  /comment/{comment_id}:
+    put:
+      tags:
+        - Comment
+      summary: '댓글 수정'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'comment_id'
+          in: path
+          description: 'Comment ID'
+          type: integer
+          format: int32
+          required: true
+        - name: 'comment, stars'
+          in: body
+          description: 'new Comment and stars'
+          schema:
+            type: object
+            required:
+              - 'comment'
+              - 'stars'
+            properties:
+              comment:
+                type: string
+              stars:
+                type: integer
+      responses:
+        '200':
+          description: 댓글 업데이트에 성공하거나 존재하지 않는 댓글일 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                description: '댓글 업데이트 여부에 대한 메시지'
+                type: string
+                example: '레슨에 댓글을 업데이트하는데 성공하였습니다.'
+              data:
+                description: '댓글 업데이트 여부'
+                type: boolean
+                example: true
+        '400':
+          description: 레슨 ID 형식이 숫자가 아닐 때
+          schema:
+            type: string
+            example: '레슨 ID엔 숫자만 올 수 있습니다.'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized
+    delete:
+      tags:
+        - Comment
+      summary: '댓글 삭제'
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+        - name: 'comment_id'
+          in: path
+          description: 'Comment ID'
+          type: integer
+          format: int32
+          required: true
+      responses:
+        '200':
+          description: 댓글 삭제에 성공하거나 권한이 없을 때
+          schema:
+            required:
+              - message
+              - data
+            properties:
+              message:
+                description: '댓글을 삭제하는데 성공하였습니다.'
+                type: string
+                example: '댓글을 삭제하는데 성공하였습니다.'
+              data:
+                description: '댓글 삭제 여부'
+                type: boolean
+                example: true
+        '400':
+          description: 댓글 ID 형식이 숫자가 아닐 때
+          schema:
+            type: string
+            example: '댓글 ID엔 숫자만 올 수 있습니다.'
+        '401':
+          description: 'Invalid JWT token'
+          schema:
+            type: string
+            example: Unauthorized

@@ -1,64 +1,41 @@
-import { FindOptions } from 'sequelize/dist';
+import { Sequelize, Op, FindOptions } from 'sequelize';
 import { Category, categoryAttributes } from '../models/category';
 import { Lesson, lessonAttributes } from '../models/lesson';
 import { User, userAttributes } from '../models/user';
 import ErrorResponse from '../modules/errorResponse';
 import * as Status from 'http-status';
+import { CountRows, LessonAllInfo, LessonEditable } from '../types/service/lesson.service';
+
+import { Comment } from '../models/comment';
+import { LessonLike } from '../models/lessonLike';
+import addProperty from '../util/addProperty';
+import { router } from '../routes';
+import * as LessonMapper from '../mapping/LessonMapper';
 
 /**
- * findAndCountAll의 리턴 타입입니다.
- */
-export interface CountRows<T> {
-  count: number;
-  rows: T[];
-}
-
-/**
- * Request body of post, patch of /api/lesson. These are editable value of lesson
- */
-export interface LessonEditable {
-  category?: string;
-  title?: string;
-  price?: number;
-  location?: string;
-  minute_per_lesson?: number;
-  content?: string;
-}
-
-/**
- * All information of Lesson including Category and User data.
- * this is gotten by `Lesson.findOne` or `Lesson.findAll`
- */
-export type LessonAllInfo = {
-  lesson_id: number;
-  tutor_id: number;
-  title: string;
-  price?: number;
-  location?: string;
-  minute_per_lesson?: number;
-  content?: string;
-  Category: categoryAttributes;
-  User: userAttributes;
-};
-
-/**
- * Query option of 'find Lesson' to get all information about a lesson
+ * 레슨의 모든 정보 (유저, 카테고리를 포함한 정보) 를 가져올 때 사용하는 쿼리 옵션입니다.
+ * 
+ * @author Jonghyun Lim
+ * @version 1
  */
 const lessonQueryOptions: FindOptions<lessonAttributes> = {
   attributes: [
-    ['id', 'lesson_id'],
+    'id',
     'tutor_id',
     'title',
     'price',
     'location',
     'minute_per_lesson',
     'content',
+    'youtube',
+    'updatedAt'
   ],
   include: [
     { model: Category, attributes: ['name'] },
     {
       model: User,
       attributes: [
+        'login_id',
         'name',
         'nickname',
         'name_public',
@@ -69,188 +46,19 @@ const lessonQueryOptions: FindOptions<lessonAttributes> = {
       ],
     },
   ],
-};
-
-/**
- *  put a lesson row in the database. In case of failure, string is returned
- *
- * @param tutorId Id of a tutor which will be the owner of the lesson
- * @param lessonEditable Lesson information which will be the Lesson object
- * @returns Lesson information which is created
- */
-export const createLesson = async (
-  tutorId: number,
-  lessonEditable: LessonEditable,
-): Promise<LessonAllInfo | string> => {
-  const tutor = await User.findOne({
-    where: {
-      id: tutorId,
-    },
-  });
-  if (tutor === null) return '해당하는 튜터가 없습니다.';
-  const category = await Category.findOne({
-    where: {
-      name: lessonEditable.category,
-    },
-  });
-  if (category === null) return '해당하는 카테고리 이름이 없습니다.';
-
-  const categoryLess = { ...lessonEditable } as any;
-  categoryLess.category = undefined;
-
-  const newLesson = await Lesson.create({
-    ...categoryLess,
-    tutor_id: tutorId,
-    category_id: category.id,
-  });
-  newLesson.save();
-
-  const lesson = (await Lesson.findOne({
-    ...lessonQueryOptions,
-    where: { id: newLesson.id },
-  })) as LessonAllInfo | null;
-  if (lesson === null) throw new Error('레슨 등록에 실패했습니다.');
-  lesson.lesson_id = (lesson as any).dataValues.lesson_id; // 왠지 모르겠지만 바로 들어가지 않음. User와의 property 차이일까?
-  return lesson;
-};
-
-/**
- * Get lesson information by a lesson id
- *
- * @param lessonId Lesson id for finding a lesson
- * @returns A lesson corresponding to the `lessonId`. If there's no corresponding lesson, string is returned
- */
-export const findLesson = async (
-  lessonId: number,
-): Promise<LessonAllInfo | string> => {
-  const lesson = (await Lesson.findOne({
-    ...lessonQueryOptions,
-    where: { id: lessonId },
-  })) as unknown as LessonAllInfo | null;
-  if (lesson === null) return '해당하는 레슨이 없습니다.';
-  lesson.lesson_id = (lesson as any).dataValues.lesson_id;
-  return lesson;
-};
-
-/**
- * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다. 순서는 기본 순서인 생성 순입니다.
- * deletede된 게시물은 제외
- * @param offset
- * @param limit
- * @returns
- */
-export const findLessons = async (
-  offset: number,
-  limit: number,
-): Promise<CountRows<LessonAllInfo> | string> => {
-  if (offset < 0 || limit < 0)
-    return 'offset이나 limit 값으로 음수가 올 수 없습니다.';
-  const lessonData = (await Lesson.findAndCountAll({
-    ...lessonQueryOptions,
-    offset,
-    limit,
-  })) as CountRows<unknown> as CountRows<LessonAllInfo>;
-  for (const lesson of lessonData.rows) {
-    lesson.lesson_id = (lesson as any).dataValues.lesson_id;
-  }
-  return lessonData;
-};
-
-/**
- * Edit lesson information of a lesson id only present in lessonInfo. In case of failure, string is returned
- *
- * @param lessonId Id of a lesson to be editted
- * @param lessonEditable partial information of lesson which will be inserted
- * @returns The edited lesson
- */
-export const editLesson = async (
-  lessonId: number,
-  lessonEditable: LessonEditable,
-): Promise<LessonAllInfo | string> => {
-  let category;
-  if (lessonEditable.category) {
-    category = await Category.findOne({
-      attributes: ['id'],
-      where: { name: lessonEditable.category },
-    });
-    console.log(lessonEditable.category);
-    if (category === null) return '해당하는 카테고리 이름이 없습니다.';
-  }
-  const [updatedNum] = await Lesson.update(
-    { ...lessonEditable, category_id: category?.id },
-    {
-      where: {
-        id: lessonId,
-      },
-    },
-  );
-  if (updatedNum === 0) return '해당하는 레슨이 없습니다.';
-  console.assert(updatedNum === 1);
-
-  const updatedLesson = (await Lesson.findOne({
-    ...lessonQueryOptions,
-    where: { id: lessonId },
-  })) as LessonAllInfo | null;
-  if (updatedLesson === null) throw new Error('레슨 업데이트에 실패했습니다.');
-
-  updatedLesson.lesson_id = (updatedLesson as any).dataValues.lesson_id; // 이유를 알 수 없다.
-  return updatedLesson;
-};
-
-/**
- * Delete a lesson by lesson id.
- *
- * @param lessonId Lesson id to be deleted
- * @returns Whether the lesson is deleted or not. If there is no corresponding lesson, returns false
- */
-export const removeLesson = async (
-  lessonId: number,
-): Promise<{ removed: boolean } | string> => {
-  const checkExistence = await Lesson.findOne({
-    where: { id: lessonId },
-  });
-  if (!checkExistence) return '해당하는 레슨이 없습니다.';
-
-  await checkExistence.destroy();
-  return { removed: true };
-};
-
-/**
- * 특정 유저가 작성한 레슨을 가져옵니다.
- *
- * @param userId
- */
-export const findLessonsByUserId = async (
-  userId: number,
-  offset: number,
-  limit: number,
-): Promise<CountRows<LessonAllInfo> | string> => {
-  const lessonData = (await Lesson.findAndCountAll({
-    ...lessonQueryOptions,
-    where: { tutor_id: userId },
-    offset,
-    limit,
-  })) as CountRows<unknown> | null as CountRows<LessonAllInfo> | null;
-  if (lessonData === null) return '해당하는 유저의 레슨이 더 이상 없습니다.';
-  for (const lesson of lessonData.rows) {
-    lesson.lesson_id = (lesson as any).dataValues.lesson_id;
-  }
-  return lessonData;
-};
-
-const lessonQueryOptionsforAdmin: FindOptions = {
-  attributes: [
-    'id',
-    'tutor_id',
-    'title',
-    'price',
-    'location',
-    'minute_per_lesson',
-    'content',
-    'createdAt',
-    'updatedAt',
-    'deletedAt',
+  order: [
+    ['updatedAt', 'DESC'],
   ],
+};
+
+/**
+ * 레슨의 모든 정보 (유저, 카테고리를 포함한 정보) 를 가져올 때 사용하는 쿼리 옵션입니다.
+ * 이 쿼리문은 삭제된 정보까지 조회합니다.
+ * 
+ * @author Jonghyun Lim
+ * @version 1
+ */
+const lessonQueryOptionsforAdmin: FindOptions = {
   include: [
     { model: Category, attributes: ['name'] },
     {
@@ -268,52 +76,311 @@ const lessonQueryOptionsforAdmin: FindOptions = {
       paranoid: false,
     },
   ],
+  paranoid: false,
+  raw: true,
 };
 
 /**
- * Admin용 findAllLessons(deleted 게시물까지 포함)
+ * 데이터베이스에 레슨 정보를 삽입합니다.
+ *
+ * @param tutorId 레슨을 등록한 튜터의 테이블 ID입니다.
+ * @param lessonEditable 수정 가능한 레슨 정보 객체입니다.
+ * @returns Promise<Lesson>
+ * @throws ErrorResponse 해당되는 카테고리, 튜터가 없거나 기타 이유로 실패할 경우
+ * @author Jonghyun Lim
+ * @version 1
  */
-export const findAllLessons = async (offset: number, limit: number) => {
-  const lessonData = await Lesson.findAndCountAll({
-    ...lessonQueryOptionsforAdmin,
+export const createLesson = async (
+  tutorId: number,
+  lessonEditable: LessonEditable,
+): Promise<Lesson> => {
+  const newLesson = Lesson.build({
+    tutor_id: tutorId,
+    ...lessonEditable as any, // NOTE: any 키워드를 사용하지 않는 방법 강구
+  });
+  const rtn = newLesson.save().catch(() => {
+    throw new ErrorResponse(Status.BAD_REQUEST, '레슨 등록에 실패했습니다.');
+  });
+  return rtn;
+};
+
+/**
+ * 레슨 ID에 대한 레슨을 가져옵니다.
+ *
+ * @param lessonId Lesson id for finding a lesson
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @throws ErrorResponse 레슨 ID에 대한 레슨이 존재하지 않을 경우
+ * @author Jonghyun Lim
+ * @version 1
+ */
+export const findLessonById = async (
+  lessonId: number,
+  all: boolean,
+): Promise<Lesson> => {
+  const query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
+  const lesson = await Lesson.findOne({
+    ...query,
+    where: { id: lessonId },
+  });
+  if (!lesson)
+    throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');
+  return lesson;
+};
+
+/**
+ * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다.
+ * 
+ * @param offset number
+ * @param limit number
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @returns Promise<>
+ * @author Jonghyun Lim
+ * @version 2
+ */
+export const findLessons = async (
+  offset: number,
+  limit: number,
+  all: boolean,
+  category_id?: number,
+): Promise<{rows: LessonAllInfo[], count: number}> => {
+  const _query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
+  const query = {
+    ..._query,
     offset,
     limit,
-    paranoid: false,
-    raw: true,
-  });
-  return lessonData;
+  };
+  if (category_id !== undefined || category_id !== 0) {
+    const where = { category_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  const {rows, count} = await Lesson.findAndCountAll(query);
+
+  const rows_new = await Promise.all( rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new, count};
 };
 
 /**
- * Admin용 findLessonsByUserId(deleted 게시물까지 포함)
+ * 레슨 ID에 대한 레슨 정보를 수정합니다.
+ *
+ * @param lessonId 수정하고자 하는 레슨 ID
+ * @param lessonEditable 수정하고자 하는 정보
+ * @returns Promise<boolean> 수정 여부
+ * @author Jonghyun Lim
+ * @version 1
  */
-export const findAllLessonsByUserId = async (
+export const editLesson = async (
+  lessonId: number,
+  lessonEditable: LessonEditable,
+): Promise<boolean> => {
+  const [updatedNum] = await Lesson.update(
+    { ...lessonEditable },
+    {
+      where: {
+        id: lessonId,
+      },
+    },
+  );
+  return updatedNum > 0;
+};
+
+/**
+ * 레슨 ID에 대한 레슨을 삭제합니다.
+ *
+ * @param lessonId 삭제하고자 하는 레슨 ID
+ * @returns Promise<boolean> 삭제 여부
+ * @author Jonghyun Lim
+ * @version 1
+ */
+export const removeLesson = async (
+  lessonId: number,
+): Promise< boolean > => {
+  const checkExistence = await Lesson.findOne({
+    where: { id: lessonId },
+  });
+  if (!checkExistence) return false;
+  await checkExistence.destroy();
+  return true;
+};
+
+/**
+ * 특정 유저가 작성한 레슨을 가져옵니다.
+ *
+ * @param userId 유저 ID
+ * @param offset number
+ * @param limit number
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @returns Promise<Lesson[]> 레슨 객체
+ * @author Jonghyun Lim
+ * @version 1
+ */
+export const findLessonsByUserId = async (
   userId: number,
   offset: number,
   limit: number,
-) => {
+  all: boolean,
+): Promise<Lesson[]> => {
+  const query = all ? lessonQueryOptionsforAdmin : lessonQueryOptions;
   const lessonData = await Lesson.findAndCountAll({
-    ...lessonQueryOptionsforAdmin,
+    ...query,
     where: { tutor_id: userId },
     offset,
     limit,
-    paranoid: false,
-    raw: true,
   });
-  return lessonData;
+  return lessonData.rows;
 };
 
-export const findLessonById = async (lessonId: number) => {
-  const lesson = await Lesson.findOne({
-    ...lessonQueryOptionsforAdmin,
-    where: { id: lessonId },
-    paranoid: false,
-    raw: true,
-  });
-  if (!lesson)
-    throw new ErrorResponse(
-      Status.BAD_REQUEST,
-      '유효하지 않은 레슨 아이디입니다.',
-    );
-  return lesson;
+/**
+ * 튜터가 해당 카테고리에 쓴 글이 있는 지 확인하는 메소드.
+ * 이미 해당 카테고리에 글이 존재한다면, true를 반환. 없다면 false를 반환.
+ * But, 글의 수정의 경우를 생각해서 arrLessonId와 lessonId가 같은 경우에는 false를 반환.
+ * 
+ * @param userId 유저 ID
+ * @param categoryId 카테고리 ID
+ * @param lessonId 레슨 ID
+ * @returns Promise<boolean>
+ * @author sungkim
+ */
+export const checkLessonWithUserId = async (
+  userId: number,
+  categoryId: number,
+  lessonId: number,
+) : Promise<boolean> => {
+  
+  const lessonData = await Lesson.findAndCountAll({
+    where: {
+      tutor_id: userId,
+      category_id: categoryId,
+    }
+  })
+  
+  let arrLessonId: number = -1;
+
+  lessonData.rows.map((arr: Lesson) => {
+    arrLessonId = arr.id;
+  })
+  if (arrLessonId === lessonId)
+    return false;
+  if (lessonData.count)
+    return true;
+  return false;
+}
+
+/**
+ * 글 끌어올리기 기능을 수행하기 위한 메소드입니다.
+ * 이때 쿨타임 60분이 있기 때문에 그에 대한 제한을 time_diff_min으로 체크합니다.
+ * 
+ * @param lessonId 레슨 ID
+ * @returns Promise<boolean>
+ * @author sungkim
+ */
+export const updateLessonOrderByButton = async (
+  lessonId: number,
+) : Promise<boolean> => {
+
+  const checkCompleted = await Lesson.findOne({where: {id: lessonId,}});
+
+  let now = new Date();
+  now.setHours(now.getHours() + 9);
+  let updatedTime = new Date(checkCompleted?.updatedAt.toString() || "");
+  let time_diff_min = (Number(now) - Number(updatedTime)) / 1000 / 60;
+
+  if (time_diff_min < 60)
+    throw new ErrorResponse(Status.BAD_REQUEST, '쿨타임이 남아있습니다.');
+
+  checkCompleted?.changed('updatedAt', true);
+  checkCompleted?.save();
+
+  if (checkCompleted)
+    return true;
+  return false;
+}
+
+/**
+ * 고유 ID를 통해 레슨들을 삭제
+ * 
+ * @param id 삭제하고자 하는 ID 배열
+ * @param force 실제로 테이블에서 삭제하는지 여부
+ * @returns Promise<number>
+ * @author joohongpark
+ */
+ export const removeLessons = async (
+  id: number[],
+  force?: boolean,
+): Promise< number > => {
+  let query = {
+    where: { id }
+  };
+  if (force !== undefined) {
+    addProperty<boolean>(query, 'force', force);
+  }
+  const rtn = await Lesson.destroy(query);
+  return rtn;
 };
+
+
+/**
+ * 조건에 따라 레슨 정보들을 받아옵니다.
+ * 
+ * @param offset number
+ * @param limit number
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @returns Promise<>
+ * @author Jonghyun Lim
+ * @version 2
+ */
+export const findLessonsBySomething = async (
+  instrument_id?: number,
+  tutor_id?: number,
+  location_name?: string,
+): Promise<{rows: LessonAllInfo[]}> => {
+  const _query = lessonQueryOptions;
+  const query = {
+    ..._query,
+  };
+  if (instrument_id !== undefined && instrument_id !== -1) {
+    const where = { category_id: instrument_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  if (tutor_id !== undefined && tutor_id !== -1) {
+    const where = { tutor_id };
+    addProperty<Object>(query, 'where', where);
+  }
+  if (location_name !== undefined && location_name !== "") {
+    const where = { location: {
+      [Op.like]: '%' + location_name + '%',
+    }};
+    addProperty<Object>(query, 'where', where);
+  }
+
+  const rows = await Lesson.findAll(query);
+
+  const rows_new = await Promise.all(rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new};
+};
+

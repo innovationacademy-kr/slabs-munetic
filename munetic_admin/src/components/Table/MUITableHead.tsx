@@ -11,6 +11,7 @@ import {
 } from './AdminUser/adminUserHeadCells';
 import { LessonHeadCell, lessonHeadCells } from './Lesson/LessonHeadCells';
 import { useInfo } from '../../contexts/info';
+import { CommentHeadCell, CommentHeadCells } from './Comment/CommentHeadCells';
 
 export interface MUITableProps {
   numSelected: number;
@@ -27,11 +28,13 @@ export default function MUITableHead({
   const info = useInfo() as any;
 
   let headCells:
+    | readonly CommentHeadCell[]
     | readonly UserHeadCell[]
     | readonly AdminUserHeadCell[]
     | readonly LessonHeadCell[];
   headCells = [];
 
+  if (path === '/comments') headCells = CommentHeadCells;
   if (path === '/users') headCells = userHeadCells;
   if (path === '/admin_users') headCells = adminUserHeadCells;
   if (path === '/lessons' || path === `/users/${info!.id}`)

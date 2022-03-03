@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 import { Account, User } from '../models/user';
-import * as Status from 'http-status';
+import Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
+import { TutorInfo } from '../models/tutorInfo'
+import addProperty from '../util/addProperty';
 
 export interface IsearchUser {
   login_id?: string;
@@ -47,6 +49,12 @@ export const searchActiveUser = async (userInfo: IsearchUser) => {
     where: {
       ...userInfo,
     },
+    include: [
+      {
+        model: TutorInfo,
+        attributes: ["spec", "career", "youtube", "instagram", "soundcloud"],
+      }
+    ],
   });
   return data;
 };
@@ -167,4 +175,59 @@ export const findAllUserById = async (id: number) => {
     );
   }
   return user;
+};
+
+export const findTutorIdByName = async (tutor_name: string) => {
+  const data = await User.findOne({
+      where: {
+          name: tutor_name
+      },
+      attributes: ['id']
+  })
+  if (data === null) return {id: 0};
+  return data;
+}
+
+/**
+ * 튜터 타입 변경
+ * 
+ * @param user_id user ID
+ * @param type Account user 타입
+ * @returns Promise<boolean>
+ * @author joohongpark
+ */
+export const userTypeChange = async (
+  user_id: number,
+  type: Account,
+): Promise< boolean > => {
+  const [userUpdate] = await User.update( {
+    type: type,
+  } , {
+    where: {
+      id: user_id,
+    },
+  });
+  return (userUpdate !== 0);
+}
+
+/**
+ * 고유 ID를 통해 유저들을 삭제
+ * 
+ * @param id 삭제하고자 하는 ID 배열
+ * @param force 실제로 테이블에서 삭제하는지 여부
+ * @returns Promise<number>
+ * @author joohongpark
+ */
+ export const removeUsers = async (
+  id: number[],
+  force?: boolean,
+): Promise< number > => {
+  let query = {
+    where: { id }
+  };
+  if (force !== undefined) {
+    addProperty<boolean>(query, 'force', force);
+  }
+  const rtn = await User.destroy(query);
+  return rtn;
 };

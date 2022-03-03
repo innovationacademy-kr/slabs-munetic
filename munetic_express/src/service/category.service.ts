@@ -11,3 +11,14 @@ export const findAllCategory = async () => {
   if (categories === null) return '카테고리가 없습니다.';
   return categories;
 };
+
+export const findCategoryIdByName = async (category_name: string): Promise<{id: number}> => {
+  const data = await Category.findOne({
+      where: {
+          name: category_name
+      },
+      attributes: ['id']
+  })
+  if (data === null) return {id: 0};
+  return data;
+};

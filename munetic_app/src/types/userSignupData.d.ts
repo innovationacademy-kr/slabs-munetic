@@ -9,3 +9,11 @@ export interface userSignupData {
   phone_number: string;
   gender: string | undefined;
 }
+
+export interface ITutorInfoType {
+  spec?: string;
+  career?: string;
+  youtube?: string;
+  instagram?: string;
+  soundcloud?: string;
+}
