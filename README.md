@@ -40,7 +40,8 @@ nginx를 이용해 munetic 프로젝트를 한 포트에서 접근할 수 있게
 
 ## 관련 문서
 * 시나리오 : https://github.com/innovationacademy-kr/slabs-munetic/blob/develop/docs/scenario.md
-* figma 와이어프레임 : https://www.figma.com/file/6THnbJkS1vHRshCWU7422o/뮤네틱-화면-설명서?node-id=0%3A1
+* figma 와이어프레임 (~2022.04.20) : [초안 구성](https://www.figma.com/file/6THnbJkS1vHRshCWU7422o/뮤네틱-화면-설명서?node-id=0%3A1)
+* figma 와이어프레임 (2022.04.21 ~) : [새로 정리](https://www.figma.com/file/9EYawhC2W8W243ADmDt5iw/MUNETIC-APP-%ED%99%94%EB%A9%B4%EC%84%A4%EA%B3%84%EC%84%9C%2B%ED%94%8C%EB%A1%9C%EC%9A%B0%EC%B0%A8%ED%8A%B8(FIXED-VER.)?node-id=0%3A1)
 
 ## Wiki
 * https://github.com/innovationacademy-kr/slabs-munetic/wiki
