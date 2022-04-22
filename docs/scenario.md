@@ -1,7 +1,8 @@
 # 뮤네틱 유저 시나리오
 
 # figma 와이어프레임
-- [링크](https://www.figma.com/file/6THnbJkS1vHRshCWU7422o/뮤네틱-화면-설명서?node-id=0%3A1)
+- [링크](https://www.figma.com/file/6THnbJkS1vHRshCWU7422o/%EB%AE%A4%EB%84%A4%ED%8B%B1-%ED%99%94%EB%A9%B4-%EC%84%A4%EB%AA%85%EC%84%9C)
+- [링크](https://www.figma.com/file/9EYawhC2W8W243ADmDt5iw/MUNETIC-APP-%ED%99%94%EB%A9%B4%EC%84%A4%EA%B3%84%EC%84%9C%2B%ED%94%8C%EB%A1%9C%EC%9A%B0%EC%B0%A8%ED%8A%B8(FIXED-VER.))
 
 
 ## 뮤네틱의 유저 계정은 크게 3가지 유저로 나뉩니다.
