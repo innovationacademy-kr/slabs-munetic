@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import CategoryPage from './pages/lesson/CategoryPage';
@@ -9,6 +9,7 @@ import WriteClassPage from './pages/lesson/WriteClassPage';
 import ViewProfilePage from './pages/profile/ViewProfilePage';
 import ManageProfilePage from './pages/profile/ManageProfilePage';
 import EditProfilePage from './pages/profile/EditProfilePage';
+import EditTutorProfilePage from './pages/profile/EditTutorProfilePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ViewMyLikesPage from './pages/profile/ViewMyLikesPage';
@@ -35,6 +36,10 @@ export default function Routing() {
       <Route path="/profile/likes/" element={<ViewMyLikesPage />} />
       <Route path="/profile/manage" element={<ManageProfilePage />} />
       <Route path="/profile/edit/:id" element={<EditProfilePage />} />
+      <Route
+        path="/profile/tutor/edit/:id"
+        element={<EditTutorProfilePage />}
+      />
       <Route path="/bookmark/" element={<ViewMyBookmarksPage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
