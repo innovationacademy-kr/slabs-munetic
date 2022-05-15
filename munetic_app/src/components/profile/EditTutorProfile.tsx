@@ -11,7 +11,6 @@ import ToggleBtn from '../common/ToggleBtn';
 import Button from '../common/Button';
 import Contexts from '../../context/Contexts';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import styles from './EditTutorProfile.module.css';
 
 const Container = styled.div`
   margin: 30px 10px 60px 10px;
@@ -139,6 +138,10 @@ const InfoWrapper = styled.div<InfoNameProps>`
   .careerText {
     font-size: 18px;
     margin-right: 1rem;
+    width: 80%;
+    outline: none;
+    border: none;
+    background-color: inherit;
   }
 
   .careerDeleteBtn,
@@ -173,24 +176,7 @@ export default function EditTutorProfile() {
   const userId = useParams().id;
   const navigate = useNavigate();
   console.log('check it sound');
-  const [userData, setUserData] = useState<IUserTable>({
-    type: 'Student',
-    login_id: '42kunlee',
-    login_password:
-      '$2b$10$fO/O6fF5w1HDkXNab8AMBOYE/9ByW8/sjIeXpQONQgJxkegxdFDIq',
-    nickname: 'kunlee',
-    name: '쿠운리',
-    name_public: true,
-    gender: 'Male',
-    birth: 940302,
-    email: '42.kunlee@gmail.com',
-    phone_number: '010-1234-1234',
-    phone_public: true,
-    image_url: '/img/basicProfileImg.png',
-    introduction: '안녕하세요. kunlee입니다. 반가워요',
-    // createdAt: Sequelize.fn('now'),
-    // updatedAt: Sequelize.fn('now'),
-  });
+  const [userData, setUserData] = useState<IUserTable>();
   const [nicknameValue, setNicknameValue] = useState('');
   const [namePublicValue, setNamePublicValue] = useState<boolean>();
   const [phonePublicValue, setPhonePublicValue] = useState<boolean>();
@@ -202,7 +188,7 @@ export default function EditTutorProfile() {
   const [nicknameMessage, setNicknameMessage] = useState('');
 
   const [careerValue, setCareerValue] = useState<Array<string>>(
-    userData?.career ? userData.career : ['서울예대', '학원 강사 3년'],
+    userData?.career ? userData.career : [],
   );
 
   const { state, actions } = useContext(Contexts);
@@ -228,7 +214,13 @@ export default function EditTutorProfile() {
   };
 
   const onClickAddCareer = () => {
-    console.log('click');
+    setCareerValue(prev => [...prev, '']);
+  };
+
+  const onClickDeleteCareer = (idx: number) => {
+    let tmp = [...careerValue];
+    tmp.splice(idx, 1);
+    setCareerValue(tmp);
   };
 
   const onClickEditNicknameBtn = async () => {
@@ -265,6 +257,12 @@ export default function EditTutorProfile() {
     }
   };
 
+  const onEditCareer = (e: React.FormEvent<HTMLInputElement>, idx: number) => {
+    let tmp = [...careerValue];
+    tmp[idx] = e.currentTarget.value;
+    setCareerValue(tmp);
+  };
+
   const onChangeProfileImg = async (e: any) => {
     try {
       const formData = new FormData();
@@ -287,11 +285,12 @@ export default function EditTutorProfile() {
         setPhonePublicValue(userProfile.data.data.phone_public);
         setImageValue(userProfile.data.data.image_url);
         setIntroValue(userProfile.data.data.introduction);
+        setCareerValue(userProfile.data.data.career);
       } catch (e) {
         console.log(e, '프로필을 불러오지 못했습니다.');
       }
     }
-    // getProfile();
+    getProfile();
   }, []);
 
   useEffect(() => {
@@ -305,6 +304,7 @@ export default function EditTutorProfile() {
               phone_public: phonePublicValue,
               image_url: imageValue,
               introduction: introValue,
+              career: careerValue,
             };
             await ProfileAPI.updateProfile(newData);
             actions.setWrite(false);
@@ -316,9 +316,8 @@ export default function EditTutorProfile() {
         actions.setWrite(false);
       }
     }
-    // UpdateProfile();
+    UpdateProfile();
   }, [state]);
-
   return (
     <>
       {!userData ? (
@@ -409,11 +408,24 @@ export default function EditTutorProfile() {
               <div className="infoNameTextCol">경력사항</div>
             </div>
             <ul className="careers">
-              {careerValue.map((careerInfo, idx) => {
+              {careerValue?.map((careerInfo, idx) => {
                 return (
                   <li className="careerList">
-                    <span className="careerText">{careerInfo}</span>
-                    <button className="careerDeleteBtn">−</button>
+                    <input
+                      className="careerText"
+                      value={careerInfo}
+                      name={String(idx)}
+                      onChange={e => onEditCareer(e, idx)}
+                      placeholder="경력을 입력하세요"
+                    />
+                    <button
+                      className="careerDeleteBtn"
+                      onClick={() => {
+                        onClickDeleteCareer(idx);
+                      }}
+                    >
+                      −
+                    </button>
                   </li>
                 );
               })}
