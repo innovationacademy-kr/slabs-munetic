@@ -68,3 +68,8 @@ export const searchLessonsByLocation = async (location_name: string) => {
 
     return await LessonService.findLessonsBySomething(-1, -1, location_name);
 }
+
+export const searchLessonsTarget = async (lessonId: number, all: boolean) => {
+    const data = await Lesson.findAll()
+    return data;
+}

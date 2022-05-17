@@ -3,6 +3,7 @@ import * as Status from 'http-status';
 import ErrorResponse from '../modules/errorResponse';
 import { ResJSON } from '../modules/types';
 import * as SearchService from '../service/search.service';
+import * as status from 'http-status';
 
 /**
  * 모든 Lesson 데이터를 가져옵니다.
@@ -93,6 +94,33 @@ export const getLessonsByLocation: RequestHandler = async (req, res, next) => {
             data,
         )
         res.status(Status.OK).json(result);
+    } catch (err) {
+        next(err);
+    }
+}
+
+/**
+ * 선택한 악기의 Lesson 데이터 검색창을 띄운다.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @author JaeGu Jeong
+ * @version 1
+ */
+ export const getLessonsTarget: RequestHandler = async (req, res, next) => {
+    try {
+        const lessonId: number = parseInt(req.params.id as string);
+        if (Number.isNaN(lessonId) || lessonId < 0) {
+          res.status(status.BAD_REQUEST).send('offset / limit / user ID error');
+        } else {
+            let result: ResJSON;
+            const data = await SearchService.searchLessonsTarget(lessonId, false)
+            result = new ResJSON(
+                '데이터를 불러오는데 성공하였습니다.',
+                data,
+            )
+            res.status(Status.OK).json(result);
+        }
     } catch (err) {
         next(err);
     }
