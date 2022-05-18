@@ -78,9 +78,11 @@ export default function Login() {
         ] = `Bearer ${accessToken}`;
         try {
           localStorage.setItem('user', JSON.stringify(login_id));
+          //localStorage.setItem('')
         } catch (e) {
           console.log(e, 'localStorage is not working');
         }
+        actions.setLoggedin(true);
         navigate('/');
       } catch (e) {
         setShowErrorMessage(true);
