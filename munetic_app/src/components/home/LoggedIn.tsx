@@ -9,6 +9,7 @@ import * as LikeAPI from '../../lib/api/like';
 import * as CommentAPI from '../../lib/api/comment';
 import { ICommentPerTutorTable } from '../../types/commentData';
 import { ILikesPerTutorTable } from '../../types/lessonLikeData';
+import { Account } from '../../types/enums';
 
 const Container = styled.div`
   padding: 20px;
@@ -28,13 +29,15 @@ const ButtonWrapper = styled.div`
   height: 40%;
 `;
 
-export default function LoggedIn({ type }: { type: string }) {
+export default function LoggedIn({ type }: { type: Account }) {
+  console.log(type);
   const [manyCommentsTutors, setManyCommentsTutors] =
     useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
   const [manyLikesTutors, setManyLikesTutors] =
     useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
 
   useEffect(() => {
+    console.log('effect');
     async function init() {
       try {
         const commentsResult = await CommentAPI.getStarTutors();
@@ -66,7 +69,7 @@ export default function LoggedIn({ type }: { type: string }) {
           <Button to="/lesson/category">레슨 찾기</Button>
         </ButtonWrapper>
         <ButtonWrapper>
-          {type !== 'student' ? (
+          {type !== Account.Student ? (
             <Button to="/lesson/manage">레슨 등록</Button>
           ) : (
             <Button to="/auth/register?tutor=tutor">
