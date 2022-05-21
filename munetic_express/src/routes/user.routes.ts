@@ -10,4 +10,5 @@ router.get('/', jwtAuth(), UserAPI.getMyProfile);
 router.patch('/', jwtAuth(), UserAPI.editUserProfile);
 router.get('/:id', UserAPI.getUserProfile);
 router.get('/tutor/:id', UserAPI.getTutorProfile);
+router.patch('/tutor', jwtAuth(), UserAPI.editTutorProfile);
 router.post('/image', jwtAuth(), storage.imgUpload, UserAPI.createProfileImg);
