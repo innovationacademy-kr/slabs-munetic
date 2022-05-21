@@ -103,17 +103,20 @@ export default function ManageProfile() {
   };
 
   const changeAccount = async (changeTo: boolean) => {
-    const res = await AuthAPI.changeAccount(userData?.type === 'Student' ? 'Tutor' : 'Student');
-    let new_userData = {...userData} as IUserTable;
+    const res = await AuthAPI.changeAccount(
+      userData?.type === 'Student' ? 'Tutor' : 'Student',
+    );
+    let new_userData = { ...userData } as IUserTable;
     if (userData) {
-      new_userData.type = userData.type === 'Student' ? Account.Tutor : Account.Student;
+      new_userData.type =
+        userData.type === 'Student' ? Account.Tutor : Account.Student;
       setUserData(new_userData);
     }
     return res.data.data || false;
   };
 
   const Label = styled.div`
-    font-family: "Roboto","Arial",sans-serif;
+    font-family: 'Roboto', 'Arial', sans-serif;
     font-size: 1.3rem;
     line-height: 2.2rem;
     font-weight: 400;
@@ -130,18 +133,19 @@ export default function ManageProfile() {
       ) : (
         <Container>
           <Label>
-          {
-            userData.TutorInfo ? (
+            {userData.TutorInfo ? (
               <SwitchWithLabel
                 init={userData.type !== 'Student'}
-                label={`${userData.type === 'Student' ? '선생님' : '학생'} 계정으로 변경`}
-                change={changeAccount} />
+                label={`${
+                  userData.type === 'Student' ? '선생님' : '학생'
+                } 계정으로 변경`}
+                change={changeAccount}
+              />
             ) : (
               <ChangeTypeButton>
                 <Link to="/auth/register?tutor=tutor">튜터 등록</Link>
               </ChangeTypeButton>
-            )
-          }
+            )}
           </Label>
           <ProfileWrapper>
             <div className="imgAndNickname">
@@ -151,7 +155,13 @@ export default function ManageProfile() {
               </div>
             </div>
             <div className="sns">
-              <StyledEditButton to={`/profile/edit/${userData.id}`}>
+              <StyledEditButton
+                to={
+                  userData.type === Account.Student
+                    ? `/profile/edit/${userData.id}`
+                    : `/profile/tutor/edit/${userData.id}`
+                }
+              >
                 프로필 수정
               </StyledEditButton>
               <StyledEditButton to={`/profile/likes`}>

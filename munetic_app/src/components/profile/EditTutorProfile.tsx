@@ -1,12 +1,11 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IUserTable } from '../../types/userData';
+import { forEditTutorProfileInfoType } from '../../lib/api/profile';
 import * as ProfileAPI from '../../lib/api/profile';
 import * as AuthAPI from '../../lib/api/auth';
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import ToggleBtn from '../common/ToggleBtn';
 import Button from '../common/Button';
 import Contexts from '../../context/Contexts';
@@ -91,7 +90,6 @@ const StyledBtnIntro = styled(Button)`
 
 interface InfoNameProps {
   column?: boolean;
-  editable?: boolean;
 }
 
 const InfoWrapper = styled.div<InfoNameProps>`
@@ -117,14 +115,11 @@ const InfoWrapper = styled.div<InfoNameProps>`
   .infoContent {
     font-size: 18px;
     outline: none;
-    ${({ editable }) =>
-      editable
-        ? `border: 1px solid ${palette.grayBlue}; border-radius: 5px;`
-        : null};
   }
   .careers {
   }
-  .careerList {
+  .careerList,
+  .snsList {
     margin: 1rem 0;
     border-radius: 0.5rem;
     border: solid 1.5px;
@@ -170,26 +165,50 @@ const InfoWrapper = styled.div<InfoNameProps>`
   .careerAddBtn:hover {
     transform: scale(1.1);
   }
+
+  .specText,
+  .tutorIntroText {
+    padding: 1rem 1rem;
+    font-size: 18px;
+    margin-right: 1rem;
+    width: 80%;
+    outline: none;
+    border: none;
+    background-color: inherit;
+  }
+`;
+
+const SnsInfo = styled.ul`
+  font-size: 18px;
+  font-weight: bold;
+
+  .snsTitle {
+    width: 20%;
+  }
+  .snsUrlInput {
+    font-size: 18px;
+    margin-right: 1rem;
+    width: 80%;
+    outline: none;
+    border: none;
+    background-color: inherit;
+  }
 `;
 
 export default function EditTutorProfile() {
   const userId = useParams().id;
   const navigate = useNavigate();
-  console.log('check it sound');
   const [userData, setUserData] = useState<IUserTable>();
+  const [tutorData, setTutorData] = useState<forEditTutorProfileInfoType>();
   const [nicknameValue, setNicknameValue] = useState('');
   const [namePublicValue, setNamePublicValue] = useState<boolean>();
   const [phonePublicValue, setPhonePublicValue] = useState<boolean>();
   const [imageValue, setImageValue] = useState('');
-  const [introValue, setIntroValue] = useState('');
-  const [isEditIntro, setIsEditIntro] = useState<boolean>(false);
   const [isEditNickname, setIsEditNickname] = useState<boolean>(false);
   const [isNicknameChanged, setIsNicknameChanged] = useState<boolean>(false);
   const [nicknameMessage, setNicknameMessage] = useState('');
 
-  const [careerValue, setCareerValue] = useState<Array<string>>(
-    userData?.career ? userData.career : [],
-  );
+  const [careerValue, setCareerValue] = useState<Array<string>>();
 
   const { state, actions } = useContext(Contexts);
 
@@ -209,18 +228,25 @@ export default function EditTutorProfile() {
     setPhonePublicValue(newAlignment);
   };
 
-  const onClickEditIntroBtn = () => {
-    setIsEditIntro(!isEditIntro);
-  };
-
   const onClickAddCareer = () => {
-    setCareerValue(prev => [...prev, '']);
+    if (careerValue) setCareerValue([...careerValue, '']);
+    else setCareerValue(['']);
   };
 
   const onClickDeleteCareer = (idx: number) => {
-    let tmp = [...careerValue];
-    tmp.splice(idx, 1);
-    setCareerValue(tmp);
+    if (careerValue) {
+      let tmp = [...careerValue];
+      tmp.splice(idx, 1);
+      setCareerValue(tmp);
+    }
+  };
+
+  const onEditCareer = (e: React.FormEvent<HTMLInputElement>, idx: number) => {
+    if (careerValue) {
+      let tmp = [...careerValue];
+      tmp[idx] = e.currentTarget.value;
+      setCareerValue(tmp);
+    }
   };
 
   const onClickEditNicknameBtn = async () => {
@@ -239,12 +265,6 @@ export default function EditTutorProfile() {
     }
   };
 
-  const onEditIntro = (e: React.FormEvent<HTMLDivElement>) => {
-    if (e.currentTarget.textContent) {
-      setIntroValue(e.currentTarget.textContent);
-    }
-  };
-
   const onEditNickname = (e: React.FormEvent<HTMLDivElement>) => {
     if (e.currentTarget.textContent) {
       setNicknameValue(e.currentTarget.textContent);
@@ -255,12 +275,6 @@ export default function EditTutorProfile() {
         setIsNicknameChanged(true);
       }
     }
-  };
-
-  const onEditCareer = (e: React.FormEvent<HTMLInputElement>, idx: number) => {
-    let tmp = [...careerValue];
-    tmp[idx] = e.currentTarget.value;
-    setCareerValue(tmp);
   };
 
   const onChangeProfileImg = async (e: any) => {
@@ -275,17 +289,42 @@ export default function EditTutorProfile() {
     }
   };
 
+  const onChangeTutorData = (e: React.FormEvent<HTMLInputElement>) => {
+    const { value, name } = e.currentTarget;
+    setTutorData({
+      ...tutorData,
+      [name]: value,
+    });
+  };
+
   useEffect(() => {
     async function getProfile() {
       try {
         const userProfile = await ProfileAPI.getProfileById(Number(userId));
+        const tutorProfile = await ProfileAPI.getTutorProfileById(
+          Number(userId),
+        );
+
         setUserData(userProfile.data.data);
         setNicknameValue(userProfile.data.data.nickname);
         setNamePublicValue(userProfile.data.data.name_public);
         setPhonePublicValue(userProfile.data.data.phone_public);
         setImageValue(userProfile.data.data.image_url);
-        setIntroValue(userProfile.data.data.introduction);
-        setCareerValue(userProfile.data.data.career);
+        setCareerValue(
+          tutorProfile.data.data.career
+            ? JSON.parse(tutorProfile.data.data.career)
+            : '',
+        );
+        setTutorData({
+          spec: tutorProfile.data.data.spec,
+          career: tutorProfile.data.data.career
+            ? JSON.parse(tutorProfile.data.data.career)
+            : '',
+          youtube: tutorProfile.data.data.youtube,
+          instagram: tutorProfile.data.data.instagram,
+          soundcloud: tutorProfile.data.data.soundcloud,
+          tutor_introduction: tutorProfile.data.data.tutor_introduction,
+        });
       } catch (e) {
         console.log(e, '프로필을 불러오지 못했습니다.');
       }
@@ -294,19 +333,21 @@ export default function EditTutorProfile() {
   }, []);
 
   useEffect(() => {
-    async function UpdateProfile() {
+    async function UpdateTutorProfile() {
       if (state.write) {
-        if (!isEditNickname && !isNicknameChanged && !isEditIntro) {
+        if (!isEditNickname && !isNicknameChanged) {
           try {
             const newData = {
               nickname: nicknameValue,
               name_public: namePublicValue,
               phone_public: phonePublicValue,
               image_url: imageValue,
-              introduction: introValue,
-              career: careerValue,
             };
             await ProfileAPI.updateProfile(newData);
+            await ProfileAPI.updateTutorProfile(
+              { ...tutorData, career: JSON.stringify(careerValue) },
+              Number(userId),
+            );
             actions.setWrite(false);
             navigate(`/profile/${userData?.id}`, { replace: true });
           } catch (e) {
@@ -316,8 +357,9 @@ export default function EditTutorProfile() {
         actions.setWrite(false);
       }
     }
-    UpdateProfile();
+    UpdateTutorProfile();
   }, [state]);
+
   return (
     <>
       {!userData ? (
@@ -361,10 +403,6 @@ export default function EditTutorProfile() {
           <div className="nicknameMessage">
             {!isNicknameChanged && isEditNickname ? nicknameMessage : ''}
           </div>
-          <div className="sns">
-            <InstagramIcon />
-            <YouTubeIcon />
-          </div>
           <InfoWrapper>
             <div className="infoName">이름</div>
             <div className="infoContent">{userData.name}</div>
@@ -385,25 +423,31 @@ export default function EditTutorProfile() {
               handleChange={onChangeTogglePhone}
             />
           </InfoWrapper>
-          <InfoWrapper column editable={isEditIntro}>
+          <InfoWrapper column>
             <div className="infoName">
-              <div className="infoNameTextCol">소개</div>
-              <StyledBtnIntro onClick={onClickEditIntroBtn}>
-                {isEditIntro ? '완료' : '수정'}
-              </StyledBtnIntro>
+              <div className="infoNameTextCol">튜터 소개</div>
             </div>
-            <div
-              className="infoContent"
-              contentEditable={isEditIntro}
-              suppressContentEditableWarning
-              onInput={e => {
-                isEditIntro ? onEditIntro(e) : null;
-              }}
-            >
-              {userData.introduction}
-            </div>
+            <input
+              className="tutorIntroText"
+              name="tutor_introduction"
+              value={tutorData ? tutorData.tutor_introduction : ''}
+              placeholder="튜터 소개를 입력하세요."
+              onChange={onChangeTutorData}
+            />
           </InfoWrapper>
-          <InfoWrapper column editable={isEditIntro}>
+          <InfoWrapper column>
+            <div className="infoName">
+              <div className="infoNameTextCol">학력</div>
+            </div>
+            <input
+              className="specText"
+              name="spec"
+              value={tutorData ? tutorData.spec : ''}
+              placeholder="학력을 입력하세요."
+              onChange={onChangeTutorData}
+            />
+          </InfoWrapper>
+          <InfoWrapper column>
             <div className="infoName">
               <div className="infoNameTextCol">경력사항</div>
             </div>
@@ -433,6 +477,43 @@ export default function EditTutorProfile() {
             <button className="careerAddBtn" onClick={onClickAddCareer}>
               +
             </button>
+          </InfoWrapper>
+          <InfoWrapper column>
+            <div className="infoName">
+              <div className="infoNameTextCol">SNS</div>
+            </div>
+            <SnsInfo>
+              <li className="snsList snsYoutube">
+                <span className="snsTitle">Youtube : </span>
+                <input
+                  type="text"
+                  className="snsUrlInput"
+                  value={tutorData ? tutorData.youtube : ''}
+                  name="youtube"
+                  onChange={onChangeTutorData}
+                />
+              </li>
+              <li className="snsList snsInstagram">
+                <span className="snsTitle">Instagram : </span>
+                <input
+                  type="text"
+                  className="snsUrlInput"
+                  value={tutorData ? tutorData.instagram : ''}
+                  name="instagram"
+                  onChange={onChangeTutorData}
+                />
+              </li>
+              <li className="snsList snsSoundCloud">
+                <span className="snsTitle">SoundCloud : </span>
+                <input
+                  type="text"
+                  className="snsUrlInput"
+                  value={tutorData ? tutorData.soundcloud : ''}
+                  name="soundcloud"
+                  onChange={onChangeTutorData}
+                />
+              </li>
+            </SnsInfo>
           </InfoWrapper>
         </Container>
       )}
