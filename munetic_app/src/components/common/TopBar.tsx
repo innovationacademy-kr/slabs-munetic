@@ -74,6 +74,7 @@ const TopBarContainer = styled.div`
     color: ${palette.green};
     font-size: 15px;
     font-weight: bold;
+    cursor: pointer;
   }
 `;
 const CustomButton = styled(Button)`
