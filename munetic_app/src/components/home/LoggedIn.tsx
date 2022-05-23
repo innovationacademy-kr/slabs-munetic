@@ -30,14 +30,12 @@ const ButtonWrapper = styled.div`
 `;
 
 export default function LoggedIn({ type }: { type: Account }) {
-  console.log(type);
   const [manyCommentsTutors, setManyCommentsTutors] =
     useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
   const [manyLikesTutors, setManyLikesTutors] =
     useState<ReadonlyArray<ViewTutorsProfileDataIProps>>();
 
   useEffect(() => {
-    console.log('effect');
     async function init() {
       try {
         const commentsResult = await CommentAPI.getStarTutors();
