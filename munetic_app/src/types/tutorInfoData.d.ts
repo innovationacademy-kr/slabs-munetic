@@ -25,3 +25,12 @@ export interface ITutorInfoData {
   soundcloud?: string;
   tutor_introduction?: string;
 }
+
+export interface ITutorProfileData {
+  spec?: string;
+  career?: string[];
+  youtube?: string;
+  instagram?: string;
+  soundcloud?: string;
+  tutor_introduction?: string;
+}

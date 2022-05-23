@@ -116,8 +116,7 @@ const InfoWrapper = styled.div<InfoNameProps>`
     font-size: 18px;
     outline: none;
   }
-  .careers {
-  }
+
   .careerList,
   .snsList {
     margin: 1rem 0;
@@ -349,7 +348,7 @@ export default function EditTutorProfile() {
               Number(userId),
             );
             actions.setWrite(false);
-            navigate(`/profile/${userData?.id}`, { replace: true });
+            navigate(`/profile/tutor/${userData?.id}`, { replace: true });
           } catch (e) {
             console.log(e, '프로필 업데이트가 실패하였습니다.');
           }
