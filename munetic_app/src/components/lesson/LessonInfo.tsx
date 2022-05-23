@@ -126,6 +126,7 @@ function convertComment(
     ?.replace(/["]+/g, '');
   return arr.map((comment: any) => ({
     commentListId: comment.id,
+    user_id: comment.user_id,
     nickname: comment.User.nickname,
     text: comment.content,
     date:
@@ -179,6 +180,7 @@ export default function LessonInfo() {
     try {
       const lesson_id: number = Number(classId);
       const res = await CommentAPI.getCommentByLesson(lesson_id);
+      console.log(res.data.data);
       const comments_arr = convertComment(res.data.data);
       setComments(comments_arr);
     } catch (e) {
@@ -303,7 +305,6 @@ export default function LessonInfo() {
     }
     getTutorProfile();
   }, [classInfo]);
-  console.log(tutorData?.career?.join(', '));
   return (
     <ClassContainer>
       <ClassProfileWrapper>
