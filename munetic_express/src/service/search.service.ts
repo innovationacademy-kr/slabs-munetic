@@ -65,11 +65,21 @@ export const searchLessonsByTutor = async (tutor_name: string) => {
 }
 
 export const searchLessonsByLocation = async (location_name: string) => {
-
     return await LessonService.findLessonsBySomething(-1, -1, location_name);
 }
 
 export const searchLessonsTarget = async (lessonId: number, all: boolean) => {
     const data = await Lesson.findAll()
     return data;
+}
+
+export const searchLessonsMix = async (
+    instrument_name: string,
+    tutor_name: string,
+    location_name: string,
+    ) => {
+
+    let instrument_id = (await CategoryService.findCategoryIdByName(instrument_name)).id;
+    let tutor_id = (await UserService.findTutorIdByName(tutor_name)).id;
+    return await LessonService.findLessonsMix(instrument_id, tutor_id, location_name);
 }

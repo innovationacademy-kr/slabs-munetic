@@ -16,11 +16,10 @@ import SearchTarget from '../../components/SearchTarget';
 
 export default function SearchPageTarget() {
   const [getParams] = useSearchParams();
-  const categoryParam = parseInt(getParams.get('category') as string);
+  const categoryParam = getParams.get('category') as string;
   return (
     <div>
-      <SearchTarget category_id={Number.isNaN(categoryParam) ? undefined : categoryParam} />
-      <ClassList category_id={Number.isNaN(categoryParam) ? undefined : categoryParam} />
+      <SearchTarget category_id = { categoryParam } />
       {/* <BottomMenu /> */}
     </div>
   );

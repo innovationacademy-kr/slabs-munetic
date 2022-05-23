@@ -7,8 +7,8 @@ import {
   patchLesson,
   postLesson,
   updateLessonOrder,
+  getLessonsAll,
 } from '../controllers/lesson.controller';
-import * as SearchAPI from '../controllers/search.controller';
 
 export const path = '/lesson';
 export const router = Router();
@@ -24,4 +24,4 @@ router
 
   .patch('/update/:id', updateLessonOrder); // updateLessonOrderByButton
 
-// router.get('/lesson/:category_id', SearchAPI.getLessonsTarget);
+router.get('/all/:dummy_param', getLessonsAll); // findLessons

@@ -9,3 +9,12 @@ export const searchLessonsByTutor = (tutor: string | undefined) =>
 
 export const searchLessonsByLocation = (location: string | undefined) => 
     client.get(`/search/location/?location=${location}`);
+
+export const searchLessonsMix = (
+    instrument: string | undefined,
+    tutor: string | undefined,
+    location: string | undefined,
+    ) => 
+    client.get(`/search/mix/?instrument=${instrument}&tutor=${tutor}&location=${location}`);
+    
+    

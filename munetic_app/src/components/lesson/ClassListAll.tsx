@@ -52,7 +52,7 @@ export default function ClassListAll() {
   const getList = async (limit: number, offset: number) => {
     try {
       let res;
-      res = await LessonAPI.getLessons(limit, offset);
+      res = await LessonAPI.getLessonsAll(limit, offset);
       setClasses(res.data.data.rows);
       setClassCount(res.data.data.count);
     } catch (e) {

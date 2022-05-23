@@ -125,3 +125,33 @@ export const getLessonsByLocation: RequestHandler = async (req, res, next) => {
         next(err);
     }
 }
+
+/**
+ * 악기 이름, 글쓴이, 지역을 통해 Lesson 데이터를 가져옵니다.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @author JaeGu Jeong
+ * @version 1
+ */
+ export const getLessonsMix: RequestHandler = async (req, res, next) => {
+    try {
+        let result: ResJSON;
+
+        const instrument_name = req.query.instrument as string;
+        const tutor_name = req.query.tutor as string;
+        const location_name = req.query.location as string;
+        const data = await SearchService.searchLessonsMix(
+            instrument_name,
+            tutor_name,
+            location_name
+            );
+        result = new ResJSON (
+            '데이터를 불러오는데 성공하였습니다.',
+            data,
+        )
+        res.status(Status.OK).json(result);
+    } catch (err) {
+        next(err);
+    }
+}
