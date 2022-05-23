@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import palette from '../../style/palette';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { IUserTable } from '../../types/userData';
 import * as ProfileAPI from '../../lib/api/profile';
 import * as AuthAPI from '../../lib/api/auth';
@@ -10,6 +10,7 @@ import logout from '../../lib/auth/logout';
 import ViewAllCommentByUser from '../comment/ViewAllCommentByUser';
 import SwitchWithLabel from '../ui/SwitchWithLabel';
 import { Account } from '../../types/enums';
+import Contexts from '../../context/Contexts';
 
 const Container = styled.div`
   margin: 30px 0;
@@ -83,6 +84,7 @@ const Separater = styled.div`
 export default function ManageProfile() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState<IUserTable>();
+  const { actions } = useContext(Contexts);
 
   useEffect(() => {
     async function getMyProfile() {
@@ -99,21 +101,25 @@ export default function ManageProfile() {
 
   const onClickLogout = async () => {
     logout();
+    actions.setLoggedin(false);
     navigate('/');
   };
 
   const changeAccount = async (changeTo: boolean) => {
-    const res = await AuthAPI.changeAccount(userData?.type === 'Student' ? 'Tutor' : 'Student');
-    let new_userData = {...userData} as IUserTable;
+    const res = await AuthAPI.changeAccount(
+      userData?.type === 'Student' ? 'Tutor' : 'Student',
+    );
+    let new_userData = { ...userData } as IUserTable;
     if (userData) {
-      new_userData.type = userData.type === 'Student' ? Account.Tutor : Account.Student;
+      new_userData.type =
+        userData.type === 'Student' ? Account.Tutor : Account.Student;
       setUserData(new_userData);
     }
     return res.data.data || false;
   };
 
   const Label = styled.div`
-    font-family: "Roboto","Arial",sans-serif;
+    font-family: 'Roboto', 'Arial', sans-serif;
     font-size: 1.3rem;
     line-height: 2.2rem;
     font-weight: 400;
@@ -130,18 +136,19 @@ export default function ManageProfile() {
       ) : (
         <Container>
           <Label>
-          {
-            userData.TutorInfo ? (
+            {userData.TutorInfo ? (
               <SwitchWithLabel
                 init={userData.type !== 'Student'}
-                label={`${userData.type === 'Student' ? '선생님' : '학생'} 계정으로 변경`}
-                change={changeAccount} />
+                label={`${
+                  userData.type === 'Student' ? '선생님' : '학생'
+                } 계정으로 변경`}
+                change={changeAccount}
+              />
             ) : (
               <ChangeTypeButton>
                 <Link to="/auth/register?tutor=tutor">튜터 등록</Link>
               </ChangeTypeButton>
-            )
-          }
+            )}
           </Label>
           <ProfileWrapper>
             <div className="imgAndNickname">
