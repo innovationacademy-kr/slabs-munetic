@@ -5,6 +5,24 @@ module.exports = {
     await queryInterface.bulkInsert('User', [
       {
         type: 'Student',
+        login_id: '42jjeong',
+        login_password:
+          '$2b$10$cKBp68P5g9RYotIBMrw9bOYYOtLl4FOFIO5YtaxXhLEEE43vCyGH2',
+        nickname: 'jjeong',
+        name: '정초코파이',
+        name_public: true,
+        gender: 'Male',
+        birth: 220101,
+        email: '42jjeong@gmail.com',
+        phone_number: '010-1234-1221',
+        phone_public: true,
+        image_url: '/img/basicProfileImg.png',
+        introduction: '잘부탁드립니다. jjeong입니다!',
+        createdAt: Sequelize.fn('now'),
+        updatedAt: Sequelize.fn('now'),
+      },
+      {
+        type: 'Student',
         login_id: '42kunlee',
         login_password:
           '$2b$10$fO/O6fF5w1HDkXNab8AMBOYE/9ByW8/sjIeXpQONQgJxkegxdFDIq',
@@ -254,7 +272,7 @@ module.exports = {
         introduction: '안녕하세요. woowa입니다. test data입니다.',
         createdAt: Sequelize.fn('now'),
         updatedAt: Sequelize.fn('now'),
-      },
+      }
     ]);
   },
 
