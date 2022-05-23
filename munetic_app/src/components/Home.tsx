@@ -18,7 +18,7 @@ export default function Home() {
       }
     };
     if (state.loggedin) getAccountInfo();
-  }, []);
+  }, [state.loggedin]);
 
   return <LoggedIn type={userType} />;
 }
