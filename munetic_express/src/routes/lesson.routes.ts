@@ -7,6 +7,7 @@ import {
   patchLesson,
   postLesson,
   updateLessonOrder,
+  getLessonsAll,
 } from '../controllers/lesson.controller';
 
 export const path = '/lesson';
@@ -22,3 +23,5 @@ router
   .get('/user/:id', getUserLessons) // findLessonsByUserId
 
   .patch('/update/:id', updateLessonOrder); // updateLessonOrderByButton
+
+router.get('/all/:dummy_param', getLessonsAll); // findLessons
