@@ -225,9 +225,11 @@ export default function ViewTutorProfile() {
               <ul className="careers">
                 {tutorData.career.map(careerInfo => {
                   return (
-                    <li className="careerList">
-                      <span className="careerText">{careerInfo}</span>
-                    </li>
+                    careerInfo && (
+                      <li className="careerList">
+                        <span className="careerText">{careerInfo}</span>
+                      </li>
+                    )
                   );
                 })}
               </ul>

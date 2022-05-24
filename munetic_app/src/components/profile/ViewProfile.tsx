@@ -79,14 +79,9 @@ export default function ViewProfile() {
             userData?.id,
           );
           setTutorData({
-            spec: tutorProfile.data.data.spec,
-            career: tutorProfile.data.data.career
-              ? JSON.parse(tutorProfile.data.data.career)
-              : '',
             youtube: tutorProfile.data.data.youtube,
             instagram: tutorProfile.data.data.instagram,
             soundcloud: tutorProfile.data.data.soundcloud,
-            tutor_introduction: tutorProfile.data.data.tutor_introduction,
           });
         }
       } catch (e) {
