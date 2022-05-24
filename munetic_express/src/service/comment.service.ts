@@ -7,7 +7,7 @@ import { User } from '../models/user';
 import addProperty from '../util/addProperty';
 /**
  * user 로그인 id의 모든 댓글 조회
- * 
+ *
  * @param user_id user login ID
  * @param offset number (optional)
  * @param limit number (optional)
@@ -19,11 +19,11 @@ export const searchAllCommentsByUserId = async (
   user_id: string,
   offset?: number,
   limit?: number,
-): Promise< Comment[] > => {
+): Promise<Comment[]> => {
   const searchUserID = await User.findOne({
     where: {
       login_id: user_id,
-    }
+    },
   });
   if (!searchUserID)
     throw new ErrorResponse(Status.BAD_REQUEST, '유효하지 않은 유저 id입니다.');
@@ -34,7 +34,7 @@ export const searchAllCommentsByUserId = async (
     include: [
       {
         model: Lesson,
-        attributes: ["id", "category_id", "title"],
+        attributes: ['id', 'category_id', 'title'],
       },
     ],
   };
@@ -48,7 +48,7 @@ export const searchAllCommentsByUserId = async (
 
 /**
  * 모든 댓글 조회
- * 
+ *
  * @param offset number (optional)
  * @param limit number (optional)
  * @param all boolean (optional)
@@ -60,13 +60,13 @@ export const searchAllComments = async (
   offset?: number,
   limit?: number,
   all?: boolean,
-): Promise< {count: number, rows: Comment[]} > => {
+): Promise<{ count: number; rows: Comment[] }> => {
   let query = {
     include: [
       {
         model: Lesson,
-        attributes: ["id", "category_id", "title"],
-      }
+        attributes: ['id', 'category_id', 'title'],
+      },
     ],
     raw: true,
   };
@@ -85,34 +85,34 @@ export const searchAllComments = async (
 
 /**
  * 레슨 id에 대한 모든 댓글 조회
- * 
+ *
  * @param lesson_id lesson ID
  * @returns Promise<Bookmark>
  * @author joohongpark
  */
 export const searchAllCommentsByLessonId = async (
   lesson_id: number,
-): Promise< Comment[] > => {
+): Promise<Comment[]> => {
   const searchAllComments = await Comment.findAll({
     where: {
       lesson_id,
     },
     attributes: {
-      exclude: ['user_id', 'deletedAt'],
+      exclude: ['deletedAt'],
     },
     include: [
       {
         model: User,
-        attributes: ["type", "login_id", "nickname", "image_url"],
-      }
+        attributes: ['type', 'login_id', 'nickname', 'image_url'],
+      },
     ],
-  })
+  });
   return searchAllComments;
 };
 
 /**
  * 레슨에 댓글 추가
- * 
+ *
  * @param user_id user ID
  * @param lesson_id lesson ID
  * @param comment comment
@@ -126,7 +126,7 @@ export const addComment = async (
   lesson_id: number,
   comment: string,
   stars: number,
-): Promise< Comment > => {
+): Promise<Comment> => {
   const newComment: Comment = Comment.build({
     user_id,
     lesson_id,
@@ -141,7 +141,7 @@ export const addComment = async (
 
 /**
  * 댓글 수정
- * 
+ *
  * @param comment_id comment ID
  * @param comment comment
  * @param stars stars
@@ -152,7 +152,7 @@ export const updateComment = async (
   comment_id: number,
   comment: string,
   stars: number,
-): Promise< boolean > => {
+): Promise<boolean> => {
   const rtn = await Comment.update(
     {
       content: comment,
@@ -161,15 +161,15 @@ export const updateComment = async (
     {
       where: {
         id: comment_id,
-      }
-    }
+      },
+    },
   );
   return rtn[0] > 0;
 };
 
 /**
  * user의 댓글을 삭제
- * 
+ *
  * @param user_id user ID
  * @param comment_id comment ID
  * @returns Promise<boolean>
@@ -178,14 +178,11 @@ export const updateComment = async (
 export const removeComment = async (
   user_id: number,
   comment_id: number,
-): Promise< boolean > => {
+): Promise<boolean> => {
   const checkExistence = await Comment.findOne({
     where: {
-      [Op.and]: [
-        { user_id },
-        { id: comment_id },
-      ]
-    }
+      [Op.and]: [{ user_id }, { id: comment_id }],
+    },
   });
   if (!checkExistence) return false;
   await checkExistence.destroy();
@@ -194,18 +191,18 @@ export const removeComment = async (
 
 /**
  * 고유 ID를 통해 댓글들을 삭제
- * 
+ *
  * @param id 삭제하고자 하는 ID 배열
  * @param force 실제로 테이블에서 삭제하는지 여부
  * @returns Promise<number>
  * @author joohongpark
  */
- export const removeComments = async (
+export const removeComments = async (
   id: number[],
   force?: boolean,
-): Promise< number > => {
+): Promise<number> => {
   let query = {
-    where: { id }
+    where: { id },
   };
   if (force !== undefined) {
     addProperty<boolean>(query, 'force', force);
@@ -216,20 +213,20 @@ export const removeComment = async (
 
 /**
  * 강사 당 댓글 개수
- * 
+ *
  * @param offset number (optional)
  * @param limit number (optional)
  * @author joohongpark
  */
- export const getCommentCountByTutor = async (
+export const getCommentCountByTutor = async (
   offset?: number,
   limit?: number,
-): Promise< Comment[] > => {
+): Promise<Comment[]> => {
   let rtn: Comment[];
   try {
-    let query : {
-      attributes: FindAttributeOptions,
-      group: string[],
+    let query: {
+      attributes: FindAttributeOptions;
+      group: string[];
     } = {
       attributes: [
         'lesson_id',
@@ -250,12 +247,13 @@ export const removeComment = async (
 
 /**
  * 강사 당 댓글 개수
- * 
+ *
  * @author joohongpark
  */
- export const getCommentsCountByTutor = async (
-): Promise< {tutor_id: number, comment_count: number}[] > => {
-  let rtn: {tutor_id: number, comment_count: number}[] = [];
+export const getCommentsCountByTutor = async (): Promise<
+  { tutor_id: number; comment_count: number }[]
+> => {
+  let rtn: { tutor_id: number; comment_count: number }[] = [];
   try {
     let query: FindOptions<lessonAttributes> = {
       attributes: [
@@ -267,7 +265,7 @@ export const removeComment = async (
         {
           model: Lesson,
           attributes: ['tutor_id'],
-        }
+        },
       ],
       order: Sequelize.col('likes'),
     };
@@ -275,7 +273,7 @@ export const removeComment = async (
     let map = new Map<number, number>();
     result.forEach(lessonLike => {
       const lesson = lessonLike.get('Lesson') as Lesson;
-      const tutor_id = lesson ? lesson.get('tutor_id') as number : 0;
+      const tutor_id = lesson ? (lesson.get('tutor_id') as number) : 0;
       let likes = lessonLike.get('likes') as number;
       if (tutor_id !== 0) {
         if (map.has(tutor_id)) {
@@ -286,10 +284,10 @@ export const removeComment = async (
         }
       }
     });
-    map.forEach( (value, key) => {
-      rtn.push({tutor_id: key, comment_count: value});
+    map.forEach((value, key) => {
+      rtn.push({ tutor_id: key, comment_count: value });
     });
-    rtn.sort((a, b) => (b.comment_count - a.comment_count));
+    rtn.sort((a, b) => b.comment_count - a.comment_count);
     console.log(rtn);
   } catch (e) {
     throw new ErrorResponse(Status.BAD_REQUEST, '에러');

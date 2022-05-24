@@ -8,36 +8,36 @@ import * as AuthAPI from '../../lib/api/auth';
 import { ITutorInfoType } from '../../types/userSignupData';
 
 const Container = styled.form`
-margin: 100px 30px 30px 30px;
-padding: 30px;
-border-radius: 10px;
-background-color: ${palette.green};
-.registerButton {
-  margin-top: 20px;
-}
-.checkWrapper {
-  display: flex;
-  .checkInput {
-    flex: 1 0 auto;
+  margin: 100px 30px 30px 30px;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: ${palette.green};
+  .registerButton {
+    margin-top: 20px;
   }
-  .checkBtn {
-    flex-shrink: 0;
-    font-size: 13px;
-    color: ${palette.green};
-    border: 0;
-    border-radius: 5px;
-    background-color: ${palette.grayBlue};
-    margin: 10px 0px 0px 5px;
-    line-height: 30px;
-    height: 30px;
+  .checkWrapper {
+    display: flex;
+    .checkInput {
+      flex: 1 0 auto;
+    }
+    .checkBtn {
+      flex-shrink: 0;
+      font-size: 13px;
+      color: ${palette.green};
+      border: 0;
+      border-radius: 5px;
+      background-color: ${palette.grayBlue};
+      margin: 10px 0px 0px 5px;
+      line-height: 30px;
+      height: 30px;
+    }
   }
-}
-.dupErrorMessage {
-  text-align: center;
-  color: ${palette.red};
-  font-size: 14px;
-  margin-top: 15px;
-}
+  .dupErrorMessage {
+    text-align: center;
+    color: ${palette.red};
+    font-size: 14px;
+    margin-top: 15px;
+  }
 `;
 
 const StyledButton = styled(Button)`
@@ -51,7 +51,6 @@ const StyledButton = styled(Button)`
 `;
 
 export default function TutorRegister() {
-
   const navigate = useNavigate();
   const [registerInfo, setRegisterInfo] = useState<ITutorInfoType>({
     spec: '',
@@ -59,12 +58,17 @@ export default function TutorRegister() {
     youtube: '',
     instagram: '',
     soundcloud: '',
+    tutor_introduction: '',
   });
+  const [career, setCareer] = useState<Array<string>>([]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
     try {
-      await AuthAPI.tutorsignup(registerInfo);
+      await AuthAPI.tutorsignup({
+        ...registerInfo,
+        career: JSON.stringify(career),
+      });
       navigate('/profile/manage');
     } catch (e) {
       console.log(e, '회원가입 실패');
@@ -77,10 +81,12 @@ export default function TutorRegister() {
     >,
   ) => {
     const { value, name } = e.target;
-    setRegisterInfo({
-      ...registerInfo,
-      [name]: value,
-    });
+    if (name == 'career') setCareer([value]);
+    else
+      setRegisterInfo({
+        ...registerInfo,
+        [name]: value,
+      });
   };
 
   return (
@@ -94,7 +100,13 @@ export default function TutorRegister() {
       <InputBox
         inputName="레슨 경력"
         name="career"
-        value={registerInfo.career}
+        value={career}
+        onChange={onChange}
+      />
+      <InputBox
+        inputName="튜터 소개"
+        name="tutor_introduction"
+        value={registerInfo.tutor_introduction}
         onChange={onChange}
       />
       <InputBox
