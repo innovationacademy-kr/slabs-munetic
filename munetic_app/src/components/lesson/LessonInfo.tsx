@@ -180,7 +180,6 @@ export default function LessonInfo() {
     try {
       const lesson_id: number = Number(classId);
       const res = await CommentAPI.getCommentByLesson(lesson_id);
-      console.log(res.data.data);
       const comments_arr = convertComment(res.data.data);
       setComments(comments_arr);
     } catch (e) {
