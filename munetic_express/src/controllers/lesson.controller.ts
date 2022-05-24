@@ -247,3 +247,36 @@ export const updateLessonOrder: RequestHandler = async (
     next(err);
   }
 }
+
+/**
+ * offset, limit 범위만큼 카테고리 별 레슨을 가져오는 미들웨어 (카테고리 입력 안하면 전체 조회)
+ * GET Request -> 200, 400 Response
+ * 
+ * @param req request Objrct
+ * @param res response Objrct
+ * @param next next middleware function Object
+ * @author JaeGu Jeong
+ * @version 1
+ */
+export const getLessonsAll: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const offset: number = parseInt(req.query.offset as string);
+    const limit: number = parseInt(req.query.limit as string);
+    if (Number.isNaN(offset) || Number.isNaN(limit) || offset < 0 || limit < 0) {
+      res.status(status.BAD_REQUEST).send('offset / limit error');
+    } else {
+      const data = await LessonServive.findLessonsAll(offset, limit, false);
+      const result: ResJSON = new ResJSON(
+        '응답에 성공하였습니다.',
+        data,
+      );
+      res.status(status.OK).json(result);
+    }
+  } catch (err) {
+    next(err);
+  }
+};

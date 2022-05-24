@@ -384,3 +384,157 @@ export const findLessonsBySomething = async (
   return {rows: rows_new};
 };
 
+/**
+ * offset만큼 스킵하여 limit만큼의 레슨 정보들을 받아옵니다.
+ * 
+ * @param offset number
+ * @param limit number
+ * @param all boolean 삭제된 정보도 가져옴 (운영자용)
+ * @returns Promise<>
+ * @author JaeGu Jeong
+ * @version 1
+ */
+ export const findLessonsAll = async (
+  offset: number,
+  limit: number,
+  all: boolean,
+): Promise<{rows: LessonAllInfo[], count: number}> => {
+  const _query = lessonQueryOptions;
+  const query = {
+    ..._query,
+    offset,
+    limit,
+  };
+  const {rows, count} = await Lesson.findAndCountAll(query);
+
+  const rows_new = await Promise.all( rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new, count};
+};
+
+/**
+ * 조건에 따라 레슨 정보들을 받아옵니다.
+ * 
+ * @returns Promise<>
+ * @author JaeGu Jeong
+ * @version 1
+ */
+ export const findLessonsMix = async (
+  instrument_id: number,
+  tutor_id: number,
+  location_name: string,
+): Promise<{rows: LessonAllInfo[]}> => {
+  const _query = lessonQueryOptions;
+  let query = { ..._query };
+  if (instrument_id != 0 && tutor_id != 0 && location_name != '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: instrument_id },
+          { tutor_id: tutor_id },
+          { location: { [Op.like]: '%' + location_name + '%' } },
+        ]
+      },
+    };
+  } else if (instrument_id != 0 && tutor_id != 0 && location_name == '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: instrument_id },
+          { tutor_id: tutor_id },
+        ]
+      },
+    };
+  } else if (instrument_id != 0 && tutor_id == 0 && location_name == '')
+  {
+    query = {
+      ..._query,
+      where: { category_id: instrument_id }
+    };
+  } else if (instrument_id == 0 && tutor_id != 0 && location_name != '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: 1 },
+          { tutor_id: tutor_id },
+          { location: { [Op.like]: '%' + location_name + '%' } },
+        ]
+      },
+    };
+  } else if (instrument_id == 0 && tutor_id != 0 && location_name == '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: 1 },
+          { tutor_id: tutor_id },
+        ]
+      },
+    };
+  } else if (instrument_id == 0 && tutor_id == 0 && location_name != '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: 1 },
+          { location: { [Op.like]: '%' + location_name + '%' } },
+        ]
+      },
+    };
+  } else if (instrument_id != 0 && tutor_id == 0 && location_name != '')
+  {
+    query = {
+      ..._query,
+      where: {
+        [Op.and]: [
+          { category_id: instrument_id },
+          { location: { [Op.like]: '%' + location_name + '%' } },
+        ]
+      },
+    };
+  } 
+  else {
+    query = {
+      ..._query,
+      where: { category_id: 1 }
+    };
+  }
+
+  const rows = await Lesson.findAll(query);
+
+  const rows_new = await Promise.all(rows.map(async row => {
+    const comments = await row.getComments({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+    });
+    const likes = await row.getLessonLikes({
+      attributes: [[Sequelize.fn('COUNT', '*'), 'cnt']],
+      where: {
+        lesson_like: 1,
+      }
+    });
+    const CommentsCount = comments[0].get('cnt') as number;
+    const LessonLikesCount = likes[0].get('cnt') as number;
+    return LessonMapper.toLessonAllInfo(row, CommentsCount, LessonLikesCount);
+  }));
+  return {rows: rows_new};
+};

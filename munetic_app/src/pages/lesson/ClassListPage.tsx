@@ -1,14 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
 import BottomMenu from '../../components/common/BottomMenu';
 import ClassList from '../../components/lesson/ClassList';
+import SearchTarget from '../../components/SearchTarget';
 
-export default function ClassListPage() {
+export default function SearchPageTarget() {
   const [getParams] = useSearchParams();
-  const categoryParam = parseInt(getParams.get('category') as string);
+  const categoryParam = getParams.get('category') as string;
   return (
-    <>
-      <ClassList category_id={Number.isNaN(categoryParam) ? undefined : categoryParam} />
+    <div>
+      <SearchTarget category_id = { categoryParam } />
       {/* <BottomMenu /> */}
-    </>
+    </div>
   );
 }

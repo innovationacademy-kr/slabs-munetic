@@ -16,3 +16,6 @@ export const editLessonById = async (id: number, body: ILessonTable) => {
 };
 export const deleteLessonById = (id: number) => client.delete(`/lesson/${id}`);
 export const updateLessonOrder = async (id: number) => await client.patch(`/lesson/update/${id}`);
+
+export const getLessonsAll = (limit: number, offset: number) =>
+  client.get(`/lesson/all/dummy?limit=${limit}&offset=${offset}`);

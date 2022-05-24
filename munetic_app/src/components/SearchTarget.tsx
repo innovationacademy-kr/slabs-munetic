@@ -12,6 +12,8 @@ import { SearchInputBox } from './common/Input';
 import * as SearchAPI from '../lib/api/search';
 import { LessonItem, LessonItemIProps } from './lesson/lessonlist/LessonItem';
 import { ILessonData } from '../types/lessonData';
+import { ICategoryTable } from '../types/categoryData';
+import * as CategoryAPI from '../lib/api/category';
 
 const Container = styled.form`
   margin: 100px 30px 30px 30px;
@@ -55,101 +57,109 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const StyledTable = styled.table`
+  width: 100%;
+`;
+
 const ClassListContainer = styled.div`
   margin: 30px;
   margin-bottom: 66px;
 `;
 
-function convertResponse(arr: any): ReadonlyArray<LessonItemIProps> {
-  return arr.map((lesson: any) => ({
-    lesson_id: lesson.id,
-    category: lesson.Category.name,
-    title: lesson.title,
-  }));
+/**
+ * 컴포넌트의 프로퍼티 정의
+ */
+export interface SearchIProps {
+  category_id?: string;
 }
 
-export default function Search() {
+export default function SearchTarget(props: SearchIProps) {
   const { actions } = useContext(Contexts);
-  const [searchInput, setInstrumentInput] = useState<string | undefined>('');
-  const [searchInstrument, setSearchInstrument] = useState<string | undefined>(
-    '악기 전체',
-  );
-  const [searchValue, setSearchValue] = useState<string | undefined>('악기별 검색');
+  const [instrumentInput, setInstrumentInput] = useState<string | undefined>(props.category_id);
+  const [tutorInput, setTutorInput] = useState<string | undefined>('');
+  const [locationInput, setLocationInput] = useState<string | undefined>('');
   const [searchResult, setSearchResult] = useState<ReadonlyArray<ILessonData>>([]);
+  const [categoryData, setCategoryData] = useState<ICategoryTable[]>();
 
-  const onChangeSearch = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value, name } = e.target;
-
-    if (name === 'instrument') {
-      setSearchInstrument(value);
-    } else if (name === 'category') {
-      setSearchValue(value);
-    }
-  };
   const onChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
   ) => setInstrumentInput(e.target.value);
 
-  const validateSearchForm = () => {
-    if (!searchInput) {
-      return false;
-    }
-    return true;
-  };
+  const onChange2 = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => setTutorInput(e.target.value);
 
+  const onChange3 = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => setLocationInput(e.target.value);
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     actions.setValidationMode(true);
-    if (validateSearchForm()) {
-      try {
-        //검색 결과 받기
-        if (searchValue === '악기별 검색') {
-          const res = await SearchAPI.searchLessonsByInstrument(searchInput);
-          setSearchResult((res.data.data.rows));
-        } else if (searchValue === '글쓴이 이름으로 검색') {
-          const res = await SearchAPI.searchLessonsByTutor(searchInput);
-          setSearchResult((res.data.data.rows));
-        } else { // 지역 검색
-          const res = await SearchAPI.searchLessonsByLocation(searchInput);
-          setSearchResult((res.data.data.rows));
-        }
-        
-      } catch (e) {
-        console.log(e, '검색 오류 발생');
-      }
+    try {
+      //검색 결과 받기
+      const res = await SearchAPI.searchLessonsMix(instrumentInput,tutorInput,locationInput);
+      setSearchResult((res.data.data.rows));
+    } catch (e) {
+      console.log(e, '검색 오류 발생');
     }
   };
+
+  useEffect(() => {
+    async function getCategory() {
+      try {
+        const res = await CategoryAPI.getCategories();
+        setCategoryData(res.data.data);
+      } catch (e) {
+        console.log(e, '카테고리를 불러오지 못했습니다.');
+      }
+    }
+    getCategory();
+  }, []);
 
   useEffect(() => {
     return () => {
       actions.setValidationMode(false);
     };
   }, []);
+  
   return (
     <>
       <Container onSubmit={onSubmit}>
-        <Select
-            options={[
-              '악기별 검색',
-              '글쓴이 이름으로 검색',
-              '지역 검색',
-            ]}
-            value={searchValue}
-            name="category"
-            isValid={!!searchValue}
-            onChange={onChangeSearch}
-          />
-          <SearchInputBox
-            inputName="검색어 입력"
-            name="Search_Input"
-            value={searchInput}
-            onChange={onChange}
-            isValid={!!searchInput}
-            errorMessage="검색어를 입력하세요."
-          />
-          <StyledButton type="submit">검색하기</StyledButton>
+        <StyledTable>
+        <tr><td>악기 :&nbsp;</td>
+        <td><Select
+          options={
+            categoryData?.map(category => category.name) as string[]
+          }
+          value={instrumentInput}
+          name="Search_Input"
+          isValid={ true }
+          onChange={onChange}
+        /></td><td><pre>  </pre></td>
+        <td>글쓴이 :&nbsp;</td>
+        <td><SearchInputBox
+          inputName="검색어 입력"
+          name="Search_Input2"
+          value={tutorInput}
+          onChange={onChange2}
+          isValid={ true }
+        /></td><td><pre>  </pre></td>
+        <td>지역 :&nbsp;</td>
+        <td><SearchInputBox
+          inputName="검색어 입력"
+          name="Search_Input3"
+          value={locationInput}
+          onChange={onChange3}
+          isValid={ true }
+        /></td></tr>
+        </StyledTable>
+        <StyledButton type="submit">검색하기</StyledButton>
       </Container>
 
       <ClassListContainer>
