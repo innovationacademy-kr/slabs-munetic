@@ -2,8 +2,11 @@ import styled from 'styled-components';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import palette from '../../style/palette';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Contexts from '../../context/Contexts';
+import Button from './Button';
+import loginCheck from '../../lib/auth/loginCheck';
+import Logout from '../../lib/auth/logout';
 
 const TopBarContainer = styled.div`
   width: 100%;
@@ -57,23 +60,41 @@ const TopBarContainer = styled.div`
   }
   .topBarRight {
     flex: 3;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
   .topBarRightText {
     color: ${palette.green};
     font-size: 15px;
     font-weight: bold;
+    cursor: pointer;
   }
   .topBarLeftText {
     color: ${palette.green};
     font-size: 15px;
     font-weight: bold;
+    cursor: pointer;
+  }
+`;
+const CustomButton = styled(Button)`
+  display: block;
+  height: 30px;
+  width: 70px;
+  font-size: 17px;
+  color: ${palette.grayBlue};
+  background-color: ${palette.ivory};
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.7s ease;
+  :hover {
+    background-color: ${palette.grayBlue};
+    color: ${palette.ivory};
   }
 `;
 
 export default function TopBar() {
-  const { actions } = useContext(Contexts);
-
+  const { actions, state } = useContext(Contexts);
   //home에선 푸쉬알림&공백, 수정에선 Back&저장, 등록에선 Back&등록, 나머지는 Back&공백
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
@@ -96,7 +117,10 @@ export default function TopBar() {
       actions.setWrite(true);
     }
   };
-
+  const onClickLogout = () => {
+    Logout();
+    actions.setLoggedin(false);
+  };
   return (
     <TopBarContainer>
       <div className="topBarWrapper">
@@ -124,6 +148,14 @@ export default function TopBar() {
           >
             {rightText}
           </span>
+          {state.loggedin ? (
+            <CustomButton
+              children="로그아웃"
+              onClick={() => onClickLogout()}
+            ></CustomButton>
+          ) : (
+            <CustomButton to="/auth/login" children="로그인"></CustomButton>
+          )}
         </div>
       </div>
     </TopBarContainer>

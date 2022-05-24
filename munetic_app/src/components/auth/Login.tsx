@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import client from '../../lib/api/client';
 
 const Container = styled.form`
-  margin: 250px 30px 30px 30px;
+  margin: 250px 0px 30px 0px;
   padding: 30px;
   border-radius: 10px;
   background-color: ${palette.green};
@@ -29,6 +29,10 @@ const StyledButton = styled(Button)`
   height: 40px;
   border-radius: 5px;
   font-size: 18px;
+  transition: all 0.7s ease;
+  :hover {
+    opacity: 0.8;
+  }
   ::before {
     padding-top: 0%;
   }
@@ -81,6 +85,7 @@ export default function Login() {
         } catch (e) {
           console.log(e, 'localStorage is not working');
         }
+        actions.setLoggedin(true);
         navigate('/');
       } catch (e) {
         setShowErrorMessage(true);
