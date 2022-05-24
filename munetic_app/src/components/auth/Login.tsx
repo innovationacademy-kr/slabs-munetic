@@ -122,7 +122,7 @@ export default function Login() {
         errorMessage="비밀번호를 입력하세요."
       />
       {showErrorMessage && (
-        <div className="loginErrorMessage">회원 정보가 일치하지 않습니다.</div>
+        <div className="loginErrorMessage">회원정보가 일치하지 않습니다.</div>
       )}
       <div className="loginButton">
         <StyledButton type="submit">로그인</StyledButton>
