@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import CategoryPage from './pages/lesson/CategoryPage';
