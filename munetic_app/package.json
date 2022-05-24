@@ -5,7 +5,6 @@
     "start": "npx vite",
     "build": "tsc && npx vite build",
     "test": "vite-jest",
-    "//": "tsc && npx vite build && vite serve",
     "dev": "tsc && npx vite build && vite serve -l 2424",
     "serve": "tsc && npx vite build && serve dist -s -l 2424"
   },

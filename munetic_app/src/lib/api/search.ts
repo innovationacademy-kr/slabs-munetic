@@ -15,6 +15,6 @@ export const searchLessonsMix = (
     tutor: string | undefined,
     location: string | undefined,
     ) => 
-    client.get(`/search/mix/?instrument=${instrument}&tutor=${tutor}&location=${location}`);
+    client.get(`/search/mix-filter/?instrument=${instrument}&tutor=${tutor}&location=${location}`);
     
     

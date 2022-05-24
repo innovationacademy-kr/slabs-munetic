@@ -70,7 +70,7 @@ function convertResponse(arr: any): ReadonlyArray<LessonItemIProps> {
 
 export default function Search() {
   const { actions } = useContext(Contexts);
-  const [searchInput, setSearchInput] = useState<string | undefined>('');
+  const [searchInput, setInstrumentInput] = useState<string | undefined>('');
   const [searchInstrument, setSearchInstrument] = useState<string | undefined>(
     '악기 전체',
   );
@@ -90,7 +90,7 @@ export default function Search() {
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-  ) => setSearchInput(e.target.value);
+  ) => setInstrumentInput(e.target.value);
 
   const validateSearchForm = () => {
     if (!searchInput) {

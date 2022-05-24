@@ -75,10 +75,9 @@ export interface SearchIProps {
 
 export default function SearchTarget(props: SearchIProps) {
   const { actions } = useContext(Contexts);
-  const [searchInput, setSearchInput] = useState<string | undefined>(props.category_id);
-  const [searchInput2, setSearchInput2] = useState<string | undefined>('');
-  const [searchInput3, setSearchInput3] = useState<string | undefined>('');
-
+  const [instrumentInput, setInstrumentInput] = useState<string | undefined>(props.category_id);
+  const [tutorInput, setTutorInput] = useState<string | undefined>('');
+  const [locationInput, setLocationInput] = useState<string | undefined>('');
   const [searchResult, setSearchResult] = useState<ReadonlyArray<ILessonData>>([]);
   const [categoryData, setCategoryData] = useState<ICategoryTable[]>();
 
@@ -86,26 +85,25 @@ export default function SearchTarget(props: SearchIProps) {
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-  ) => setSearchInput(e.target.value);
+  ) => setInstrumentInput(e.target.value);
 
   const onChange2 = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-  ) => setSearchInput2(e.target.value);
+  ) => setTutorInput(e.target.value);
 
   const onChange3 = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-  ) => setSearchInput3(e.target.value);
-
+  ) => setLocationInput(e.target.value);
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     actions.setValidationMode(true);
     try {
       //검색 결과 받기
-      const res = await SearchAPI.searchLessonsMix(searchInput,searchInput2,searchInput3);
+      const res = await SearchAPI.searchLessonsMix(instrumentInput,tutorInput,locationInput);
       setSearchResult((res.data.data.rows));
     } catch (e) {
       console.log(e, '검색 오류 발생');
@@ -117,7 +115,6 @@ export default function SearchTarget(props: SearchIProps) {
       try {
         const res = await CategoryAPI.getCategories();
         setCategoryData(res.data.data);
-        console.log(res.data.data);
       } catch (e) {
         console.log(e, '카테고리를 불러오지 못했습니다.');
       }
@@ -140,7 +137,7 @@ export default function SearchTarget(props: SearchIProps) {
           options={
             categoryData?.map(category => category.name) as string[]
           }
-          value={searchInput}
+          value={instrumentInput}
           name="Search_Input"
           isValid={ true }
           onChange={onChange}
@@ -149,7 +146,7 @@ export default function SearchTarget(props: SearchIProps) {
         <td><SearchInputBox
           inputName="검색어 입력"
           name="Search_Input2"
-          value={searchInput2}
+          value={tutorInput}
           onChange={onChange2}
           isValid={ true }
         /></td><td><pre>  </pre></td>
@@ -157,7 +154,7 @@ export default function SearchTarget(props: SearchIProps) {
         <td><SearchInputBox
           inputName="검색어 입력"
           name="Search_Input3"
-          value={searchInput3}
+          value={locationInput}
           onChange={onChange3}
           isValid={ true }
         /></td></tr>
