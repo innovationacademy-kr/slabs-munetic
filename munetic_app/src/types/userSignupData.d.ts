@@ -11,9 +11,10 @@ export interface userSignupData {
 }
 
 export interface ITutorInfoType {
-  spec?: string;
-  career?: string;
-  youtube?: string;
-  instagram?: string;
-  soundcloud?: string;
+  spec: string;
+  career: string;
+  youtube: string;
+  instagram: string;
+  soundcloud: string;
+  tutor_introduction: string;
 }

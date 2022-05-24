@@ -158,7 +158,13 @@ export default function ManageProfile() {
               </div>
             </div>
             <div className="sns">
-              <StyledEditButton to={`/profile/edit/${userData.id}`}>
+              <StyledEditButton
+                to={
+                  userData.type === Account.Student
+                    ? `/profile/edit/${userData.id}`
+                    : `/profile/tutor/edit/${userData.id}`
+                }
+              >
                 프로필 수정
               </StyledEditButton>
               <StyledEditButton to={`/profile/likes`}>

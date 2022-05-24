@@ -14,7 +14,7 @@ import LikeButton from '../like/LikeButton';
 import BookmarkButton from '../bookmark/BookmarkButton';
 import SnsButtons from '../ui/SnsButtons';
 import * as ProfileAPI from '../../lib/api/profile';
-import { ITutorInfoData } from '../../types/tutorInfoData';
+import { ITutorProfileData } from '../../types/tutorInfoData';
 import VideoEmbed from '../media/VideoEmbed';
 
 const ClassContainer = styled.div`
@@ -112,33 +112,38 @@ const Content = styled.div`
 /**
  * 서버에서 전달받은 댓글 객체를 클라이언트가 읽을 수 있는 객체로 변환하는 함수입니다.
  * 개발 중 변경 사항이 많을듯 하여 파라미터는 임시로 any 타입의 배열로 받습니다.
- * 
- * @param ReadonlyArray<any> 
+ *
+ * @param ReadonlyArray<any>
  * @returns ReadonlyArray<CommentDataType>
  * @author joohongpark
  */
-function convertComment(arr: ReadonlyArray<any>): ReadonlyArray<CommentDataType> {
+function convertComment(
+  arr: ReadonlyArray<any>,
+): ReadonlyArray<CommentDataType> {
   // FIXME: 추후에 브라우저 로컬저장소 ID에 double quote 들어가는거 제거해야 함.
-  const login_id: string | undefined = localStorage.getItem('user')?.replace(/["]+/g, '');
-  return (arr.map((comment: any) => 
-    ({
-      commentListId: comment.id,
-      nickname: comment.User.nickname,
-      text: comment.content,
-      date: (comment.updatedAt !== comment.createdAt) ? comment.updatedAt : comment.createdAt,
-      stars: comment.stars,
-      accessible: (comment.User.login_id === login_id),
-      modified: (comment.updatedAt !== comment.createdAt),
-    })
-  ));
-};
-
+  const login_id: string | undefined = localStorage
+    .getItem('user')
+    ?.replace(/["]+/g, '');
+  return arr.map((comment: any) => ({
+    commentListId: comment.id,
+    user_id: comment.user_id,
+    nickname: comment.User.nickname,
+    text: comment.content,
+    date:
+      comment.updatedAt !== comment.createdAt
+        ? comment.updatedAt
+        : comment.createdAt,
+    stars: comment.stars,
+    accessible: comment.User.login_id === login_id,
+    modified: comment.updatedAt !== comment.createdAt,
+  }));
+}
 
 // TODO: 추후에 컴포넌트 분리해야함 joohongpark
 interface InfosType {
-  '나이': string;
+  나이: string;
   '지역/장소': string;
-  '가격': number;
+  가격: number;
   '선생님 성별': string;
   '수업 시간': number;
 }
@@ -169,7 +174,7 @@ export default function LessonInfo() {
   const classId = useParams().id;
   const [comments, setComments] = useState<ReadonlyArray<CommentDataType>>([]);
   const [classInfo, setClassInfo] = useState<ILessonData>();
-  const [tutorData, setTutorData] = useState<ITutorInfoData>();
+  const [tutorData, setTutorData] = useState<ITutorProfileData>();
 
   const getComment = async () => {
     try {
@@ -180,43 +185,44 @@ export default function LessonInfo() {
     } catch (e) {
       console.log(e, 'id로 레슨을 불러오지 못했습니다.');
     }
-  }
+  };
 
   const getBasicInfo = (data: ILessonData): InfosType => ({
-    '나이': data.User.birth as unknown as string,
-    '지역/장소': data.location || "",
-    '가격': data.price || 0,
+    나이: data.User.birth as unknown as string,
+    '지역/장소': data.location || '',
+    가격: data.price || 0,
     '선생님 성별': data.User.gender as unknown as string,
     '수업 시간': data.minute_per_lesson || 0,
   });
 
   const sortByStar = () => {
-    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
-      b.stars - a.stars
-    ));
+    const new_comments = [...comments].sort(
+      (a: CommentDataType, b: CommentDataType) => b.stars - a.stars,
+    );
     setComments(new_comments);
-  }
+  };
 
   const decSortByStar = () => {
-    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
-      a.stars - b.stars
-    ));
+    const new_comments = [...comments].sort(
+      (a: CommentDataType, b: CommentDataType) => a.stars - b.stars,
+    );
     setComments(new_comments);
-  }
+  };
 
   const sortByTime = () => {
-    const new_comments = [...comments].sort((a: CommentDataType, b: CommentDataType) => (
-      a.commentListId - b.commentListId
-    ));
+    const new_comments = [...comments].sort(
+      (a: CommentDataType, b: CommentDataType) =>
+        a.commentListId - b.commentListId,
+    );
     setComments(new_comments);
-  }
+  };
 
   const addComment = async (stars: number | null, comment: string) => {
     if (!comment) {
       alert('댓글 내용을 입력하세요');
-      return ;
+      return;
     }
-    const star: number = (stars === null) ? 1 : stars;
+    const star: number = stars === null ? 1 : stars;
     try {
       await CommentAPI.addComment(Number(classId), comment, star);
       getComment();
@@ -224,12 +230,16 @@ export default function LessonInfo() {
       alert('댓글 추가에 실패하였습니다.');
       console.log(e, '댓글 추가에 실패하였습니다.');
     }
-  }
+  };
 
-  const modComment = async (commentId:number, stars: number, comment: string) => {
+  const modComment = async (
+    commentId: number,
+    stars: number,
+    comment: string,
+  ) => {
     if (!comment) {
       alert('댓글 내용을 입력하세요');
-      return ;
+      return;
     }
     try {
       await CommentAPI.modComment(commentId, comment, stars);
@@ -238,9 +248,9 @@ export default function LessonInfo() {
       alert('댓글 수정에 실패하였습니다.');
       console.log(e, '댓글 수정에 실패하였습니다.');
     }
-  }
+  };
 
-  const delComment = async (commentId:number) => {
+  const delComment = async (commentId: number) => {
     try {
       await CommentAPI.delComment(commentId);
       getComment();
@@ -248,16 +258,16 @@ export default function LessonInfo() {
       alert('댓글 삭제에 실패하였습니다.');
       console.log(e, '댓글 삭제에 실패하였습니다.');
     }
-  }
+  };
 
   const updateOrder = async () => {
     try {
       await LessonAPI.updateLessonOrder(parseInt(classId as string));
     } catch (e) {
       alert('아직 1시간이 지나지 않았습니다.');
-      console.log(e, "글 끌어올리기에 실패하였습니다.");
+      console.log(e, '글 끌어올리기에 실패하였습니다.');
     }
-  }
+  };
 
   useEffect(() => {
     async function getLessonById(id: string) {
@@ -278,8 +288,15 @@ export default function LessonInfo() {
     async function getTutorProfile() {
       try {
         if (classInfo?.tutor_id) {
-          const userProfile = await ProfileAPI.getTutorProfileById(classInfo?.tutor_id);
-          setTutorData(userProfile.data.data);
+          const tutorProfile = await ProfileAPI.getTutorProfileById(
+            classInfo?.tutor_id,
+          );
+          setTutorData({
+            ...tutorProfile.data.data,
+            career: tutorProfile.data.data.career
+              ? JSON.parse(tutorProfile.data.data.career)
+              : [],
+          });
         }
       } catch (e) {
         console.log(e, '튜터 프로필을 불러오지 못했습니다.');
@@ -287,23 +304,24 @@ export default function LessonInfo() {
     }
     getTutorProfile();
   }, [classInfo]);
-
   return (
     <ClassContainer>
       <ClassProfileWrapper>
         <div className="imgAndNickname">
-          <img className="profileImg" src={classInfo?.User.image_url} alt="" />
-          <div className="nickname">
-            <Link to={`/profile/${classInfo?.tutor_id}`}>{classInfo?.User.name}</Link>
-          </div>
+          <Link to={`/profile/tutor/${classInfo?.tutor_id}`}>
+            <img
+              className="profileImg"
+              src={classInfo?.User.image_url}
+              alt=""
+            />
+            <div className="nickname">{classInfo?.User.name}</div>
+          </Link>
         </div>
-
         <div className="update">
           <div>
             <button onClick={updateOrder}>글 위로 올리기</button>
           </div>
         </div>
-
         <div className="sns">
           <div className="snsTop">
             <LikeButton lesson_id={Number(classId)} />
@@ -320,32 +338,34 @@ export default function LessonInfo() {
       </ClassProfileWrapper>
       <Divider>
         <PhoneNumber>
-        연락처 : <span className="phoneNumber">{classInfo?.User.phone_number}</span>
+          연락처 :{' '}
+          <span className="phoneNumber">{classInfo?.User.phone_number}</span>
         </PhoneNumber>
       </Divider>
       <Divider>
         <BasicInfo>
-        레슨 기본 정보
-        {classInfo && <RenderInfo infos={getBasicInfo(classInfo)} />}
+          레슨 기본 정보
+          {classInfo && <RenderInfo infos={getBasicInfo(classInfo)} />}
         </BasicInfo>
       </Divider>
       <Divider>
         {/* TODO: 추후에 경력 세밀화 할 때 리팩터링 해야함 */}
-        강사 정보<br />
+        강사 정보
+        <br />
         <div>학력 : {tutorData?.spec || '없음'}</div>
-        <div>경력 : {tutorData?.career || '없음'}</div>
+        <div>경력 : {tutorData?.career?.join(', ') || '없음'}</div>
       </Divider>
       {classInfo?.youtube && (
         <Divider>
-        <VideoEmbed title='연주 동영상' id={classInfo?.youtube || ''} />
+          <VideoEmbed title="연주 동영상" id={classInfo?.youtube || ''} />
         </Divider>
       )}
       <Divider>
         <Content>
-        본문
-        <div className="contentBox">
-          <div className="contentText">{classInfo?.content}</div>
-        </div>
+          본문
+          <div className="contentBox">
+            <div className="contentText">{classInfo?.content}</div>
+          </div>
         </Content>
       </Divider>
       <CommentTop
@@ -353,9 +373,10 @@ export default function LessonInfo() {
         refrash={getComment}
         sortByTime={sortByTime}
         incSortByStar={sortByStar}
-        decSortByStar={decSortByStar} />
+        decSortByStar={decSortByStar}
+      />
       <Comment comments_arr={comments} edit={modComment} del={delComment} />
-      <CommentWrite initStars={5} initComment={""} submit={addComment} />
+      <CommentWrite initStars={5} initComment={''} submit={addComment} />
       <Divider />
     </ClassContainer>
   );

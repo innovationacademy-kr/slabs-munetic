@@ -4,6 +4,8 @@ import ErrorResponse from '../modules/errorResponse';
 import { ResJSON } from '../modules/types';
 import * as UserService from '../service/user.service';
 import * as TutorService from '../service/tutorInfo.service';
+import { ITutorInfoType } from '../types/controller/tutorInfoData';
+import { Account } from '../models/user';
 
 export const getMyProfile: RequestHandler = async (req, res, next) => {
   try {
@@ -61,6 +63,27 @@ export const editUserProfile: RequestHandler = async (req, res, next) => {
         req.body,
       )) as any;
       result = new ResJSON('유저 프로필을 수정하는데 성공하였습니다.', user);
+      res.status(Status.OK).json(result);
+    } else {
+      next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editTutorProfile: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+      const TutorInfoData: ITutorInfoType = req.body;
+      const setData = (await TutorService.addTutorDataById(
+        Number(req.user.id),
+        TutorInfoData,
+      )) as any;
+      let result: ResJSON = new ResJSON(
+        '튜터 프로필을 수정하는데 성공하였습니다.',
+        setData,
+      );
       res.status(Status.OK).json(result);
     } else {
       next(new ErrorResponse(Status.UNAUTHORIZED, '로그인이 필요합니다.'));

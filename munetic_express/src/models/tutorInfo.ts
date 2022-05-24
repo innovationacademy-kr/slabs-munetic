@@ -1,4 +1,11 @@
-import { Sequelize, DataTypes, Model, Optional, HasOneGetAssociationMixin } from 'sequelize';
+import {
+  Sequelize,
+  DataTypes,
+  Model,
+  Optional,
+  HasOneGetAssociationMixin,
+} from 'sequelize';
+import { Json } from 'sequelize/types/utils';
 import { Lesson } from './lesson';
 
 export interface tutorInfoAttributes {
@@ -9,12 +16,14 @@ export interface tutorInfoAttributes {
   youtube: string;
   instagram: string;
   soundcloud: string;
+  tutor_introduction: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 }
 
-type tutorInfoCreationAttributes = Optional<tutorInfoAttributes,
+type tutorInfoCreationAttributes = Optional<
+  tutorInfoAttributes,
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >;
 
@@ -29,6 +38,7 @@ export class TutorInfo
   public youtube!: string;
   public instagram!: string;
   public soundcloud!: string;
+  public tutor_introduction!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -65,6 +75,10 @@ export class TutorInfo
           type: DataTypes.STRING(1024),
         },
         soundcloud: {
+          allowNull: true,
+          type: DataTypes.STRING(1024),
+        },
+        tutor_introduction: {
           allowNull: true,
           type: DataTypes.STRING(1024),
         },
