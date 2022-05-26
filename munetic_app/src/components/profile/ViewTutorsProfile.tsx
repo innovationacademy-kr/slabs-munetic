@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import ImageListItemBar from "@mui/material/ImageListItemBar";
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import * as ProfileAPI from '../../lib/api/profile';
+
 
 const TutorsWrapper = styled.div`
   margin: 20px 0;
@@ -22,7 +23,7 @@ const ImagesWrapper = styled.div`
 `;
 
 const Label = styled.div`
-  font-family: 'Roboto', 'Arial', sans-serif;
+  font-family: "Roboto","Arial",sans-serif;
   font-size: 1.6rem;
   line-height: 2.2rem;
   font-weight: 400;
@@ -48,15 +49,16 @@ interface TutorListElementIProps {
 function TutorListElement(props: TutorListElementIProps) {
   return (
     <ImageListItem key={props.tutor_id} sx={{ width: 150 }}>
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        badgeContent={<Badge badgeContent={props.reviews} color="secondary" />}
-      >
-        <Avatar src={props.image_uri} sx={{ width: 150, height: 150 }} />
-      </Badge>
-      <ImageListItemBar title={props.tutor_name} />
-    </ImageListItem>
+    <Badge
+      overlap="circular"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      badgeContent={
+        (<Badge badgeContent={props.reviews} color="secondary" />)
+      }>
+      <Avatar src={props.image_uri} sx={{ width: 150, height: 150 }} />
+    </Badge>
+    <ImageListItemBar title={props.tutor_name} />
+  </ImageListItem>
   );
 }
 
@@ -64,16 +66,16 @@ function TutorListElement(props: TutorListElementIProps) {
  * ViewTutorsProfile 컴포넌트에 들어가는 데이터 타입 정의
  */
 export interface ViewTutorsProfileDataIProps {
-  tutor_id: number;
-  num: number;
+  tutor_id: number,
+  num: number,
 }
 
 /**
  * ViewTutorsProfile 컴포넌트의 프로퍼티 정의
  */
 export interface ViewTutorsProfileIProps {
-  label: string;
-  row: ReadonlyArray<ViewTutorsProfileDataIProps>;
+  label: string,
+  row: ReadonlyArray<ViewTutorsProfileDataIProps>,
 }
 
 export default function ViewTutorsProfile(props: ViewTutorsProfileIProps) {
@@ -82,22 +84,17 @@ export default function ViewTutorsProfile(props: ViewTutorsProfileIProps) {
   useEffect(() => {
     async function init() {
       try {
-        const startutors_new = await Promise.all(
-          props.row.map(
-            async (
-              row: ViewTutorsProfileDataIProps,
-            ): Promise<TutorListElementIProps> => {
-              const tutor = await ProfileAPI.getProfileById(row.tutor_id);
-              return {
-                tutor_id: row.tutor_id,
-                image_uri: tutor.data.data.image_url,
-                tutor_name: tutor.data.data.name,
-                reviews: row.num,
-              };
-            },
-          ),
-        );
+        const startutors_new = await Promise.all( props.row.map(async (row: ViewTutorsProfileDataIProps) : Promise<TutorListElementIProps> => {
+          const tutor = await ProfileAPI.getProfileById(row.tutor_id);
+          return {
+            tutor_id: row.tutor_id,
+            image_uri: tutor.data.data.image_url,
+            tutor_name: tutor.data.data.name,
+            reviews: row.num,
+          }
+        }));
         setStartutors(startutors_new);
+        console.log(startutors);
       } catch (e) {
         console.log(e, '튜터 프로필을 불러오지 못했습니다.');
       }
@@ -112,25 +109,19 @@ export default function ViewTutorsProfile(props: ViewTutorsProfileIProps) {
         <ImageList
           rowHeight={200}
           sx={{
-            gridAutoFlow: 'column',
-            gridTemplateColumns:
-              'repeat(auto-fit, minmax(160px,1fr)) !important',
-            gridAutoColumns: 'minmax(160px, 1fr)',
+            gridAutoFlow: "column",
+            gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr)) !important",
+            gridAutoColumns: "minmax(160px, 1fr)"
           }}
         >
-          {startutors.length >= 1 ? (
-            startutors.map(tutor => (
-              <TutorListElement
-                key={tutor.tutor_id}
-                tutor_id={tutor.tutor_id}
-                image_uri={tutor.image_uri}
-                tutor_name={tutor.tutor_name}
-                reviews={tutor.reviews}
-              />
-            ))
-          ) : (
-            <li>No content</li>
-          )}
+        {startutors.map((tutor) => (
+          <TutorListElement
+            key={tutor.tutor_id}
+            tutor_id={tutor.tutor_id}
+            image_uri={tutor.image_uri}
+            tutor_name={tutor.tutor_name}
+            reviews={tutor.reviews} />
+        ))}
         </ImageList>
       </ImagesWrapper>
     </TutorsWrapper>
