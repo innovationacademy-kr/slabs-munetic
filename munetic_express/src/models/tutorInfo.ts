@@ -5,7 +5,6 @@ import {
   Optional,
   HasOneGetAssociationMixin,
 } from 'sequelize';
-import { Json } from 'sequelize/types/utils';
 import { Lesson } from './lesson';
 
 export interface tutorInfoAttributes {
